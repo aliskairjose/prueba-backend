@@ -58,27 +58,25 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
         $token = null;
 
-        return response()->json(['isSuccess' => true]);
-
-        /*try {
+        try {
             if (!$token = 'Bearer '.JWTAuth::attempt($credentials)) {
                 return response()->json([
                   'isSuccess' => false,
-                  'message' => 'Email o Password inválido',
+                  'message'   => 'Email o Password inválido',
                 ], 401);
             }
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
             return response()->json([
               'isSuccess' => false,
-              'message' => 'No se pudo crear el token'
+              'message'   => 'No se pudo crear el token'
             ], 500);
         }
 
         return response()->json([
           'isSuccess' => true,
-          'token'   => $token,
-        ], 200);*/
+          'token'     => $token,
+        ], 200);
     }
 
     /**
