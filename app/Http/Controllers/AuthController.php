@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
-use Illuminate\Validation\ValidationException;
+
 use JWTAuth;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Illuminate\Validation\ValidationException;
 use App\Http\Requests\RegistrationFormRequest;
 
 class AuthController extends Controller
@@ -23,20 +24,28 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        $input = $request->only('email', 'password');
+        $credentials = $request->only('email', 'password');
         $token = null;
 
-        if (!$token = JWTAuth::attempt($input)) {
+        try {
+            if (!$token = 'Bearer '.JWTAuth::attempt($credentials)) {
+                return response()->json([
+                  'isSuccess' => false,
+                  'message' => 'Email o Password inválido',
+                ], 401);
+            }
+        } catch (JWTException $e) {
+            // something went wrong whilst attempting to encode the token
             return response()->json([
-              'success' => false,
-              'message' => 'Invalid Email or Password',
-            ], 401);
+              'isSuccess' => false,
+              'message' => 'No se pudo crear el token'
+            ], 500);
         }
 
         return response()->json([
-          'success' => true,
+          'isSuccess' => true,
           'token'   => $token,
-        ]);
+        ], 200);
     }
 
     /**
