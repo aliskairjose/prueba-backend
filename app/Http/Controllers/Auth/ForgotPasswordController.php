@@ -22,7 +22,7 @@ class ForgotPasswordController extends Controller
 
     use SendsPasswordResetEmails;
 
-    public function recovery_pass()
+    public function forgot_password()
     {
         return response()->json(['isSuccess' => true]);
     }

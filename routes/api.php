@@ -17,12 +17,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-/*Route::post( 'login', 'AuthController@login' );
-Route::post( 'register', 'AuthController@register' );*/
-
 Route::post( 'login', 'Auth\LoginController@login');
 Route::post( 'register', 'Auth\LoginController@register');
-Route::post( 'recovery-pass', 'Auth\ForgotPasswordController@recovery_pass');
+Route::post( 'forgot_password', 'Auth\ForgotPasswordController@forgot_password');
 
 Route::group( [ 'middleware' => 'auth.jwt' ], function () {
     Route::get( 'logout', 'ApiController@logout' );
