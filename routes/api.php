@@ -17,11 +17,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post( 'login', 'Auth\LoginController@login');
-Route::post( 'register', 'Auth\LoginController@register');
-Route::post( 'forgot_password', 'Auth\ForgotPasswordController@forgot_password');
+Route::post('login', 'Auth\LoginController@login');
+Route::post('register', 'Auth\LoginController@register');
+Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
 
-Route::group( [ 'middleware' => 'auth.jwt' ], function () {
-    Route::get( 'logout', 'ApiController@logout' );
+Route::group(['middleware' => 'auth.jwt'], function () {
+    Route::get('logout', 'ApiController@logout');
 
-} );
+});
