@@ -56,27 +56,20 @@ class ForgotPasswordController extends Controller
             ]);
         }
 
-        // $token = $this->broker()->createToken($user);
-
-
         try {
             Mail::to($user['email'])->send(new RecoveryPassword);
         } catch (\Exception $e) {
             return response()->json([
                 'isSuccess' => false,
-                'message' => 'No se pudo enviar el correo a '.$user['email'],
+                'message' => 'No se pudo enviar el correo a ' . $user['email'],
             ]);
         }
-
-        return response()->json([
-            'isSuccess' => true,
-            'messagge' => 'El mensaje ha sido enviado con exito a '. $user['email']
-        ]);
+        // $token = $this->broker()->createToken($user);
 
         return response()->json([
             'isSuccess' => true,
             // 'token' => $token,
-            'message' => 'Correo enviado con exito'
+            'messagge' => 'El mensaje ha sido enviado con exito a ' . $user['email']
         ]);
     }
 }
