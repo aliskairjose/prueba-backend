@@ -39,7 +39,7 @@ class ForgotPasswordController extends Controller
         if (request()->header('Content-Type') == 'application/json') {
             return response()->json([
               'isSuccess' => false,
-              'error' => 'Oops something went wrong.'
+              'error'     => 'Oops something went wrong.'
             ], 500);
         }
 
