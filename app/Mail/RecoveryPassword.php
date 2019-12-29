@@ -28,6 +28,6 @@ class RecoveryPassword extends Mailable
      */
     public function build()
     {
-        return $this->view('mails.recovery-password');
+        return $this->view('emails.notification');
     }
 }
