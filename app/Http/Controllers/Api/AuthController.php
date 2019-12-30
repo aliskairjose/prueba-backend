@@ -20,27 +20,30 @@ class  AuthController extends Controller
         $token = null;
 
         try {
-            if (!$token = auth()->attempt($credentials)) {
+            if (!$token = JWTAuth::attempt($credentials)) {
                 return response()->json([
                     'isSuccess' => false,
-                    'status'    => 400,
+                    'status'    => 401,
                     'message'   => 'La combinación de inicio de sesión / correo electrónico no es correcta, intente nuevamente.',
-                ], 401);
+                ]);
             }
         } catch (JWTException $e) {
             return response()->json([
                 'isSuccess'=> false,
                 'status'=> 500,
                 'message' => 'No se pudo crear el token'
-            ], 500);
+            ]);
         }
+
+        $user = new UserResource((User::where('email', '=', $request->get('email')))->firstOrFail());
 
         return response()->json([
             'isSuccess' => true,
-            'message' => '',
+            'message' => 'Ha ingresado al sistema correctamente',
             'status' => 200,
-            'token' => 'Bearer ' . $token,
-        ], 200);
+            'token' => $token,
+            'objects'=> $user
+        ]);
     }
 
     public function logout(Request $request)
