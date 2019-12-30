@@ -22,26 +22,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('login', 'AuthController@login');
 Route::post('register', 'AuthController@register');
-Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
-Route::post('recovery/password', function (Request $request) {
 
-    $email = $request->get('email');
-
-    try {
-        Mail::to($email)->send(new RecoveryPassword);
-    } catch (\Exception $e) {
-        return response()->json([
-            'isSuccess' => false,
-            'message' => 'No se pudo enviar el correo a '.$email,
-            'error'=> $e
-        ]);
-    }
-
-    return response()->json([
-        'isSuccess' => true,
-        'messagge' => 'El mensaje ha sido enviado con exito a '. $email
-    ]);
-});
+// Password Reset Routes
+Route::post('password/email', 'Api\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('password.reset');
 
 Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('logout', 'ApiController@logout');

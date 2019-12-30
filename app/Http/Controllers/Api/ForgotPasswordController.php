@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Mail\PasswordRecover;
-use App\Mail\RecoveryPassword;
 // use App\Transformers\Json;
 use App\User;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
@@ -27,15 +26,22 @@ class ForgotPasswordController extends Controller
     | your application to your users. Feel free to explore this trait.
     |
      */
+
     use SendsPasswordResetEmails;
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
+
+    protected function sendResetLinkResponse(Request $request, $response)
     {
-        $this->middleware('guest');
+        return response()->json([
+            'isSuccess' => true,
+            'message' => 'Se ha enviado el correo exitosamente!'
+        ]);
     }
 
+    protected function sendResetLinkFailedResponse(Request $request, $response)
+    {
+        return response()->json([
+            'isSuccess' => false,
+            'message' => 'No se pudo enviar el correo!'
+        ]);
+    }
 }
