@@ -33,6 +33,7 @@ class ForgotPasswordController extends Controller
     {
         return response()->json([
             'isSuccess' => true,
+            'status'=> 200,
             'message' => 'Se ha enviado el correo exitosamente!'
         ]);
     }
@@ -41,6 +42,7 @@ class ForgotPasswordController extends Controller
     {
         return response()->json([
             'isSuccess' => false,
+            'status'=> 400,
             'message' => 'No se pudo enviar el correo!'
         ]);
     }

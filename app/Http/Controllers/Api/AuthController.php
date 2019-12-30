@@ -23,17 +23,23 @@ class  AuthController extends Controller
             if (!$token = auth()->attempt($credentials)) {
                 return response()->json([
                     'isSuccess' => false,
-                    'status'    => 'invalid_credentials',
-                    'error'   => 'La combinación de inicio de sesión / correo electrónico no es correcta, intente nuevamente.',
+                    'status'    => 400,
+                    'message'   => 'La combinación de inicio de sesión / correo electrónico no es correcta, intente nuevamente.',
                 ], 401);
             }
         } catch (JWTException $e) {
-            return response()->json(['error' => 'Could not create token'], 500);
+            return response()->json([
+                'isSuccess'=> false,
+                'status'=> 500,
+                'message' => 'No se pudo crear el token'
+            ], 500);
         }
 
         return response()->json([
             'isSuccess' => true,
-            'token'     => 'Bearer '.$token,
+            'message' => '',
+            'status' => 200,
+            'token' => 'Bearer ' . $token,
         ], 200);
     }
 
@@ -46,13 +52,15 @@ class  AuthController extends Controller
         try {
             JWTAuth::invalidate($request->token);
             return response()->json([
-                'status'  => 'ok',
+                'isSuccess'=> true,
+                'status'  => 200,
                 'message' => 'Cierre de sesión exitoso.'
             ]);
         } catch (JWTException  $exception) {
             return response()->json([
-                'status'  => 'unknown_error',
-                'message' => 'Al usuario no se le pudo cerrar la sesión.'
+                'isSuccess'=> false,
+                'status'  => '500',
+                'message' => 'Ha ocurrido un error inesperado.'
             ], 500);
         }
     }

@@ -44,18 +44,19 @@ class RegisterController extends Controller
             $input['password'] = bcrypt($input['password']);
             $user = User::create($input);
             // $success['token'] =  $user->createToken('AppName')->accessToken;
-        } catch ( \Illuminate\Database\QueryException $e) {
+        } catch (\Illuminate\Database\QueryException $e) {
             $error = $e->getMessage();
             return response()->json([
-                'isSuccess'=>false,
-                'messagge'=> 'El correo ya existe',
-                'error'=> $error
-            ], 400);
+                'isSuccess' => false,
+                'messagge' => 'El correo ya existe',
+                'status' => 409
+            ]);
         }
 
         return response()->json([
-           'isSuccess'=> true,
-           'message' => 'EL usuario ha sido creado.'
+            'isSuccess' => true,
+            'status' => 201,
+            'message' => 'EL usuario ha sido creado.'
         ]);
     }
 
