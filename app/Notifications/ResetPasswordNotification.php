@@ -61,10 +61,11 @@ class ResetPasswordNotification extends Notification
             ->subject('Notificación de Reestablecimiento de Contraseña')
             ->greeting('Hola! ' . $notifiable->name)
             ->line('Recibes este correo porque has solicitado reestablecer la contraseña para tu cuenta')
-            ->action('Reset Password', url(config('app.url') . route('password.reset', ['token' => $this->token, 'email' => $notifiable->getEmailForPasswordReset()], false)))
+            ->action('Reestablecer Contraseña', url(config('app.url') . route('password.reset', ['token' => $this->token, 'email' => $notifiable->getEmailForPasswordReset()], false)))
             ->line('Este enlace para reestablecer tu contraseña expirará en  :count minutes.', ['count' => config('auth.passwords.' . config('auth.defaults.passwords') . '.expire')])
             ->line('Si no solicitó un restablecimiento de contraseña, no se requiere ninguna otra acción.')
-            ->salutation('Saludos');
+            ->salutation('Saludos')
+            ->salutation('Equipo Dropi');
     }
 
     /**
