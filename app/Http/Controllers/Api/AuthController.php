@@ -9,6 +9,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\JWTAuth as JWTAuthJWTAuth;
+use  JWTAuth;
 
 class AuthController extends Controller
 {
@@ -37,23 +39,23 @@ class AuthController extends Controller
         $token = null;
 
         try {
-            if (!$token = 'Bearer '.JWTAuth::attempt($credentials)) {
+            if (!$token = 'Bearer ' . auth()->attempt($credentials)) {
                 return response()->json([
-                  'isSuccess' => false,
-                  'message'   => 'Email o Password inválido',
+                    'isSuccess' => false,
+                    'message'   => 'La combinación de inicio de sesión / correo electrónico no es correcta, intente nuevamente.',
                 ], 401);
             }
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
             return response()->json([
-              'isSuccess' => false,
-              'message'   => 'No se pudo crear el token'
+                'isSuccess' => false,
+                'message'   => 'No se pudo crear el token'
             ], 500);
         }
 
         return response()->json([
-          'isSuccess' => true,
-          'token'     => $token,
+            'isSuccess' => true,
+            'token'     => $token,
         ], 200);
     }
 
@@ -65,20 +67,20 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $this->validate($request, [
-          'token' => 'required'
+            'token' => 'required'
         ]);
 
         try {
             JWTAuth::invalidate($request->token);
 
             return response()->json([
-              'success' => true,
-              'message' => 'User logged out successfully'
+                'success' => true,
+                'message' => 'User logged out successfully'
             ]);
         } catch (JWTException $exception) {
             return response()->json([
-              'isSuccess' => false,
-              'message'   => 'Sorry, the user cannot be logged out'
+                'isSuccess' => false,
+                'message'   => 'Sorry, the user cannot be logged out'
             ], 500);
         }
     }
@@ -100,8 +102,8 @@ class AuthController extends Controller
         }
 
         return response()->json([
-          'success' => true,
-          'data'    => $user
+            'success' => true,
+            'data'    => $user
         ], 200);
     }
 }
