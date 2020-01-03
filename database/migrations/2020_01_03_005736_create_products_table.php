@@ -18,7 +18,7 @@ class CreateProductsTable extends Migration
             $table->string('name', 255)->nullable();
             $table->text('description')->nullable();
             $table->string('type', 45)->nullable()->comment('SIMPLE y VARIABLE');
-            $table->string('stock', 45)->nullable();
+            $table->decimal('stock', 10, 2)->nullable();
             $table->decimal('sale_price')->nullable();
             $table->decimal('suggested_price')->nullable();
             $table->unsignedInteger('user_id')->index('user_id')->nullable(false);
