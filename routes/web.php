@@ -16,14 +16,14 @@ use Illuminate\Database\Connection;
 
 
 Route::get('/', function () {
-
+    $data = '';
     try {
         DB::connection()->getPdo();
-        echo "Connected successfully to: " . DB::connection()->getDatabaseName();
+        $data =  "Connected successfully to: " . DB::connection()->getDatabaseName();
     } catch (\Exception $e) {
         die("Could not connect to the database. Please check your configuration. error:" . $e );
     }
 
-    return view('welcome')->with();
+    return view('welcome')->with('data', $data);
 
 });
