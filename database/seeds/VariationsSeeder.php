@@ -20,7 +20,7 @@ class VariationsSeeder extends Seeder
                 'suggested_price' => $faker->randomDigit,
                 'sale_price' => $faker->randomDigit,
                 'product_id' => $faker->numberBetween(1, 6),
-                'stock' => $faker->text(45),
+                'stock' => $faker->randomDigit,
                 'created_at' => date('Y-m-d H:m:s'),
                 'updated_at' => date('Y-m-d H:m:s')
             ));

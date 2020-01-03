@@ -17,7 +17,6 @@ class AttributesSeeder extends Seeder
         for ($i = 0; $i < 6; $i++) {
             DB::table('attributes')->insert(array(
                 'description' => $faker->text(),
-                // 'user_id' => $faker->numberBetween(1, 6),
                 'product_id' => $faker->numberBetween(1, 6),
                 'created_at' => date('Y-m-d H:m:s'),
                 'updated_at' => date('Y-m-d H:m:s')

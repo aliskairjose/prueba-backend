@@ -20,7 +20,7 @@ class ProductSeeder extends Seeder
                 'name' => $faker->name(),
                 'description' => $faker->text(),
                 'type'  => $faker->randomElement(['simple', 'variable']),
-                'stock' => $faker->text(45),
+                'stock' => $faker->randomDigit,
                 'sale_price' => $faker->randomDigit,
                 'suggested_price' => $faker->randomDigit,
                 'user_id' => $faker->numberBetween(1, 6),
