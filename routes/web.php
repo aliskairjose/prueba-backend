@@ -11,6 +11,19 @@
 |
 */
 
+use Illuminate\Support\Facades\Route;
+use Illuminate\Database\Connection;
+
+
 Route::get('/', function () {
-    return view('welcome');
+
+    try {
+        DB::connection()->getPdo();
+        echo "Connected successfully to: " . DB::connection()->getDatabaseName();
+    } catch (\Exception $e) {
+        die("Could not connect to the database. Please check your configuration. error:" . $e );
+    }
+
+    return view('welcome')->with();
+
 });

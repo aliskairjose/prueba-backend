@@ -3,67 +3,49 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RegistrationFormRequest;
 use App\User;
-use Illuminate\Http\JsonResponse;
+use App\Http\Resources\User as UserResource;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\JWTAuth as JWTAuthJWTAuth;
 use  JWTAuth;
 
-class AuthController extends Controller
+class  AuthController extends Controller
 {
-    /**
-     * @var bool
-     */
-    public $loginAfterSignUp = true;
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('guest')->except('logout');
-    }
-
-    /**
-     * @param  Request  $request
-     * @return JsonResponse
-     */
     public function login(Request $request)
     {
+
         $credentials = $request->only('email', 'password');
         $token = null;
 
         try {
-            if (!$token = 'Bearer ' . auth()->attempt($credentials)) {
+            if (!$token = JWTAuth::attempt($credentials)) {
                 return response()->json([
                     'isSuccess' => false,
+                    'status'    => 401,
                     'message'   => 'La combinación de inicio de sesión / correo electrónico no es correcta, intente nuevamente.',
-                ], 401);
+                ]);
             }
         } catch (JWTException $e) {
-            // something went wrong whilst attempting to encode the token
             return response()->json([
-                'isSuccess' => false,
-                'message'   => 'No se pudo crear el token'
-            ], 500);
+                'isSuccess'=> false,
+                'status'=> 500,
+                'message' => 'No se pudo crear el token'
+            ]);
         }
+
+        $user = new UserResource((User::where('email', '=', $request->get('email')))->firstOrFail());
 
         return response()->json([
             'isSuccess' => true,
-            'token'     => $token,
-        ], 200);
+            'message' => 'Ha ingresado al sistema correctamente',
+            'status' => 200,
+            'token' => $token,
+            'objects'=> $user
+        ]);
     }
 
-    /**
-     * @param  Request  $request
-     * @return JsonResponse
-     * @throws ValidationException
-     */
     public function logout(Request $request)
     {
         $this->validate($request, [
@@ -72,38 +54,43 @@ class AuthController extends Controller
 
         try {
             JWTAuth::invalidate($request->token);
-
             return response()->json([
-                'success' => true,
-                'message' => 'User logged out successfully'
+                'isSuccess'=> true,
+                'status'  => 200,
+                'message' => 'Cierre de sesión exitoso.'
             ]);
-        } catch (JWTException $exception) {
+        } catch (JWTException  $exception) {
             return response()->json([
-                'isSuccess' => false,
-                'message'   => 'Sorry, the user cannot be logged out'
+                'isSuccess'=> false,
+                'status'  => '500',
+                'message' => 'Ha ocurrido un error inesperado.'
             ], 500);
         }
     }
 
-    /**
-     * @param  RegistrationFormRequest  $request
-     * @return JsonResponse
-     */
-    public function register(RegistrationFormRequest $request)
+    public function getAuthUser(Request $request)
     {
-        $user = new User();
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = bcrypt($request->password);
-        $user->save();
+        $this->validate($request, [
+            'token' => 'required'
+        ]);
 
-        if ($this->loginAfterSignUp) {
-            return $this->login($request);
+        $user = JWTAuth::authenticate($request->token);
+        return response()->json(['user' => $user]);
+    }
+
+    public function getAuthenticatedUser()
+    {
+        try {
+            if (!$user = JWTAuth::parseToken()->authenticate()) {
+                return response()->json(['user_not_found'], 404);
+            }
+        } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            return response()->json(['token_expired'], $e->getStatusCode());
+        } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+            return response()->json(['token_invalid'], $e->getStatusCode());
+        } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
+            return response()->json(['token_absent'], $e->getStatusCode());
         }
-
-        return response()->json([
-            'success' => true,
-            'data'    => $user
-        ], 200);
+        return response()->json(compact('user'));
     }
 }
