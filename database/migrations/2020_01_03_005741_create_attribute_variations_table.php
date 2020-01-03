@@ -15,11 +15,10 @@ class CreateAttributeVariationsTable extends Migration
     {
         Schema::create('attribute_variations', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedInteger('variation_id')->nullable(false);
-            $table->unsignedInteger('attribute_value_id')->nullable(false);
+            $table->integer('variation_id')->unsigned()->index('variation_id')->nullable(false);
+            $table->integer('attribute_value_id')->unsigned()->index('attribute_value_id')->nullable(false);
             $table->foreign('variation_id')->references('id')->on('variations');
             $table->foreign('attribute_value_id')->references('id')->on('attributes_values');
-            $table->index('attribute_value_id');
             $table->timestamps();
         });
     }
