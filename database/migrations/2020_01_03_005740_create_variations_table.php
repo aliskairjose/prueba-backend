@@ -17,7 +17,7 @@ class CreateVariationsTable extends Migration
             $table->bigIncrements('id');
             $table->decimal('suggested_price')->nullable();
             $table->decimal('sale_price')->nullable();
-            $table->unsignedInteger('product_id', 11)->index('products')->nullable();
+            $table->unsignedInteger('product_id', 11)->index('product_id')->nullable(false);
             $table->string('stock', 45)->nullable();
             $table->foreign('product_id')->references('id')->on('products');
             $table->timestamps();

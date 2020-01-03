@@ -15,8 +15,8 @@ class CreateAttributeVariationsTable extends Migration
     {
         Schema::create('attribute_variations', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedInteger('variation_id');
-            $table->unsignedInteger('attribute_value_id');
+            $table->unsignedInteger('variation_id')->nullable(false);
+            $table->unsignedInteger('attribute_value_id')->nullable(false);
             $table->foreign('variation_id')->references('id')->on('variations');
             $table->foreign('attribute_value_id')->references('id')->on('attributes_values');
             $table->index('attribute_value_id');

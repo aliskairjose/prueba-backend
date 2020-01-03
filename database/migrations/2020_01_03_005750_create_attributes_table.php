@@ -17,7 +17,7 @@ class CreateAttributesTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedInteger('user_id')->nullable(false);
             $table->text('description')->nullable();
-            $table->unsignedInteger('product_id', 11)->nullable(false);
+            $table->unsignedInteger('product_id', 11)->index('product_id')->nullable(false);
             $table->foreign('product_id')->references('id')->on('products');
             $table->timestamps();
         });
