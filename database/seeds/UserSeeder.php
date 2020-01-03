@@ -4,6 +4,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Database\Connection;
 use Faker\Factory as Faker;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
@@ -23,7 +24,7 @@ class UserSeeder extends Seeder
                 'birthday'=>$faker->date,
                 'type_user'=>$faker->randomElement(['suplier', 'dropshiper', 'administrador']),
                 'status'=> $faker->randomElement(['Activo', 'Suspendido', 'Inactivo']),
-                'password'=>$faker->password,
+                'password'=>Hash::make('aliskair25'),
                 'created_at' => date('Y-m-d H:m:s'),
                 'updated_at' => date('Y-m-d H:m:s')
             ));
