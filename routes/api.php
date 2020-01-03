@@ -27,9 +27,13 @@ Route::post('register', 'Api\RegisterController@register');
 Route::post('password/email', 'Api\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
 Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('password.reset');
 
+// User Routes
+Route::get('users', 'UserController@index');
+Route::get('users/{id}', 'UserController@show');
+
 // Product Routes
 Route::get('products', 'ProductController@index');
-Route::get('products/detail/{id}', 'ProductController@show');
+Route::get('products/{id}', 'ProductController@show');
 
 
 Route::group(['middleware' => 'auth.jwt'], function () {
