@@ -34,6 +34,9 @@ Route::get('users/{id}', 'UserController@show');
 // Product Routes
 Route::get('products', 'ProductController@index');
 Route::get('products/{id}', 'ProductController@show');
+Route::get('products/user/{id}', 'ProductController@myProducts');
+Route::post('products', 'ProductController@store');
+Route::delete('products/{id}', 'ProductController@delete');
 
 
 Route::group(['middleware' => 'auth.jwt'], function () {
