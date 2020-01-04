@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Product;
 use App\User;
 use App\Http\Resources\User as UserResource;
-use App\Http\Resources\Product as ProductResource;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\JWTAuth as JWTAuthJWTAuth;
@@ -38,16 +36,13 @@ class  AuthController extends Controller
         }
 
         $user = new UserResource((User::where('email', $request->get('email')))->firstOrFail());
-        $products = Product::where('user_id',$user['id'])->get();
-
-        $objects = array('user' => $user, 'products'=> $products );
 
         return response()->json([
             'isSuccess' => true,
             'message'   => 'Ha ingresado al sistema correctamente',
             'status'    => 200,
             'token'     => $token,
-            'objects'   => $objects,
+            'objects'   => $user,
         ]);
     }
 
