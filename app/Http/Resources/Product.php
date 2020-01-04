@@ -22,6 +22,7 @@ class Product extends JsonResource
             'stock' => $this->stock,
             'sale_price' => $this->sale_price,
             'suggested_price' => $this->suggested_price,
+            'id_user'=>$this->user_id,
             'persistanceState' => 'Unchanged',
         ];
     }

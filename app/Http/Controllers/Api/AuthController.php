@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Product;
 use App\User;
 use App\Http\Resources\User as UserResource;
+use App\Http\Resources\Product as ProductResource;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\JWTAuth as JWTAuthJWTAuth;
@@ -29,20 +31,23 @@ class  AuthController extends Controller
             }
         } catch (JWTException $e) {
             return response()->json([
-                'isSuccess'=> false,
-                'status'=> 500,
+                'isSuccess' => false,
+                'status' => 500,
                 'message' => 'No se pudo crear el token'
             ]);
         }
 
-        $user = new UserResource((User::where('email', '=', $request->get('email')))->firstOrFail());
+        $user = new UserResource((User::where('email', $request->get('email')))->firstOrFail());
+        $products = Product::where('user_id',$user['id'])->get();
+
+        $objects = array('user' => $user, 'products'=> $products );
 
         return response()->json([
             'isSuccess' => true,
-            'message' => 'Ha ingresado al sistema correctamente',
-            'status' => 200,
-            'token' => $token,
-            'objects'=> $user
+            'message'   => 'Ha ingresado al sistema correctamente',
+            'status'    => 200,
+            'token'     => $token,
+            'objects'   => $objects,
         ]);
     }
 
@@ -55,13 +60,13 @@ class  AuthController extends Controller
         try {
             JWTAuth::invalidate($request->token);
             return response()->json([
-                'isSuccess'=> true,
+                'isSuccess' => true,
                 'status'  => 200,
                 'message' => 'Cierre de sesión exitoso.'
             ]);
         } catch (JWTException  $exception) {
             return response()->json([
-                'isSuccess'=> false,
+                'isSuccess' => false,
                 'status'  => '500',
                 'message' => 'Ha ocurrido un error inesperado.'
             ], 500);

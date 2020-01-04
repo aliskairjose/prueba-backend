@@ -50,7 +50,7 @@ class ProductController extends Controller
         //
     }
 
-     /**
+    /**
      * Display the specified resource.
      *
      * @param int $id
@@ -64,8 +64,8 @@ class ProductController extends Controller
             return response()->json(
                 [
                     'isSuccess' => false,
-                    'status'=> 400,
-                    'message' => $e,
+                    'status'    => 400,
+                    'message'   => $e,
                 ]
             );
         }
@@ -73,7 +73,7 @@ class ProductController extends Controller
         return response()->json(
             [
                 'isSuccess' => true,
-                'object'      => $data,
+                'object'    => $data,
                 'status'    => 200
             ]
         );
