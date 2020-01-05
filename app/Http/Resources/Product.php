@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Attribute;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class Product extends JsonResource
@@ -23,7 +24,7 @@ class Product extends JsonResource
             'sale_price' => $this->sale_price,
             'suggested_price' => $this->suggested_price,
             'user_id'=>$this->user_id,
-            'attributes'=>
+            'attributes'=> new AttributeCollection((Attribute::where('product_id', $this->id)->get())),
             'persistanceState' => 'Unchanged',
         ];
     }
