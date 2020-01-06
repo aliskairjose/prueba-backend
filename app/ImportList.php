@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class Attribute extends Model
+class ImportList extends Model
 {
     use Notifiable;
 
@@ -14,5 +14,5 @@ class Attribute extends Model
      *
      * @var array
      */
-    protected $fillable = ['description', 'product_id'];
+    protected $fillable = ['user_id', 'product_id', 'variation_id'];
 }

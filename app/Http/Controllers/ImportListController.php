@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Attribute as AppAttribute;
-use App\Attribute;
-use App\Http\Resources\AttributeCollection;
+use App\Http\Resources\ImporListCollection;
+use App\ImportList;
 use Illuminate\Http\Request;
-use App\Http\Resources\Attribute as AttributeResource;
 
-class AttributesController extends Controller
+class ImportListController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,7 +15,7 @@ class AttributesController extends Controller
      */
     public function index()
     {
-        $data = new AttributeCollection(Attribute::all());
+        $data = new ImporListCollection(ImportList::all());
 
         return response()->json([
             [
@@ -48,7 +46,7 @@ class AttributesController extends Controller
     public function store(Request $request)
     {
         try {
-            $data = Attribute::create($request->all());
+            $data = ImportList::create($request->all());
         } catch (\Exception $e) {
             return response()->json(
                 [
@@ -77,25 +75,7 @@ class AttributesController extends Controller
      */
     public function show($id)
     {
-        try {
-            $data = new AttributeResource((Attribute::findOrFail($id)));
-        } catch (\Exception $e) {
-            return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => $e,
-                ]
-            );
-        }
-
-        return response()->json(
-            [
-                'isSuccess' => true,
-                'object'    => $data,
-                'status'    => 200
-            ]
-        );
+        //
     }
 
     /**
@@ -130,7 +110,7 @@ class AttributesController extends Controller
     public function destroy($id)
     {
         try {
-            $data = Attribute::find($id);
+            $data = ImportList::find($id);
             $data->delete();
         } catch (\Exception $e) {
             return response()->json(

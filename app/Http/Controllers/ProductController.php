@@ -21,10 +21,10 @@ class ProductController extends Controller
 
         return response()->json([
             [
-                'count'     => $data->count(),
                 'isSuccess' => true,
-                'object'      => $data,
-                'status'    => 200
+                'count'     => $data->count(),
+                'status'    => 200,
+                'object'    => $data,
             ]
         ]);
     }
