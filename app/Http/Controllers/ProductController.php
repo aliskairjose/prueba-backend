@@ -159,7 +159,33 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $data = Product::find($id);
+
+            $data->name = $request->name;
+            $data->description = $request->description;
+            $data->type = $request->type;
+            $data->stock = $request->stock;
+            $data->sale_price = $request->sale_price;
+            $data->suggested_price = $request->suggested_price;
+            $data->save();
+
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => $e,
+                ]
+            );
+        }
+        return response()->json(
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'message'   => 'EL producto se ha actualizado con exito!.',
+            ]
+        );
     }
 
     /**
