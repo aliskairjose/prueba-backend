@@ -117,7 +117,30 @@ class ImportListController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $data = ImportList::find($id);
+
+            $data->name = $request->user_id;
+            $data->product_id = $request->product_id;
+            $data->variation_id = $request->variation_id;
+            $data->save();
+
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => $e,
+                ]
+            );
+        }
+        return response()->json(
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'message'   => 'EL producto se ha actualizado con exito!.',
+            ]
+        );
     }
 
     /**
