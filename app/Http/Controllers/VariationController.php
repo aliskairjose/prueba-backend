@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ImporListCollection;
-use App\Http\Resources\ImporList as ImportLilstResource;
-use App\ImportList;
+use App\Http\Resources\VariationCollection;
+use App\Variation;
+use App\Http\Resources\Variation as VariationResource;
 use Illuminate\Http\Request;
 
-class ImportListController extends Controller
+class VariationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,14 +16,14 @@ class ImportListController extends Controller
      */
     public function index()
     {
-        $data = new ImporListCollection(ImportList::all());
+        $data = new VariationCollection(Variation::all());
 
         return response()->json([
             [
-                'isSuccess' => true,
                 'count'     => $data->count(),
-                'status'    => 200,
+                'isSuccess' => true,
                 'object'    => $data,
+                'status'    => 200
             ]
         ]);
     }
@@ -46,26 +46,7 @@ class ImportListController extends Controller
      */
     public function store(Request $request)
     {
-        try {
-            $data = ImportList::create($request->all());
-        } catch (\Exception $e) {
-            return response()->json(
-                [
-                    'isSuccess' => false,
-                    'message'   => 'Ha ocurrido un error',
-                    'status'    => 400,
-                ]
-            );
-        }
-
-        return response()->json(
-            [
-                'isSuccess' => true,
-                'message'   => 'El producto ha sido creado con exito!.',
-                'status'    => 200,
-                'data'      => $data,
-            ]
-        );
+        //
     }
 
     /**
@@ -77,13 +58,13 @@ class ImportListController extends Controller
     public function show($id)
     {
         try {
-            $data = new ImportLilstResource((ImportList::findOrFail($id)));
+            $data = new VariationResource((Variation::findOrFail($id)));
         } catch (\Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => $e,
+                    'status' => 400,
+                    'message' => $e,
                 ]
             );
         }
@@ -91,7 +72,7 @@ class ImportListController extends Controller
         return response()->json(
             [
                 'isSuccess' => true,
-                'object'    => $data,
+                'object'      => $data,
                 'status'    => 200
             ]
         );
@@ -128,25 +109,6 @@ class ImportListController extends Controller
      */
     public function destroy($id)
     {
-        try {
-            $data = ImportList::find($id);
-            $data->delete();
-        } catch (\Exception $e) {
-            return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => $e,
-                ]
-            );
-        }
-
-        return response()->json(
-            [
-                'isSuccess' => true,
-                'message'   => 'El producto ha sido eliminado!.',
-                'status'    => 200,
-            ]
-        );
+        //
     }
 }
