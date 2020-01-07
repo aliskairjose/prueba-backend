@@ -17,7 +17,7 @@ class Attribute extends JsonResource
         return [
             'id'=>$this->id,
             'description'=>$this->description,
-            // 'product_id'=>$this->product_id,
+            'product_id'=>$this->product_id,
         ];
     }
 }

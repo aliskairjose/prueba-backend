@@ -28,7 +28,7 @@ Route::post('register', 'Api\RegisterController@register');
 Route::post('password/email', 'Api\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
 Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('password.reset');
 
-Route::group(['middleware' => 'auth.jwt'], function () {
+// Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('logout', 'ApiController@logout');
 
     // User Routes
@@ -44,10 +44,26 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::put('products/{id}', 'ProductController@update');
     Route::delete('products/{id}', 'ProductController@delete');
 
-    // VariationList Routes
+    // ImportList Routes
     Route::get('importlist', 'ImportListController@index');
     Route::get('importlist/{id}', 'ImportListController@show');
     Route::post('importlist', 'ImportListController@store');
     Route::put('importlist/{id}', 'ImportListController@update');
     Route::delete('importlist/{id}', 'ImportListController@delete');
-});
+
+    // Variations Routes
+    Route::get('variations', 'VariationController@index');
+    Route::get('variations/{id}', 'VariationController@show');
+    Route::post('variations', 'VariationController@store');
+    Route::put('variations/{id}', 'VariationController@update');
+    Route::delete('variations/{id}', 'VariationController@delete');
+
+    // Attributes Routes
+    Route::get('attributes', 'AttributesController@index');
+    Route::get('attributes/{id}', 'AttributesController@show');
+    Route::post('attributes', 'AttributesController@store');
+    Route::put('attributes/{id}', 'AttributesController@update');
+    Route::delete('attributes/{id}', 'AttributesController@delete');
+
+
+// });
