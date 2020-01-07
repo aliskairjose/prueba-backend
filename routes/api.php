@@ -65,5 +65,20 @@ Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('passwo
     Route::put('attributes/{id}', 'AttributesController@update');
     Route::delete('attributes/{id}', 'AttributesController@delete');
 
+    // SeparateInventory Routes
+    Route::get('separateinventories', 'SeparateInventoryController@index');
+    Route::get('separateinventories/{id}', 'SeparateInventoryController@show');
+    Route::post('separateinventories', 'SeparateInventoryController@store');
+    Route::put('separateinventories/{id}', 'SeparateInventoryController@update');
+    Route::delete('separateinventories/{id}', 'SeparateInventoryController@delete');
+
+    // SeparateInventoryDetail Routes
+    Route::get('separatedetail', 'SeparateDetailController@index');
+    Route::get('separatedetail/{id}', 'SeparateDetailController@show');
+    Route::get('separatedetail/separateinventory/{id}', 'SeparateDetailController@getBySeparateInventoryId');
+    Route::post('separatedetail', 'SeparateDetailController@store');
+    Route::put('separatedetail/{id}', 'SeparateDetailController@update');
+    Route::delete('separatedetail/{id}', 'SeparateDetailController@delete');
+
 
 // });

@@ -24,26 +24,16 @@ class ProductController extends Controller
                 'isSuccess' => true,
                 'count'     => $data->count(),
                 'status'    => 200,
-                'object'    => $data,
+                'objects'    => $data,
             ]
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
@@ -65,7 +55,7 @@ class ProductController extends Controller
                 'isSuccess' => true,
                 'message'   => 'El producto ha sido creado con exito!.',
                 'status'    => 200,
-                'data'      => $data,
+                'objects'      => $data,
             ]
         );
     }
@@ -93,7 +83,7 @@ class ProductController extends Controller
         return response()->json(
             [
                 'isSuccess' => true,
-                'object'    => $data,
+                'objects'    => $data,
                 'status'    => 200
             ]
         );
@@ -115,7 +105,7 @@ class ProductController extends Controller
                         'isSuccess' => true,
                         'message'   => 'No existen producto asignados al usuario',
                         'status'    => 200,
-                        'object'    => $data
+                        'objects'    => $data
                     ]
                 );
             }
@@ -134,20 +124,9 @@ class ProductController extends Controller
                 'isSuccess' => true,
                 'status'    => 200,
                 'count'     => count($data),
-                'object'    => $data
+                'objects'    => $data
             ]
         );
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
@@ -155,7 +134,7 @@ class ProductController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function update(Request $request, $id)
     {
@@ -185,7 +164,7 @@ class ProductController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function delete($id)
     {

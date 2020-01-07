@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ImporListCollection;
 use App\Http\Resources\ImporList as ImportLilstResource;
 use App\ImportList;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ImportListController extends Controller
@@ -12,7 +13,7 @@ class ImportListController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function index()
     {
@@ -23,26 +24,16 @@ class ImportListController extends Controller
                 'isSuccess' => true,
                 'count'     => $data->count(),
                 'status'    => 200,
-                'object'    => $data,
+                'objects'    => $data,
             ]
         ]);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
@@ -63,7 +54,7 @@ class ImportListController extends Controller
                 'isSuccess' => true,
                 'message'   => 'La lista de importacion se ha sido creado con exito!.',
                 'status'    => 200,
-                'data'      => $data,
+                'objects'      => $data,
             ]
         );
     }
@@ -72,7 +63,7 @@ class ImportListController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function show($id)
     {
@@ -91,29 +82,18 @@ class ImportListController extends Controller
         return response()->json(
             [
                 'isSuccess' => true,
-                'object'    => $data,
+                'objects'    => $data,
                 'status'    => 200
             ]
         );
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function update(Request $request, $id)
     {
@@ -143,7 +123,7 @@ class ImportListController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function delete($id)
     {

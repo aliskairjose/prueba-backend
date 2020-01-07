@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Attribute as AppAttribute;
 use App\Attribute;
 use App\Http\Resources\AttributeCollection;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Resources\Attribute as AttributeResource;
 
@@ -13,7 +14,7 @@ class AttributesController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function index()
     {
@@ -24,26 +25,16 @@ class AttributesController extends Controller
                 'isSuccess' => true,
                 'count'     => $data->count(),
                 'status'    => 200,
-                'object'    => $data,
+                'objects'    => $data,
             ]
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
@@ -64,7 +55,7 @@ class AttributesController extends Controller
                 'isSuccess' => true,
                 'message'   => 'El atributo se ha sido creado con exito!.',
                 'status'    => 200,
-                'data'      => $data,
+                'objects'      => $data,
             ]
         );
     }
@@ -73,7 +64,7 @@ class AttributesController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function show($id)
     {
@@ -92,21 +83,10 @@ class AttributesController extends Controller
         return response()->json(
             [
                 'isSuccess' => true,
-                'object'    => $data,
+                'objects'    => $data,
                 'status'    => 200
             ]
         );
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
@@ -114,7 +94,7 @@ class AttributesController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function update(Request $request, $id)
     {
@@ -144,7 +124,7 @@ class AttributesController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function delete($id)
     {
