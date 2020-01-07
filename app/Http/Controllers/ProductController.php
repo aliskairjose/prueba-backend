@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ProductCollection;
 use App\Http\Resources\Product as ProductResource;
 use App\Product;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -32,7 +33,7 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return JsonResponse
      */
     public function store(Request $request)
@@ -40,7 +41,7 @@ class ProductController extends Controller
 
         try {
             $data = Product::create($request->all());
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
@@ -70,7 +71,7 @@ class ProductController extends Controller
     {
         try {
             $data = new ProductResource((Product::findOrFail($id)));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
@@ -109,7 +110,7 @@ class ProductController extends Controller
                     ]
                 );
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
@@ -132,7 +133,7 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @param  int  $id
      * @return JsonResponse
      */
@@ -142,7 +143,7 @@ class ProductController extends Controller
             $data = Product::findOrFail($id);
             $data->update($request->all());
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
@@ -171,7 +172,7 @@ class ProductController extends Controller
         try {
             $data = Product::find($id);
             $data->delete();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\VariationCollection;
 use App\Variation;
 use App\Http\Resources\Variation as VariationResource;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -39,7 +40,7 @@ class VariationController extends Controller
     {
         try {
             $data = Variation::create($request->all());
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
@@ -69,7 +70,7 @@ class VariationController extends Controller
     {
         try {
             $data = new VariationResource((Variation::findOrFail($id)));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
@@ -100,7 +101,7 @@ class VariationController extends Controller
         try {
             $data = Variation::findOrFail($id);
             $data->update($request->all());
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
@@ -129,7 +130,7 @@ class VariationController extends Controller
         try {
             $data = Variation::find($id);
             $data->delete();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
