@@ -61,7 +61,7 @@ Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('passwo
     // Attributes Routes
     Route::get('attributes', 'AttributesController@index');
     Route::get('attributes/{id}', 'AttributesController@show');
-    Route::post('variations', 'AttributesController@store');
+    Route::post('attributes', 'AttributesController@store');
     Route::put('attributes/{id}', 'AttributesController@update');
     Route::delete('attributes/{id}', 'AttributesController@delete');
 
