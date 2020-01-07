@@ -62,7 +62,7 @@ class AttributesController extends Controller
         return response()->json(
             [
                 'isSuccess' => true,
-                'message'   => 'El producto ha sido creado con exito!.',
+                'message'   => 'El atributo se ha sido creado con exito!.',
                 'status'    => 200,
                 'data'      => $data,
             ]
@@ -135,7 +135,7 @@ class AttributesController extends Controller
             [
                 'isSuccess' => true,
                 'status'    => 200,
-                'message'   => 'EL producto se ha actualizado con exito!.',
+                'message'   => 'EL atributo se ha actualizado con exito!.',
             ]
         );
     }
@@ -164,7 +164,7 @@ class AttributesController extends Controller
         return response()->json(
             [
                 'isSuccess' => true,
-                'message'   => 'El producto ha sido eliminado!.',
+                'message'   => 'El atributo ha sido eliminado!.',
                 'status'    => 200,
             ]
         );
