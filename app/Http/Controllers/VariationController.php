@@ -46,7 +46,26 @@ class VariationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $data = Variation::create($request->all());
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'message'   => 'Ha ocurrido un error',
+                    'status'    => 400,
+                ]
+            );
+        }
+
+        return response()->json(
+            [
+                'isSuccess' => true,
+                'message'   => 'El producto ha sido creado con exito!.',
+                'status'    => 200,
+                'data'      => $data,
+            ]
+        );
     }
 
     /**
@@ -126,7 +145,7 @@ class VariationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function delet($id)
+    public function delete($id)
     {
         try {
             $data = Variation::find($id);
