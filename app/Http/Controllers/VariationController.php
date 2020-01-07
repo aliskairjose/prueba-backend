@@ -126,7 +126,7 @@ class VariationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function delet($id)
     {
         try {
             $data = Variation::find($id);
