@@ -118,7 +118,26 @@ class AttributesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $data = Attribute::findOrFail($id);
+            $data->update($request->all());
+
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => $e,
+                ]
+            );
+        }
+        return response()->json(
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'message'   => 'EL producto se ha actualizado con exito!.',
+            ]
+        );
     }
 
     /**

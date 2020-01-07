@@ -34,11 +34,20 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     // User Routes
     Route::get('users', 'UserController@index');
     Route::get('users/{id}', 'UserController@show');
+    Route::put('usrrs/{id}', 'UserController@update');
 
     // Product Routes
     Route::get('products', 'ProductController@index');
     Route::get('products/{id}', 'ProductController@show');
     Route::get('products/user/{id}', 'ProductController@myProducts');
     Route::post('products', 'ProductController@store');
+    Route::put('products/{id}', 'ProductController@update');
     Route::delete('products/{id}', 'ProductController@delete');
+
+    // VariationList Routes
+    Route::get('importlist', 'ImportListController@index');
+    Route::get('importlist/{id}', 'ImportListController@show');
+    Route::post('importlist', 'ImportListController@store');
+    Route::put('importlist/{id}', 'ImportListController@update');
+    Route::delete('importlist/{id}', 'ImportListController@delete');
 });

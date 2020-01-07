@@ -99,15 +99,8 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $data = User::find($id);
-
-            $data->name = $request->name;
-            $data->surname = $request->surname;
-            $data->email = $request->email;
-            $data->birthday = $request->birthday;
-            $data->type_user = $request->type_user;
-            $data->status = $request->status;
-            $data->save();
+            $data = User::findOrFail($id);
+            $data->update($request->all());
 
         } catch (\Exception $e) {
             return response()->json(

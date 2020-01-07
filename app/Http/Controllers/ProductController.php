@@ -160,15 +160,8 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $data = Product::find($id);
-
-            $data->name = $request->name;
-            $data->description = $request->description;
-            $data->type = $request->type;
-            $data->stock = $request->stock;
-            $data->sale_price = $request->sale_price;
-            $data->suggested_price = $request->suggested_price;
-            $data->save();
+            $data = Product::findOrFail($id);
+            $data->update($request->all());
 
         } catch (\Exception $e) {
             return response()->json(

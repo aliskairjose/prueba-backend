@@ -99,13 +99,8 @@ class VariationController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $data = Variation::find($id);
-
-            $data->suggested_price = $request->suggested_price;
-            $data->sale_price = $request->sale_price;
-            $data->product_id = $request->product_id;
-            $data->stock = $request->stock;
-            $data->save();
+            $data = Variation::findOrFail($id);
+            $data->update($request->all());
 
         } catch (\Exception $e) {
             return response()->json(
