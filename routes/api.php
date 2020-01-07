@@ -55,8 +55,15 @@ Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('passwo
     Route::get('variations', 'VariationController@index');
     Route::get('variations/{id}', 'VariationController@show');
     Route::post('variations', 'VariationController@store');
-    Route::put('importlist/{id}', 'VariationController@update');
+    Route::put('variations/{id}', 'VariationController@update');
     Route::delete('variations/{id}', 'VariationController@delete');
+
+    // Attributes Routes
+    Route::get('attributes', 'AttributesController@index');
+    Route::get('attributes/{id}', 'AttributesController@show');
+    Route::post('variations', 'AttributesController@store');
+    Route::put('attributes/{id}', 'AttributesController@update');
+    Route::delete('attributes/{id}', 'AttributesController@delete');
 
 
 // });

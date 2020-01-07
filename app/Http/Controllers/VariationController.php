@@ -120,7 +120,6 @@ class VariationController extends Controller
         try {
             $data = Variation::findOrFail($id);
             $data->update($request->all());
-
         } catch (\Exception $e) {
             return response()->json(
                 [
