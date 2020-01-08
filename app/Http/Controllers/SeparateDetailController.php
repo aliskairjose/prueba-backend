@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\Product as ProductResource;
 use App\Http\Resources\SeparateDetail as SeparateDetailResource;
 use App\Http\Resources\SeparateDetailCollection;
+use App\Product;
 use App\SeparateDetail;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SeparateDetailController extends Controller
 {
@@ -25,7 +28,7 @@ class SeparateDetailController extends Controller
             'isSuccess' => true,
             'count'     => $data->count(),
             'status'    => 200,
-            'objects'    => $data,
+            'objects'   => $data,
           ]
         ]);
     }
@@ -38,14 +41,56 @@ class SeparateDetailController extends Controller
      */
     public function store(Request $request)
     {
+
         try {
-            $data = SeparateDetail::create($request->all());
+            $variation_id = null;
+            $product = new ProductResource(Product::findOrFail($request->get('product_id')));
+
+            if ($product[ 'type' ] == 'variable') {
+                $variation = DB::table('variations')->where('product_id', '=', $request->get('product_id'))->get();
+                if ($variation->count() !== 0) {
+                    foreach ($variation as $v) {
+                        $data = SeparateDetail::create(
+                          [
+                            'separate_inventory_id' => $request->get('separate_inventory_id'),
+                            'product_id'            => $request->get('product_id'),
+                            'variation_id'          => $v->id,
+                            'quantity'              => $request->get('quantity'),
+                            'price'                 => $request->get('price')
+                          ]
+                        );
+                    }
+                } else {
+                    $data = SeparateDetail::create(
+                      [
+                        'separate_inventory_id' => $request->get('separate_inventory_id'),
+                        'product_id'            => $request->get('product_id'),
+                        'variation_id'          => $variation_id,
+                        'quantity'              => $request->get('quantity'),
+                        'price'                 => $request->get('price')
+                      ]
+                    );
+                }
+            } else {
+                $data = SeparateDetail::create(
+                  [
+                    'separate_inventory_id' => $request->get('separate_inventory_id'),
+                    'product_id'            => $request->get('product_id'),
+                    'variation_id'          => $variation_id,
+                    'quantity'              => $request->get('quantity'),
+                    'price'                 => $request->get('price')
+                  ]
+                );
+            }
+
+
         } catch (Exception $e) {
             return response()->json(
               [
                 'isSuccess' => false,
                 'message'   => 'Ha ocurrido un error',
                 'status'    => 400,
+                'error'     => $e
               ]
             );
         }
@@ -55,7 +100,7 @@ class SeparateDetailController extends Controller
             'isSuccess' => true,
             'message'   => 'El producto ha sido creado con exito!.',
             'status'    => 200,
-            'objects'      => $data,
+            'objects'   => $data,
           ]
         );
     }
@@ -83,7 +128,7 @@ class SeparateDetailController extends Controller
         return response()->json(
           [
             'isSuccess' => true,
-            'objects'    => $data,
+            'objects'   => $data,
             'status'    => 200
           ]
         );

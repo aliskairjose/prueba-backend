@@ -28,6 +28,7 @@ class SeparateInventory extends Mailable
      */
     public function build()
     {
+//        return $this->subject('test')->view('emails.separate-inventory');
         return $this->view('emails.separate-inventory');
     }
 }
