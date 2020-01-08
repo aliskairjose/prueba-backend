@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Resources\User as UserResource;
 use App\Http\Resources\UserCollection;
 use App\User;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
@@ -33,7 +35,7 @@ class UserController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -50,7 +52,7 @@ class UserController extends Controller
     {
         try {
             $data = new UserResource((User::findOrFail($id)));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
               [
                 'isSuccess' => false,
@@ -82,7 +84,7 @@ class UserController extends Controller
             $data = User::findOrFail($id);
             $data->update($request->all());
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
               [
                 'isSuccess' => false,
@@ -104,7 +106,7 @@ class UserController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {

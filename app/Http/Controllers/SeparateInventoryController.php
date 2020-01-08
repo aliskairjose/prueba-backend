@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\SeparateInventory as SeparateInventoryResource;
 use App\Http\Resources\SeparateInventoryCollection;
 use App\SeparateInventory;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -39,7 +40,7 @@ class SeparateInventoryController extends Controller
     {
         try {
             $data = SeparateInventory::create($request->all());
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
               [
                 'isSuccess' => false,
@@ -69,7 +70,7 @@ class SeparateInventoryController extends Controller
     {
         try {
             $data = new SeparateInventoryResource((SeparateInventory::findOrFail($id)));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
               [
                 'isSuccess' => false,
@@ -108,7 +109,7 @@ class SeparateInventoryController extends Controller
                   ]
                 );
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
               [
                 'isSuccess' => false,
@@ -141,7 +142,7 @@ class SeparateInventoryController extends Controller
             $data = SeparateInventory::findOrFail($id);
             $data->update($request->all());
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
               [
                 'isSuccess' => false,
@@ -170,7 +171,7 @@ class SeparateInventoryController extends Controller
         try {
             $data = SeparateInventory::find($id);
             $data->delete();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
               [
                 'isSuccess' => false,

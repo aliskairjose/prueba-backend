@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ImporListCollection;
 use App\Http\Resources\ImporList as ImportLilstResource;
 use App\ImportList;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -39,7 +40,7 @@ class ImportListController extends Controller
     {
         try {
             $data = ImportList::create($request->all());
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
@@ -69,7 +70,7 @@ class ImportListController extends Controller
     {
         try {
             $data = new ImportLilstResource((ImportList::findOrFail($id)));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
@@ -101,7 +102,7 @@ class ImportListController extends Controller
             $data = ImportList::findOrFail($id);
             $data->update($request->all());
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
@@ -130,7 +131,7 @@ class ImportListController extends Controller
         try {
             $data = ImportList::find($id);
             $data->delete();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,

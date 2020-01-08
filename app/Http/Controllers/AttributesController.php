@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Attribute as AppAttribute;
 use App\Attribute;
 use App\Http\Resources\AttributeCollection;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Resources\Attribute as AttributeResource;
+
 
 class AttributesController extends Controller
 {
@@ -33,14 +35,14 @@ class AttributesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return JsonResponse
      */
     public function store(Request $request)
     {
         try {
             $data = Attribute::create($request->all());
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
@@ -70,7 +72,7 @@ class AttributesController extends Controller
     {
         try {
             $data = new AttributeResource((Attribute::findOrFail($id)));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
@@ -92,7 +94,7 @@ class AttributesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @param  int  $id
      * @return JsonResponse
      */
@@ -102,7 +104,7 @@ class AttributesController extends Controller
             $data = Attribute::findOrFail($id);
             $data->update($request->all());
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
@@ -131,7 +133,7 @@ class AttributesController extends Controller
         try {
             $data = Attribute::find($id);
             $data->delete();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,

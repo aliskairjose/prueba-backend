@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\SeparateDetail as SeparateDetailResource;
 use App\Http\Resources\SeparateDetailCollection;
 use App\SeparateDetail;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -39,7 +40,7 @@ class SeparateDetailController extends Controller
     {
         try {
             $data = SeparateDetail::create($request->all());
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
               [
                 'isSuccess' => false,
@@ -69,7 +70,7 @@ class SeparateDetailController extends Controller
     {
         try {
             $data = new SeparateDetailResource((SeparateDetail::findOrFail($id)));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
               [
                 'isSuccess' => false,
@@ -115,7 +116,7 @@ class SeparateDetailController extends Controller
             $data = SeparateDetail::findOrFail($id);
             $data->update($request->all());
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
               [
                 'isSuccess' => false,
@@ -144,7 +145,7 @@ class SeparateDetailController extends Controller
         try {
             $data = SeparateDetail::find($id);
             $data->delete();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
               [
                 'isSuccess' => false,
