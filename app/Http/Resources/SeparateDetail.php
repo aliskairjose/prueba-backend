@@ -16,6 +16,7 @@ class SeparateDetail extends JsonResource
     public function toArray($request)
     {
         return [
+          'id'                    => $this->id,
           'separate_inventory_id' => $this->separate_inventory_id,
           'product_id'            => $this->product_id,
           'variation_id'          => $this->variation_id,

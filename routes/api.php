@@ -65,7 +65,7 @@ Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('passwo
     Route::put('attributes/{id}', 'AttributesController@update');
     Route::delete('attributes/{id}', 'AttributesController@delete');
 
-    // SeparateInventory Routes
+    // SeparateInventorySeeder Routes
     Route::get('separateinventories', 'SeparateInventoryController@index');
     Route::get('separateinventories/{id}', 'SeparateInventoryController@show');
     Route::post('separateinventories', 'SeparateInventoryController@store');

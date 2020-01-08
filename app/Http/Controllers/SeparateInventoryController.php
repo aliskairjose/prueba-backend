@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Resources\SeparateInventory as SeparateInventoryResource;
 use App\Http\Resources\SeparateInventoryCollection;
 use App\SeparateInventory;
+use App\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class SeparateInventoryController extends Controller
 {
@@ -25,7 +27,7 @@ class SeparateInventoryController extends Controller
             'isSuccess' => true,
             'count'     => $data->count(),
             'status'    => 200,
-            'objects'    => $data,
+            'objects'   => $data,
           ]
         ]);
     }
@@ -50,11 +52,15 @@ class SeparateInventoryController extends Controller
             );
         }
 
+        $user = User::findOrFail($request->get('user_id'));
+        $notification = $this->sendNotification($user[ 'email' ]);
+
         return response()->json(
           [
-            'isSuccess' => true,
-            'message'   => 'Se ha creado con exito!.',
-            'status'    => 200,
+            'isSuccess'    => true,
+            'message'      => 'Se ha creado con exito!.',
+            'status'       => 200,
+            'Notification' => $notification,
             'objects'      => $data,
           ]
         );
@@ -83,7 +89,7 @@ class SeparateInventoryController extends Controller
         return response()->json(
           [
             'isSuccess' => true,
-            'objects'    => $data,
+            'objects'   => $data,
             'status'    => 200
           ]
         );
@@ -105,7 +111,7 @@ class SeparateInventoryController extends Controller
                     'isSuccess' => true,
                     'message'   => 'No se encontro inventario separado',
                     'status'    => 200,
-                    'objects'    => $data
+                    'objects'   => $data
                   ]
                 );
             }
@@ -124,7 +130,7 @@ class SeparateInventoryController extends Controller
             'isSuccess' => true,
             'status'    => 200,
             'count'     => count($data),
-            'objects'    => $data
+            'objects'   => $data
           ]
         );
     }
@@ -188,5 +194,17 @@ class SeparateInventoryController extends Controller
             'status'    => 200,
           ]
         );
+    }
+
+    private function sendNotification($email)
+    {
+        try {
+            // Usando queue en lugar de send, el correo se envia en segundo plano!
+            Mail::to($email)->queue( new \App\Mail\SeparateInventory());
+        } catch (\Exception $e) {
+            return 'Error al mandar la notificacion';
+        }
+
+        return 'Notificacion enviada con exito';
     }
 }

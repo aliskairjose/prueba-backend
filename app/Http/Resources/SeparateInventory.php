@@ -19,6 +19,7 @@ class SeparateInventory extends JsonResource
           'user_id' => $this->user_id,
           'suplier_id' => $this->suplier_id,
           'status' => $this->status,
+          'total' => $this->total,
         ];
     }
 }
