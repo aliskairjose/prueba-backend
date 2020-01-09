@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Attribute;
+use App\Variation;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class Product extends JsonResource
@@ -25,6 +26,7 @@ class Product extends JsonResource
           'suggested_price'  => $this->suggested_price,
           'user_id'          => $this->user_id,
           'attributes'       => new AttributeCollection((Attribute::where('product_id', $this->id)->get())),
+          'variations'       => new VariationCollection((Variation::where('product_id', $this->id)->get())),
           'persistanceState' => 'Unchanged',
         ];
     }
