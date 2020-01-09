@@ -91,46 +91,6 @@ class RequestTestDetailController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return JsonResponse
-     */
-    public function myProducts($id)
-    {
-        try {
-            $data = new RequestTestDetailCollection(RequestTestDetail::where('user_id', $id)->get());
-            if (count($data) === 0) {
-                return response()->json(
-                  [
-                    'isSuccess' => true,
-                    'message'   => 'No existe items',
-                    'status'    => 200,
-                    'objects'    => $data
-                  ]
-                );
-            }
-        } catch (Exception $e) {
-            return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'message'   => $e
-              ]
-            );
-        }
-
-        return response()->json(
-          [
-            'isSuccess' => true,
-            'status'    => 200,
-            'count'     => count($data),
-            'objects'    => $data
-          ]
-        );
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  Request  $request
