@@ -73,12 +73,26 @@ Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('passwo
     Route::delete('separateinventories/{id}', 'SeparateInventoryController@delete');
 
     // SeparateInventoryDetail Routes
-    Route::get('separatedetail', 'SeparateDetailController@index');
-    Route::get('separatedetail/{id}', 'SeparateDetailController@show');
-    Route::get('separatedetail/separateinventory/{id}', 'SeparateDetailController@getBySeparateInventoryId');
-    Route::post('separatedetail', 'SeparateDetailController@store');
-    Route::put('separatedetail/{id}', 'SeparateDetailController@update');
-    Route::delete('separatedetail/{id}', 'SeparateDetailController@delete');
+    Route::get('separateinventories/detail', 'SeparateDetailController@index');
+    Route::get('separateinventories/detail/{id}', 'SeparateDetailController@show');
+    Route::get('separateinventories/detail/{id}', 'SeparateDetailController@getBySeparateInventoryId');
+    Route::post('separateinventories/detail', 'SeparateDetailController@store');
+    Route::put('separateinventories/detail/{id}', 'SeparateDetailController@update');
+    Route::delete('separateinventories/detail/{id}', 'SeparateDetailController@delete');
+
+    // RequestTest Routes
+    Route::get('requesttest', 'RequestTestController@index');
+    Route::get('requesttest/{id}', 'RequestTestController@show');
+    Route::post('requesttest', 'RequestTestController@store');
+    Route::put('requesttest/{id}', 'RequestTestController@update');
+    Route::delete('requesttest/{id}', 'RequestTestController@delete');
+
+    // RequestTestDetail Routes
+    Route::get('requesttest/detail', 'RequestTestDeailController@index');
+    Route::get('requesttest/detail/{id}', 'RequestTestDeailController@show');
+    Route::post('requesttest/detail', 'RequestTestDeailController@store');
+    Route::put('requesttest/detail/{id}', 'RequestTestDeailController@update');
+    Route::delete('requesttest/detail/{id}', 'RequestTestDeailController@delete');
 
 
 // });

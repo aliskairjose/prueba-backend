@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Http\Resources\RequestTest as RequestTestResource;
 use App\Http\Resources\RequestTestCollection;
 use App\RequestTest;
+use App\User;
+use Illuminate\Support\Facades\Mail;
 
 class RequestTestController extends Controller
 {
@@ -25,7 +27,7 @@ class RequestTestController extends Controller
             'isSuccess' => true,
             'count'     => $data->count(),
             'status'    => 200,
-            'objects'    => $data,
+            'objects'   => $data,
           ]
         ]);
     }
@@ -51,12 +53,17 @@ class RequestTestController extends Controller
             );
         }
 
+        // Se debe cambiar usuario por supplier
+        $user = User::findOrFail($request->get('user_id'));
+        $notification = $this->sendNotification($user[ 'email' ]);
+
         return response()->json(
           [
-            'isSuccess' => true,
-            'message'   => 'El request test ha sido creado con exito!.',
-            'status'    => 200,
-            'objects'      => $data,
+            'isSuccess'     => true,
+            'message'       => 'El request test ha sido creado con exito!.',
+            'status'        => 200,
+            'Notification'  => $notification,
+            'objects'       => $data,
           ]
         );
     }
@@ -86,46 +93,6 @@ class RequestTestController extends Controller
             'isSuccess' => true,
             'objects'    => $data,
             'status'    => 200
-          ]
-        );
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return JsonResponse
-     */
-    public function myProducts($id)
-    {
-        try {
-            $data = new RequestTestCollection(RequestTest::where('user_id', $id)->get());
-            if (count($data) === 0) {
-                return response()->json(
-                  [
-                    'isSuccess' => true,
-                    'message'   => 'No existe items',
-                    'status'    => 200,
-                    'objects'    => $data
-                  ]
-                );
-            }
-        } catch (Exception $e) {
-            return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'message'   => $e
-              ]
-            );
-        }
-
-        return response()->json(
-          [
-            'isSuccess' => true,
-            'status'    => 200,
-            'count'     => count($data),
-            'objects'    => $data
           ]
         );
     }
@@ -190,4 +157,17 @@ class RequestTestController extends Controller
           ]
         );
     }
+
+    private function sendNotification($email)
+    {
+        try {
+            // Usando queue en lugar de send, el correo se envia en segundo plano!
+            Mail::to($email)->queue( new \App\Mail\SeparateInventory());
+        } catch (\Exception $e) {
+            return 'Error al mandar la notificacion';
+        }
+
+        return 'Notificacion enviada con exito';
+    }
+
 }

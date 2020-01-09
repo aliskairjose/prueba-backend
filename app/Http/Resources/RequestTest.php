@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\RequestTestDetail;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class RequestTest extends JsonResource
@@ -19,7 +20,8 @@ class RequestTest extends JsonResource
           'suplier_id'        => $this->suplier_id,
           'payment_method_id' => $this->payment_method_id,
           'status'            => $this->status,
-          'total'             => $this->total
+          'total'             => $this->total,
+          'detail'            => new RequestTestDetailCollection((RequestTestDetail::where('request_test_id', $this->id)->get()))
         ];
     }
 }
