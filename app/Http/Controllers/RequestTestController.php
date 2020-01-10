@@ -9,6 +9,7 @@ use App\Http\Resources\RequestTest as RequestTestResource;
 use App\Http\Resources\RequestTestCollection;
 use App\RequestTest;
 use App\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Mail;
 
 class RequestTestController extends Controller
@@ -137,9 +138,18 @@ class RequestTestController extends Controller
     public function delete($id)
     {
         try {
-            $data = RequestTest::find($id);
+            $data = RequestTest::findOrFail($id);
             $data->delete();
-        } catch (Exception $e) {
+        } catch (ModelNotFoundException $e) {
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => 'No se encontro RequestTest para eliminar',
+              ]
+            );
+        }
+        catch (Exception $e) {
             return response()->json(
               [
                 'isSuccess' => false,

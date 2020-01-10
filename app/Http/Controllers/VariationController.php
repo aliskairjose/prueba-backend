@@ -6,6 +6,7 @@ use App\Http\Resources\VariationCollection;
 use App\Variation;
 use App\Http\Resources\Variation as VariationResource;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -128,14 +129,23 @@ class VariationController extends Controller
     public function delete($id)
     {
         try {
-            $data = Variation::find($id);
+            $data = Variation::findOrFail($id);
             $data->delete();
-        } catch (Exception $e) {
+        } catch (ModelNotFoundException $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
                     'status'    => 400,
-                    'message'   => $e,
+                    'message'   => 'No se encontro Variation para eliminar',
+                ]
+            );
+        }
+        catch (Exception $e) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => 'Ha ocurrido un error inesperado',
                 ]
             );
         }

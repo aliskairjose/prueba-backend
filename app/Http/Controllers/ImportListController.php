@@ -6,6 +6,7 @@ use App\Http\Resources\ImporListCollection;
 use App\Http\Resources\ImporList as ImportLilstResource;
 use App\ImportList;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -129,14 +130,23 @@ class ImportListController extends Controller
     public function delete($id)
     {
         try {
-            $data = ImportList::find($id);
+            $data = ImportList::findOrFail($id);
             $data->delete();
-        } catch (Exception $e) {
+        } catch (ModelNotFoundException $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
                     'status'    => 400,
-                    'message'   => $e,
+                    'message'   => 'No se encontro lista de importacion para eliminar',
+                ]
+            );
+        }
+        catch (Exception $e) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => 'Ha ocurrido un error inesperado',
                 ]
             );
         }

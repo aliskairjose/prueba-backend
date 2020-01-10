@@ -8,6 +8,7 @@ use App\Http\Resources\SeparateDetailCollection;
 use App\Product;
 use App\SeparateDetail;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -188,14 +189,23 @@ class SeparateDetailController extends Controller
     public function delete($id)
     {
         try {
-            $data = SeparateDetail::find($id);
+            $data = SeparateDetail::findOrFail($id);
             $data->delete();
-        } catch (Exception $e) {
+        } catch (ModelNotFoundException $e) {
             return response()->json(
               [
                 'isSuccess' => false,
                 'status'    => 400,
-                'message'   => $e,
+                'message'   => 'No se encontro SeparateDetail para eliminar',
+              ]
+            );
+        }
+        catch (Exception $e) {
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => 'Ha ocurrido un error inesperado',
               ]
             );
         }

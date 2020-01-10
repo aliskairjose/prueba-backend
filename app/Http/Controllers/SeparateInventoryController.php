@@ -7,6 +7,7 @@ use App\Http\Resources\SeparateInventoryCollection;
 use App\SeparateInventory;
 use App\User;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
@@ -175,14 +176,23 @@ class SeparateInventoryController extends Controller
     public function delete($id)
     {
         try {
-            $data = SeparateInventory::find($id);
+            $data = SeparateInventory::findOrFail($id);
             $data->delete();
-        } catch (Exception $e) {
+        } catch (ModelNotFoundException $e) {
             return response()->json(
               [
                 'isSuccess' => false,
                 'status'    => 400,
-                'message'   => $e,
+                'message'   => 'No se encontro Separate Inventory para eliminar',
+              ]
+            );
+        }
+        catch (Exception $e) {
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => 'Ha ocurrido un error inesperado',
               ]
             );
         }

@@ -28,13 +28,13 @@ Route::post('register', 'Api\RegisterController@register');
 Route::post('password/email', 'Api\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
 Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('password.reset');
 
-// Route::group(['middleware' => 'auth.jwt'], function () {
+Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('logout', 'ApiController@logout');
 
     // User Routes
     Route::get('users', 'UserController@index');
     Route::get('users/{id}', 'UserController@show');
-    Route::put('usrrs/{id}', 'UserController@update');
+    Route::put('users/{id}', 'UserController@update');
 
     // Product Routes
     Route::get('products', 'ProductController@index');
@@ -95,4 +95,4 @@ Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('passwo
     Route::delete('requesttest/detail/{id}', 'RequestTestDeailController@delete');
 
 
-// });
+});

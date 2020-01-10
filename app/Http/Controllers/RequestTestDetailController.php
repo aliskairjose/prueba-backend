@@ -8,6 +8,7 @@ use Exception;
 use App\Http\Resources\RequestTestDetail as RequestTestDetailResource;
 use App\Http\Resources\RequestTestDetailCollection;
 use App\RequestTestDetail;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class RequestTestDetailController extends Controller
 {
@@ -130,14 +131,23 @@ class RequestTestDetailController extends Controller
     public function delete($id)
     {
         try {
-            $data = RequestTestDetail::find($id);
+            $data = RequestTestDetail::findOrFail($id);
             $data->delete();
-        } catch (Exception $e) {
+        } catch (ModelNotFoundException $e) {
             return response()->json(
               [
                 'isSuccess' => false,
                 'status'    => 400,
-                'message'   => $e,
+                'message'   => 'No se encontro RequestTestDetail para eliminar',
+              ]
+            );
+        }
+        catch (Exception $e) {
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => 'Ha ocurrido un erro inesperado',
               ]
             );
         }

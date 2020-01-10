@@ -9,7 +9,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Resources\Attribute as AttributeResource;
-
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class AttributesController extends Controller
 {
@@ -131,14 +131,23 @@ class AttributesController extends Controller
     public function delete($id)
     {
         try {
-            $data = Attribute::find($id);
+            $data = Attribute::findOrFail($id);
             $data->delete();
-        } catch (Exception $e) {
+        } catch (ModelNotFoundException $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
                     'status'    => 400,
-                    'message'   => $e,
+                    'message'   => 'No se encontro atributo para eliminar',
+                ]
+            );
+        }
+        catch (Exception $e) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => 'Ha ocurrido un error inesperado',
                 ]
             );
         }

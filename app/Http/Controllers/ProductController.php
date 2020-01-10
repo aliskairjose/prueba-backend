@@ -6,6 +6,7 @@ use App\Http\Resources\ProductCollection;
 use App\Http\Resources\Product as ProductResource;
 use App\Product;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -170,9 +171,18 @@ class ProductController extends Controller
     public function delete($id)
     {
         try {
-            $data = Product::find($id);
+            $data = Product::findOrFail($id);
             $data->delete();
-        } catch (Exception $e) {
+        } catch (ModelNotFoundException $e) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => 'No se encontro producto para eliminar',
+                ]
+            );
+        }
+        catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
