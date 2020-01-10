@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Resources;
+use App\Product;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -19,6 +20,7 @@ class ImporList extends JsonResource
             'user_id' => $this->user_id,
             'product_id' => $this->product_id,
             'variation_id' => $this->variation_id,
+            'product'      => new ProductCollection(Product::where('id', $this->product_id)->get())
         ];
     }
 }
