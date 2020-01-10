@@ -55,7 +55,7 @@ class RequestTestController extends Controller
         }
 
         // Se debe cambiar usuario por supplier
-        $user = User::findOrFail($request->get('user_id'));
+        $user = User::findOrFail($request->get('suplier_id'));
         $notification = $this->sendNotification($user[ 'email' ]);
 
         return response()->json(
