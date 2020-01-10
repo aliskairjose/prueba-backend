@@ -84,6 +84,7 @@ Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('passwo
     // RequestTest Routes
     Route::get('requesttest', 'RequestTestController@index');
     Route::get('requesttest/{id}', 'RequestTestController@show');
+    Route::get('requesttest/user/{id}', 'RequestTestController@myRequestTest');
     Route::post('requesttest', 'RequestTestController@store');
     Route::put('requesttest/{id}', 'RequestTestController@update');
     Route::delete('requesttest/{id}', 'RequestTestController@delete');

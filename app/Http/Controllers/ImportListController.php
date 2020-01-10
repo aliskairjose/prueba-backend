@@ -166,8 +166,27 @@ class ImportListController extends Controller
     public function myImportList($id)
     {
 
-        $data = new ImporListCollection(ImportList::where('user_id', $id)->get());
-
+        try {
+            $data = new ImporListCollection(ImportList::where('user_id', $id)->get());
+            if ($data->isEmpty()) {
+                return response()->json(
+                    [
+                        'isSuccess' => true,
+                        'status'    => 200,
+                        'message'   => 'No se encontro data',
+                        'objects'   => $data
+                    ]
+                );
+            }
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => 'Ha ocurrido un error inesperado',
+                ]
+            );
+        }
         return response()->json(
             [
                 'isSuccess' => true,
