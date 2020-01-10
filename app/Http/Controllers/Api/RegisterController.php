@@ -62,7 +62,7 @@ class RegisterController extends Controller
             $error = $e->getMessage();
             return response()->json([
                 'isSuccess' => false,
-                'messagge' => 'El correo ya existe',
+                'messagge' => 'Error',
                 'status' => 409,
                 'error' => $e
             ]);
