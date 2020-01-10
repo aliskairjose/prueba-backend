@@ -96,5 +96,9 @@ Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('passwo
     Route::put('requesttest/detail/{id}', 'RequestTestDeailController@update');
     Route::delete('requesttest/detail/{id}', 'RequestTestDeailController@delete');
 
+    // ProductPhoto Routes
+    Route::get('product/photos', 'ProductPhotos@store');
+    Route::put('product/photos/{id}', 'ProductPhotos@update');
+    Route::delete('product/photos/{id}', 'ProductPhotos@delete');
 
 // });
