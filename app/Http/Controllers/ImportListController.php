@@ -158,6 +158,7 @@ class ImportListController extends Controller
                 'isSuccess' => true,
                 'message'   => 'El producto ha sido eliminado!.',
                 'status'    => 200,
+                'deletes'   => $importDelete
             ]
         );
     }
