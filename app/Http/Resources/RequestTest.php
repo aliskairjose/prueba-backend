@@ -16,6 +16,7 @@ class RequestTest extends JsonResource
     public function toArray($request)
     {
         return [
+          'id'                => $this->id,
           'user_id'           => $this->user_id,
           'suplier_id'        => $this->suplier_id,
           'payment_method_id' => $this->payment_method_id,
