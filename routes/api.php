@@ -47,9 +47,10 @@ Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('passwo
     // ImportList Routes
     Route::get('importlist', 'ImportListController@index');
     Route::get('importlist/{id}', 'ImportListController@show');
+    Route::get('importlist/user/{id}', 'ImportListController@myImportList');
     Route::post('importlist', 'ImportListController@store');
     Route::put('importlist/{id}', 'ImportListController@update');
-    Route::delete('importlist/{id}', 'ImportListController@delete');
+    Route::delete('importlist/delete', 'ImportListController@delete');
 
     // Variations Routes
     Route::get('variations', 'VariationController@index');
@@ -65,7 +66,7 @@ Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('passwo
     Route::put('attributes/{id}', 'AttributesController@update');
     Route::delete('attributes/{id}', 'AttributesController@delete');
 
-    // SeparateInventorySeeder Routes
+    // SeparateInventory Routes
     Route::get('separateinventories', 'SeparateInventoryController@index');
     Route::get('separateinventories/{id}', 'SeparateInventoryController@show');
     Route::post('separateinventories', 'SeparateInventoryController@store');
@@ -83,6 +84,7 @@ Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('passwo
     // RequestTest Routes
     Route::get('requesttest', 'RequestTestController@index');
     Route::get('requesttest/{id}', 'RequestTestController@show');
+    Route::get('requesttest/user/{id}', 'RequestTestController@myRequestTest');
     Route::post('requesttest', 'RequestTestController@store');
     Route::put('requesttest/{id}', 'RequestTestController@update');
     Route::delete('requesttest/{id}', 'RequestTestController@delete');
@@ -94,5 +96,9 @@ Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('passwo
     Route::put('requesttest/detail/{id}', 'RequestTestDeailController@update');
     Route::delete('requesttest/detail/{id}', 'RequestTestDeailController@delete');
 
+    // ProductPhoto Routes
+    Route::get('product/photos', 'ProductPhotos@store');
+    Route::put('product/photos/{id}', 'ProductPhotos@update');
+    Route::delete('product/photos/{id}', 'ProductPhotos@delete');
 
 // });

@@ -24,12 +24,12 @@ class RequestTestController extends Controller
         $data = new RequestTestCollection(RequestTest::all());
 
         return response()->json([
-          [
-            'isSuccess' => true,
-            'count'     => $data->count(),
-            'status'    => 200,
-            'objects'   => $data,
-          ]
+            [
+                'isSuccess' => true,
+                'count'     => $data->count(),
+                'status'    => 200,
+                'objects'   => $data,
+            ]
         ]);
     }
 
@@ -46,26 +46,26 @@ class RequestTestController extends Controller
             $data = RequestTest::create($request->all());
         } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'message'   => 'Ha ocurrido un error',
-                'status'    => 400,
-              ]
+                [
+                    'isSuccess' => false,
+                    'message'   => 'Ha ocurrido un error',
+                    'status'    => 400,
+                ]
             );
         }
 
         // Se debe cambiar usuario por supplier
         $user = User::findOrFail($request->get('suplier_id'));
-        $notification = $this->sendNotification($user[ 'email' ]);
+        $notification = $this->sendNotification($user['email']);
 
         return response()->json(
-          [
-            'isSuccess'     => true,
-            'message'       => 'El request test ha sido creado con exito!.',
-            'status'        => 200,
-            'Notification'  => $notification,
-            'objects'       => $data,
-          ]
+            [
+                'isSuccess'     => true,
+                'message'       => 'El request test ha sido creado con exito!.',
+                'status'        => 200,
+                'Notification'  => $notification,
+                'objects'       => $data,
+            ]
         );
     }
 
@@ -81,20 +81,20 @@ class RequestTestController extends Controller
             $data = new RequestTestResource((RequestTest::findOrFail($id)));
         } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'message'   => $e,
-              ]
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => $e,
+                ]
             );
         }
 
         return response()->json(
-          [
-            'isSuccess' => true,
-            'objects'    => $data,
-            'status'    => 200
-          ]
+            [
+                'isSuccess' => true,
+                'objects'    => $data,
+                'status'    => 200
+            ]
         );
     }
 
@@ -110,22 +110,21 @@ class RequestTestController extends Controller
         try {
             $data = RequestTest::findOrFail($id);
             $data->update($request->all());
-
         } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'message'   => $e,
-              ]
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => $e,
+                ]
             );
         }
         return response()->json(
-          [
-            'isSuccess' => true,
-            'status'    => 200,
-            'message'   => 'EL request se ha actualizado con exito!.',
-          ]
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'message'   => 'EL request se ha actualizado con exito!.',
+            ]
         );
     }
 
@@ -142,29 +141,70 @@ class RequestTestController extends Controller
             $data->delete();
         } catch (ModelNotFoundException $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'message'   => 'No se encontro RequestTest para eliminar',
-              ]
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => 'No se encontro RequestTest para eliminar',
+                ]
             );
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'message'   => $e,
-              ]
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => $e,
+                ]
             );
         }
 
         return response()->json(
-          [
-            'isSuccess' => true,
-            'message'   => 'El request test ha sido eliminado!.',
-            'status'    => 200,
-          ]
+            [
+                'isSuccess' => true,
+                'message'   => 'El request test ha sido eliminado!.',
+                'status'    => 200,
+            ]
+        );
+    }
+
+    /**
+     * Muestra mi Request Test
+     *
+     * @param  int  $id
+     * @return JsonResponse
+     */
+    public function myRequestTest($id)
+    {
+
+        try {
+            $data = new RequestTestCollection(RequestTest::where('user_id', $id)->get());
+            if ($data->isEmpty()) {
+                return response()->json(
+                    [
+                        'isSuccess' => true,
+                        'status'    => 200,
+                        'message'   => 'No se encontro data',
+                        'objects'   => $data
+                    ]
+                );
+            }
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => $e,
+                ]
+            );
+        }
+
+
+        return response()->json(
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'message'   => '',
+                'objects'   => $data
+            ]
         );
     }
 
@@ -172,12 +212,11 @@ class RequestTestController extends Controller
     {
         try {
             // Usando queue en lugar de send, el correo se envia en segundo plano!
-            Mail::to($email)->queue( new \App\Mail\SeparateInventory());
+            Mail::to($email)->queue(new \App\Mail\SeparateInventory());
         } catch (\Exception $e) {
             return 'Error al mandar la notificacion';
         }
 
         return 'Notificacion enviada con exito';
     }
-
 }

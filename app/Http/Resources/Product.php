@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Attribute;
 use App\Variation;
+use App\ProductPhoto;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class Product extends JsonResource
@@ -27,6 +28,7 @@ class Product extends JsonResource
           'user_id'          => $this->user_id,
           'attributes'       => new AttributeCollection((Attribute::where('product_id', $this->id)->get())),
           'variations'       => new VariationCollection((Variation::where('product_id', $this->id)->get())),
+          'gallery'          => new ProductPhotoCollection((ProductPhoto::where('product_id', $this->id)->get())),
           'persistanceState' => 'Unchanged',
         ];
     }

@@ -102,7 +102,6 @@ class ImportListController extends Controller
         try {
             $data = ImportList::findOrFail($id);
             $data->update($request->all());
-
         } catch (Exception $e) {
             return response()->json(
                 [
@@ -127,11 +126,15 @@ class ImportListController extends Controller
      * @param  int  $id
      * @return JsonResponse
      */
-    public function delete($id)
+    public function delete(Request $request)
     {
+
         try {
-            $data = ImportList::findOrFail($id);
-            $data->delete();
+            $user = $request->user_id;
+            $product = $request->product_id;
+            $data = new ImporListCollection(ImportList::where('user_id', $user)->where('product_id', $product)->get());
+            $idImportList = $data[0]['id'];
+            $importDelete = ImportList::where('id', $idImportList)->delete();
         } catch (ModelNotFoundException $e) {
             return response()->json(
                 [
@@ -140,8 +143,7 @@ class ImportListController extends Controller
                     'message'   => 'No se encontro lista de importacion para eliminar',
                 ]
             );
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
@@ -156,6 +158,40 @@ class ImportListController extends Controller
                 'isSuccess' => true,
                 'message'   => 'El producto ha sido eliminado!.',
                 'status'    => 200,
+                'deletes'   => $importDelete
+            ]
+        );
+    }
+
+    public function myImportList($id)
+    {
+
+        try {
+            $data = new ImporListCollection(ImportList::where('user_id', $id)->get());
+            if ($data->isEmpty()) {
+                return response()->json(
+                    [
+                        'isSuccess' => true,
+                        'status'    => 200,
+                        'message'   => 'No se encontro data',
+                        'objects'   => $data
+                    ]
+                );
+            }
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => 'Ha ocurrido un error inesperado',
+                ]
+            );
+        }
+        return response()->json(
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'objects'   => $data
             ]
         );
     }
