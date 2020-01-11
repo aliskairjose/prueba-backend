@@ -54,7 +54,7 @@ class ImportListController extends Controller
         return response()->json(
             [
                 'isSuccess' => true,
-                'message'   => 'La lista de importacion se ha sido creado con exito!.',
+                'message'   => 'La lista de importacion ha sido creada con exito!.',
                 'status'    => 200,
                 'objects'      => $data,
             ]
