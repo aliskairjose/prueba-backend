@@ -191,9 +191,6 @@ class ImportListController extends Controller
             $object = [];
             $il_products = Product::whereIn('id', $il)->get();
             $object = ['user_id' => $id,  'products' => $il_products];
-            // array_push($object, $data['user_id'], $il_products);
-
-            // $data['products'] = $il_products;
 
         } catch (Exception $e) {
             return response()->json(
