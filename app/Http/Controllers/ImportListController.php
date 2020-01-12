@@ -168,7 +168,6 @@ class ImportListController extends Controller
     {
 
         try {
-            // $data = new ImporListCollection(ImportList::where('user_id', $id)->get());
             $data = ImportList::where('user_id', $id)->get();
 
             // ImportList Array
@@ -176,7 +175,6 @@ class ImportListController extends Controller
 
             foreach ($data as $d) {
                 array_push($il, $d->product_id);
-
             }
 
             if ($data->isEmpty()) {
@@ -190,8 +188,12 @@ class ImportListController extends Controller
                 );
             }
 
-            $il_products = Product::whereIn('id', $il )->get();
+            $object = [];
+            $il_products = Product::whereIn('id', $il)->get();
+            $object = ['user_id' => $id,  'products' => $il_products];
+            // array_push($object, $data['user_id'], $il_products);
 
+            // $data['products'] = $il_products;
 
         } catch (Exception $e) {
             return response()->json(
@@ -206,7 +208,7 @@ class ImportListController extends Controller
             [
                 'isSuccess' => true,
                 'status'    => 200,
-                'objects'   => $il_products
+                'objects'   => $object
             ]
         );
     }
