@@ -74,24 +74,6 @@ class RegisterController extends Controller
             'message' => 'EL usuario ha sido creado.'
         ]);
 
-        /* $email = $request->get('email');
-        $data = null;
-        $data = User::where('email', $email)->get();
-        if ($data->isEmpty()) {
-            return response()->json(
-                [
-                    'mail'  => $request->get('email'),
-                    'data'  => 'no hay data'
-                ]
-            );
-        } else {
-            return response()->json(
-                [
-                    'mail'  => $request->get('email'),
-                    'data'  => $data
-                ]
-            );
-        } */
     }
 
 
