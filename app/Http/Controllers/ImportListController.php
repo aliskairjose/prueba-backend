@@ -170,6 +170,8 @@ class ImportListController extends Controller
         try {
             // $data = new ImporListCollection(ImportList::where('user_id', $id)->get());
             $data = ImportList::where('user_id', $id)->get();
+
+            // ImportList Array
             $il = [];
 
             foreach ($data as $d) {
