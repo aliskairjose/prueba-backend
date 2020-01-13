@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ImporListCollection;
 use App\Http\Resources\ImporList as ImportLilstResource;
 use App\ImportList;
+use App\Product;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -167,7 +168,15 @@ class ImportListController extends Controller
     {
 
         try {
-            $data = new ImporListCollection(ImportList::where('user_id', $id)->get());
+            $data = ImportList::where('user_id', $id)->get();
+
+            // ImportList Array
+            $il = [];
+
+            foreach ($data as $d) {
+                array_push($il, $d->product_id);
+            }
+
             if ($data->isEmpty()) {
                 return response()->json(
                     [
@@ -178,6 +187,11 @@ class ImportListController extends Controller
                     ]
                 );
             }
+
+            $object = [];
+            $il_products = Product::whereIn('id', $il)->get();
+            $object = ['user_id' => $id,  'products' => $il_products];
+
         } catch (Exception $e) {
             return response()->json(
                 [
@@ -191,7 +205,7 @@ class ImportListController extends Controller
             [
                 'isSuccess' => true,
                 'status'    => 200,
-                'objects'   => $data
+                'objects'   => $object
             ]
         );
     }
