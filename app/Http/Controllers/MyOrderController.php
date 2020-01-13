@@ -7,7 +7,10 @@ use Illuminate\Http\Response;
 use App\MyOrder;
 use App\Http\Resources\MyOrder as MyOrderResource;
 use App\Http\Resources\MyOrderCollection;
+use App\Mail\MyOrder as MailMyOrder;
 use Exception;
+use Illuminate\Contracts\Mail\Mailer;
+use App\Mail\MyOrder;
 
 class MyOrderController extends Controller
 {
@@ -84,4 +87,17 @@ class MyOrderController extends Controller
     {
         //
     }
+
+    private function sendNotification($email)
+    {
+        try {
+            // Usando queue en lugar de send, el correo se envia en segundo plano!
+            Mailer::to($email)->queue(new MailMyOrder());
+        } catch (\Exception $e) {
+            return 'Error al mandar la notificacion';
+        }
+
+        return 'Notificacion enviada con exito';
+    }
+
 }
