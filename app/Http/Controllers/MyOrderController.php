@@ -10,7 +10,7 @@ use App\Http\Resources\MyOrderCollection;
 use App\Mail\MyOrder as MailMyOrder;
 use Exception;
 use Illuminate\Contracts\Mail\Mailer;
-use App\Mail\MyOrder;
+use App\User;
 
 class MyOrderController extends Controller
 {
@@ -43,13 +43,15 @@ class MyOrderController extends Controller
                 ]
             );
         }
-
+        $user = User::findOrFail($request->get('suplier_id'));
+        $notification = $this->sendNotification($user['email']);
         return response()->json(
             [
-                'isSuccess' => true,
-                'message'   => 'El producto ha sido creado con exito!.',
-                'status'    => 200,
-                'objects'   => $data,
+                'isSuccess'     => true,
+                'message'       => 'El producto ha sido creado con exito!.',
+                'status'        => 200,
+                'Notification'  => $notification,
+                'objects'       => $data,
             ]
         );
     }
