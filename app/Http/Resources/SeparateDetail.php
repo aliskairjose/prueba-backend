@@ -17,11 +17,13 @@ class SeparateDetail extends JsonResource
     {
         return [
           'id'                    => $this->id,
-          'separate_inventory_id' => $this->separate_inventory_id,
           'product_id'            => $this->product_id,
           'variation_id'          => $this->variation_id,
-          'quantity'              => $this->quantity,
-          'price'                 => $this->price
+          'payment_method_id'     => $this->quantity,
+          'price'                 => $this->price,
+          'total'                 => $this->total,
+          'status'                => $this->status,
+
         ];
     }
 }

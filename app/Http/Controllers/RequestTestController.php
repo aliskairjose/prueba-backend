@@ -208,6 +208,47 @@ class RequestTestController extends Controller
         );
     }
 
+     /**
+     * Muestra mi Request Test
+     *
+     * @param  int  $id
+     * @return JsonResponse
+     */
+    public function myRequestTestDropshiper($id)
+    {
+        try {
+            $data = new RequestTestCollection(RequestTest::where('user_id', $id)->get());
+            if ($data->isEmpty()) {
+                return response()->json(
+                    [
+                        'isSuccess' => true,
+                        'status'    => 200,
+                        'message'   => 'No se encontro data',
+                        'objects'   => $data
+                    ]
+                );
+            }
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => $e,
+                ]
+            );
+        }
+
+
+        return response()->json(
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'message'   => '',
+                'objects'   => $data
+            ]
+        );
+    }
+
     private function sendNotification($email)
     {
         try {
