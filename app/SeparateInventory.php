@@ -14,5 +14,12 @@ class SeparateInventory extends Model
      *
      * @var array
      */
-    protected $fillable = ['user_id', 'suplier_id', 'status', 'total'];
+    protected $fillable = [
+        'user_id',
+        'suplier_id',
+        'status',
+        'quantity',
+        'product_id',
+        'variation_id'
+    ];
 }
