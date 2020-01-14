@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\MyOrder;
+use App\Product;
 use App\Http\Resources\MyOrder as MyOrderResource;
 use App\Http\Resources\MyOrderCollection;
 use App\Mail\MyOrder as MailMyOrder;
@@ -32,8 +33,23 @@ class MyOrderController extends Controller
      */
     public function store(Request $request)
     {
+
+       /*  $product = Product::findOrFail($request->get('product_id'));
+        $product_user_id = $product['user_id'];
+
+        return response()->json(
+            [
+                'isSuccess'     => true,
+                'message'       => 'El producto ha sido creado con exito!.',
+                'status'        => 200,
+                'product_id'    => $request->get('produc_id'),
+                'product'       => $product
+            ]
+        ); */
+
         try {
             $data = MyOrder::create($request->all());
+
         } catch (Exception $e) {
             return response()->json(
                 [

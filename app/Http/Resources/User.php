@@ -23,6 +23,7 @@ class User extends JsonResource
             'birthday'=> $this->birthday,
             'type_user'=> $this->type_user,
             'status'=> $this->status,
+            'password' => $this->password,
             'products'=> new ProductCollection(Product::where('user_id',$this->id)->get()),
             'persistenceState'=> "Unchanged",
         ];

@@ -19,9 +19,13 @@ class MyOrder extends JsonResource
             'user_id'           =>$this->user_id,
             'suplier_id'        =>$this->suplier_id,
             'payment_method_id' =>$this->payment_method_id,
-            'total'             =>$this->total,
+            'status'            =>$this->status,
             'dir'               =>$this->dir,
             'phone'             =>$this->phone,
+            'type'              =>$this->type,
+            'quantity'          =>$this->quantity,
+            'product_id'        =>$this->product_id,
+            'variation_id'      =>$this->variation_id,
         ];
     }
 }

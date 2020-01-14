@@ -35,6 +35,7 @@ Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('passwo
     Route::get('users', 'UserController@index');
     Route::get('users/{id}', 'UserController@show');
     Route::put('users/{id}', 'UserController@update');
+    Route::post('users/changepassword', 'UserController@changePassword');
 
     // Product Routes
     Route::get('products', 'ProductController@index');
@@ -100,5 +101,8 @@ Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('passwo
     Route::get('product/photos', 'ProductPhotos@store');
     Route::put('product/photos/{id}', 'ProductPhotos@update');
     Route::delete('product/photos/{id}', 'ProductPhotos@delete');
+
+    // My Orders Routes
+    Route::post('myorders', 'MyOrderController@store');
 
 // });

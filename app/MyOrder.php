@@ -14,8 +14,12 @@ class MyOrder extends Model
         'suplier_id',
         'payment_method_id',
         'status',
-        'total',
         'dir',
-        'phone'
+        'phone',
+        'total',
+        'type',
+        'quantity',
+        'product_id',
+        'variation_id'
     ];
 }
