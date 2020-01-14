@@ -9,7 +9,7 @@ use App\Http\Resources\ProductPhoto as ProductPhotoResource;
 use App\Http\Resources\ProductPhotoCollection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class ProductPhotos extends Controller
+class ProductPhotosController extends Controller
 {
 
 
