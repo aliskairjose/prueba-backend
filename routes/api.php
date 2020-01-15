@@ -28,7 +28,7 @@ Route::post('register', 'Api\RegisterController@register');
 Route::post('password/email', 'Api\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
 Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('password.reset');
 
-Route::group(['middleware' => 'auth.jwt'], function () {
+// Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('logout', 'ApiController@logout');
 
     // User Routes
@@ -90,9 +90,10 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::delete('requesttest/detail/{id}', 'RequestTestDeailController@delete');
 
     // ProductPhoto Routes
-    Route::get('product/photos', 'ProductPhotos@store');
-    Route::put('product/photos/{id}', 'ProductPhotos@update');
-    Route::delete('product/photos/{id}', 'ProductPhotos@delete');
+    Route::get('product/photos', 'ProductPhotosController@store');
+    Route::post('product/photos/upload', 'ProductPhotosController@store');
+    Route::put('product/photos/{id}', 'ProductPhotosController@update');
+    Route::delete('product/photos/{id}', 'ProductPhotosController@delete');
 
     // My Orders Routes
     Route::post('myorders', 'MyOrderController@store');
@@ -106,5 +107,4 @@ Route::group(['middleware' => 'auth.jwt'], function () {
     Route::put('requesttest/{id}', 'RequestTestController@update');
     Route::delete('requesttest/{id}', 'RequestTestController@delete');
     */
-
-});
+// });

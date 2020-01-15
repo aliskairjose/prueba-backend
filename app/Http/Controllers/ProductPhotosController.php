@@ -21,14 +21,32 @@ class ProductPhotosController extends Controller
      */
     public function store(Request $request)
     {
+
+
         try {
-            $data = ProductPhoto::create($request->all());
+            // $data = ProductPhoto::create($request->all());
+            if($request->main == true){
+                $fileName = $request->product_id ."_main.jpg";
+            }
+            else{
+                $fileName = $request->product_id .".jpg";
+            }
+            $path = $request->file('photo')->move(public_path("/images/products"), $fileName);
+            $photoUrl = url('/' . $fileName);
+
+            $data = new ProductPhoto();
+            $data->url = public_path("/images/products");
+            $data->main = $request->main;
+            $data->product_id = $request->product_id;
+            $data->save();
+
         } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
                     'message'   => 'Ha ocurrido un error',
                     'status'    => 400,
+                    'error'     => $e
                 ]
             );
         }
@@ -55,7 +73,6 @@ class ProductPhotosController extends Controller
         try {
             $data = ProductPhoto::findOrFail($id);
             $data->update($request->all());
-
         } catch (Exception $e) {
             return response()->json(
                 [
@@ -93,8 +110,7 @@ class ProductPhotosController extends Controller
                     'message'   => 'No se encontro foto para eliminar',
                 ]
             );
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
