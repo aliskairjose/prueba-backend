@@ -25,21 +25,15 @@ class ProductPhotosController extends Controller
 
         try {
             // $data = ProductPhoto::create($request->all());
-            if($request->main == true){
-                $fileName = $request->product_id ."_main.jpg";
-            }
-            else{
-                $fileName = $request->product_id .".jpg";
-            }
-            $path = $request->file('photo')->move(public_path("/images/products"), $fileName);
-            $photoUrl = url('/' . $fileName);
+            if ($request->hasFile('photo')) {
 
-            $data = new ProductPhoto();
-            $data->url = public_path("/images/products");
-            $data->main = $request->main;
-            $data->product_id = $request->product_id;
-            $data->save();
-
+                $path = $request->photo->store('public/images/products/' . $request->product_id);
+                $data = new ProductPhoto();
+                $data->url = $path;
+                $data->main = $request->main;
+                $data->product_id = $request->product_id;
+                $data->save();
+            }
         } catch (Exception $e) {
             return response()->json(
                 [
