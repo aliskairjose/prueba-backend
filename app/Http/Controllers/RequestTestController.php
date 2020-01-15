@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\MyOrderCollection;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Resources\RequestTest as RequestTestResource;
 use App\Http\Resources\RequestTestCollection;
+use App\MyOrder;
 use App\RequestTest;
 use App\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -167,7 +169,7 @@ class RequestTestController extends Controller
     }
 
     /**
-     * Muestra mi Request Test
+     * Muestra mi Request Test donde coincida el id del usuario y el type (Sample Test)
      *
      * @param  int  $id
      * @return JsonResponse
@@ -176,7 +178,9 @@ class RequestTestController extends Controller
     {
 
         try {
-            $data = new RequestTestCollection(RequestTest::where('user_id', $id)->get());
+            // $data = new RequestTestCollection(RequestTest::where('user_id', $id)->get());
+            $data = new MyOrderCollection(MyOrder::where('user_id', $id)->where('type', 'SAMPLE TEST')->get());
+
             if ($data->isEmpty()) {
                 return response()->json(
                     [

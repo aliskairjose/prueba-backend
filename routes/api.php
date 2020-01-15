@@ -28,7 +28,7 @@ Route::post('register', 'Api\RegisterController@register');
 Route::post('password/email', 'Api\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
 Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('password.reset');
 
-// Route::group(['middleware' => 'auth.jwt'], function () {
+Route::group(['middleware' => 'auth.jwt'], function () {
     Route::get('logout', 'ApiController@logout');
 
     // User Routes
@@ -82,14 +82,6 @@ Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('passwo
     Route::put('separateinventories/detail/{id}', 'SeparateDetailController@update');
     Route::delete('separateinventories/detail/{id}', 'SeparateDetailController@delete');
 
-    // RequestTest Routes
-    Route::get('requesttest', 'RequestTestController@index');
-    Route::get('requesttest/{id}', 'RequestTestController@show');
-    Route::get('requesttest/user/{id}', 'RequestTestController@myRequestTest');
-    Route::post('requesttest', 'RequestTestController@store');
-    Route::put('requesttest/{id}', 'RequestTestController@update');
-    Route::delete('requesttest/{id}', 'RequestTestController@delete');
-
     // RequestTestDetail Routes
     Route::get('requesttest/detail', 'RequestTestDeailController@index');
     Route::get('requesttest/detail/{id}', 'RequestTestDeailController@show');
@@ -105,4 +97,14 @@ Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('passwo
     // My Orders Routes
     Route::post('myorders', 'MyOrderController@store');
 
-// });
+    // RequestTest Routes
+   /*
+    Route::get('requesttest', 'RequestTestController@index');
+    Route::get('requesttest/{id}', 'RequestTestController@show'); */
+    Route::get('requesttest/user/{id}', 'RequestTestController@myRequestTest');
+    /* Route::post('requesttest', 'RequestTestController@store');
+    Route::put('requesttest/{id}', 'RequestTestController@update');
+    Route::delete('requesttest/{id}', 'RequestTestController@delete');
+    */
+
+});
