@@ -14,5 +14,5 @@ class Variation extends Model
      *
      * @var array
      */
-    protected $fillable = ['suggested_price', 'suggested_price', 'product_id', 'stock'];
+    protected $fillable = ['suggested_price', 'sale_price', 'product_id', 'stock'];
 }

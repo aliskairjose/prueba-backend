@@ -24,7 +24,6 @@ class ProductPhotosController extends Controller
 
 
         try {
-            // $data = ProductPhoto::create($request->all());
             if ($request->hasFile('photo')) {
 
                 $path = $request->photo->store('public/images/products/' . $request->product_id);

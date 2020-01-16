@@ -2,10 +2,9 @@
 
 namespace App\Http\Resources;
 
-use App\AttributesValues;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Attribute extends JsonResource
+class AttributesVariations extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,10 +15,9 @@ class Attribute extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'=>$this->id,
-            'description'=>$this->description,
-            'product_id'=>$this->product_id,
-            'values' => new AttributeValueCollection((AttributesValues::where('attribute_id', $this->id)->get())),
+            'id' => $this->id,
+            'variation_id' => $this->variation_id,
+            'attribute_value_id' => $this->attribute_value_id,
         ];
     }
 }
