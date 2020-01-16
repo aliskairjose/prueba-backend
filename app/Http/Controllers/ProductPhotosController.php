@@ -12,6 +12,20 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class ProductPhotosController extends Controller
 {
 
+    public function index()
+    {
+        $data = new ProductPhotoCollection(ProductPhoto::all());
+
+        return response()->json([
+            [
+                'isSuccess' => true,
+                'count'     => $data->count(),
+                'status'    => 200,
+                'objects'   => $data,
+            ]
+        ]);
+    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -49,7 +63,7 @@ class ProductPhotosController extends Controller
                 'isSuccess' => true,
                 'message'   => 'El producto ha sido creado con exito!.',
                 'status'    => 200,
-                'objects'   => $data,
+                'objects'   => $data->url,
             ]
         );
     }
