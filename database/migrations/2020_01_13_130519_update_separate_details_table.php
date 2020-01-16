@@ -34,7 +34,7 @@ class UpdateSeparateDetailsTable extends Migration
     public function down()
     {
         Schema::table('separate_details', function (Blueprint $table) {
-            $table->dropForeign(['payment_method_id']);
+            $table->dropForeign(['method_id']);
             $table->dropColumn(['total']);
             $table->dropColumn(['status']);
 

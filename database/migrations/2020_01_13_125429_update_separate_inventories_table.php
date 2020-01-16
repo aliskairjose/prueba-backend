@@ -32,8 +32,8 @@ class UpdateSeparateInventoriesTable extends Migration
     public function down()
     {
         Schema::table('separate_inventories', function (Blueprint $table) {
-            $table->dropForeign(['separate_inventories_product_id']);
-            $table->dropForeign(['separate_inventories_variation_id']);
+            $table->dropForeign(['product_id']);
+            $table->dropForeign(['variation_id']);
             $table->dropColumn(['product_id']);
             $table->dropColumn(['variation_id']);
             $table->dropColumn(['quantity']);

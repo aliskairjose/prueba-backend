@@ -28,7 +28,7 @@ class UpdateProductPhotosTable extends Migration
     public function down()
     {
         Schema::table('product_photos', function (Blueprint $table) {
-        $table->dropForeign(['product_photos_variation_id']);
+        $table->dropForeign(['variation_id']);
         $table->dropColumn(['variation_id']);
         });
     }

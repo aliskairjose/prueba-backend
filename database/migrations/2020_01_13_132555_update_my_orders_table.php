@@ -36,8 +36,8 @@ class UpdateMyOrdersTable extends Migration
     public function down()
     {
         Schema::table('separate_details', function (Blueprint $table) {
-            $table->dropForeign(['my_orders_product_id']);
-            $table->dropForeign(['my_orders_variation_id']);
+            $table->dropForeign(['product_id']);
+            $table->dropForeign(['variation_id']);
             $table->dropColumn(['type']);
             $table->dropColumn(['quantity']);
             $table->dropColumn(['variation_id']);
