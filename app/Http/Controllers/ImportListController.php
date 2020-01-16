@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ImporListCollection;
-use App\Http\Resources\ImporList as ImportLilstResource;
+use App\Http\Resources\ImporList as ImportListResource;
 use App\ImportList;
 use App\Product;
 use Exception;
@@ -70,8 +70,17 @@ class ImportListController extends Controller
      */
     public function show($id)
     {
+
         try {
-            $data = new ImportLilstResource((ImportList::findOrFail($id)));
+            $data = new ImporListCollection((ImportList::findOrFail($id))->get());
+        } catch (ModelNotFoundException $e) {
+            return response()->json(
+                [
+                    'isSuccess' => true,
+                    'status'    => 200,
+                    'message'   => 'No se encontro coincidencia',
+                ]
+            );
         } catch (Exception $e) {
             return response()->json(
                 [
@@ -85,8 +94,8 @@ class ImportListController extends Controller
         return response()->json(
             [
                 'isSuccess' => true,
-                'objects'    => $data,
-                'status'    => 200
+                'status'    => 200,
+                'objects'   => $data,
             ]
         );
     }
@@ -170,6 +179,8 @@ class ImportListController extends Controller
         try {
             $data = ImportList::where('user_id', $id)->get();
 
+            // $data = new ImportLilstResource()
+
             // ImportList Array
             $il = [];
 
@@ -191,7 +202,6 @@ class ImportListController extends Controller
             $object = [];
             $il_products = Product::whereIn('id', $il)->get();
             $object = ['user_id' => $id,  'products' => $il_products];
-
         } catch (Exception $e) {
             return response()->json(
                 [

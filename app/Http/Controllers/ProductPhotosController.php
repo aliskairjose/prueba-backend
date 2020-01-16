@@ -9,7 +9,7 @@ use App\Http\Resources\ProductPhoto as ProductPhotoResource;
 use App\Http\Resources\ProductPhotoCollection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class ProductPhotos extends Controller
+class ProductPhotosController extends Controller
 {
 
 
@@ -21,14 +21,26 @@ class ProductPhotos extends Controller
      */
     public function store(Request $request)
     {
+
+
         try {
-            $data = ProductPhoto::create($request->all());
+            // $data = ProductPhoto::create($request->all());
+            if ($request->hasFile('photo')) {
+
+                $path = $request->photo->store('public/images/products/' . $request->product_id);
+                $data = new ProductPhoto();
+                $data->url = $path;
+                $data->main = $request->main;
+                $data->product_id = $request->product_id;
+                $data->save();
+            }
         } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
                     'message'   => 'Ha ocurrido un error',
                     'status'    => 400,
+                    'error'     => $e
                 ]
             );
         }
@@ -55,7 +67,6 @@ class ProductPhotos extends Controller
         try {
             $data = ProductPhoto::findOrFail($id);
             $data->update($request->all());
-
         } catch (Exception $e) {
             return response()->json(
                 [
@@ -93,8 +104,7 @@ class ProductPhotos extends Controller
                     'message'   => 'No se encontro foto para eliminar',
                 ]
             );
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,

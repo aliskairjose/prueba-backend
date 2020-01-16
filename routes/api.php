@@ -35,6 +35,7 @@ Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('passwo
     Route::get('users', 'UserController@index');
     Route::get('users/{id}', 'UserController@show');
     Route::put('users/{id}', 'UserController@update');
+    Route::post('users/changepassword', 'UserController@changePassword');
 
     // Product Routes
     Route::get('products', 'ProductController@index');
@@ -81,14 +82,6 @@ Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('passwo
     Route::put('separateinventories/detail/{id}', 'SeparateDetailController@update');
     Route::delete('separateinventories/detail/{id}', 'SeparateDetailController@delete');
 
-    // RequestTest Routes
-    Route::get('requesttest', 'RequestTestController@index');
-    Route::get('requesttest/{id}', 'RequestTestController@show');
-    Route::get('requesttest/user/{id}', 'RequestTestController@myRequestTest');
-    Route::post('requesttest', 'RequestTestController@store');
-    Route::put('requesttest/{id}', 'RequestTestController@update');
-    Route::delete('requesttest/{id}', 'RequestTestController@delete');
-
     // RequestTestDetail Routes
     Route::get('requesttest/detail', 'RequestTestDeailController@index');
     Route::get('requesttest/detail/{id}', 'RequestTestDeailController@show');
@@ -97,8 +90,21 @@ Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('passwo
     Route::delete('requesttest/detail/{id}', 'RequestTestDeailController@delete');
 
     // ProductPhoto Routes
-    Route::get('product/photos', 'ProductPhotos@store');
-    Route::put('product/photos/{id}', 'ProductPhotos@update');
-    Route::delete('product/photos/{id}', 'ProductPhotos@delete');
+    Route::get('product/photos', 'ProductPhotosController@store');
+    Route::post('product/photos/upload', 'ProductPhotosController@store');
+    Route::put('product/photos/{id}', 'ProductPhotosController@update');
+    Route::delete('product/photos/{id}', 'ProductPhotosController@delete');
 
+    // My Orders Routes
+    Route::post('myorders', 'MyOrderController@store');
+
+    // RequestTest Routes
+   /*
+    Route::get('requesttest', 'RequestTestController@index');
+    Route::get('requesttest/{id}', 'RequestTestController@show'); */
+    Route::get('requesttest/user/{id}', 'RequestTestController@myRequestTest');
+    /* Route::post('requesttest', 'RequestTestController@store');
+    Route::put('requesttest/{id}', 'RequestTestController@update');
+    Route::delete('requesttest/{id}', 'RequestTestController@delete');
+    */
 // });

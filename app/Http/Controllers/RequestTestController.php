@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\MyOrderCollection;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Resources\RequestTest as RequestTestResource;
 use App\Http\Resources\RequestTestCollection;
+use App\MyOrder;
 use App\RequestTest;
 use App\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -167,7 +169,7 @@ class RequestTestController extends Controller
     }
 
     /**
-     * Muestra mi Request Test
+     * Muestra mi Request Test donde coincida el id del usuario y el type (Sample Test)
      *
      * @param  int  $id
      * @return JsonResponse
@@ -175,6 +177,49 @@ class RequestTestController extends Controller
     public function myRequestTest($id)
     {
 
+        try {
+            // $data = new RequestTestCollection(RequestTest::where('user_id', $id)->get());
+            $data = new MyOrderCollection(MyOrder::where('user_id', $id)->where('type', 'SAMPLE TEST')->get());
+
+            if ($data->isEmpty()) {
+                return response()->json(
+                    [
+                        'isSuccess' => true,
+                        'status'    => 200,
+                        'message'   => 'No se encontro data',
+                        'objects'   => $data
+                    ]
+                );
+            }
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => $e,
+                ]
+            );
+        }
+
+
+        return response()->json(
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'message'   => '',
+                'objects'   => $data
+            ]
+        );
+    }
+
+     /**
+     * Muestra mi Request Test
+     *
+     * @param  int  $id
+     * @return JsonResponse
+     */
+    public function myRequestTestDropshiper($id)
+    {
         try {
             $data = new RequestTestCollection(RequestTest::where('user_id', $id)->get());
             if ($data->isEmpty()) {

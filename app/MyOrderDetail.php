@@ -5,18 +5,15 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class SeparateDetail extends Model
+class MyOrderDetail extends Model
 {
     use Notifiable;
 
     protected $fillable = [
+        'my_order_id',
         'product_id',
         'variation_id',
         'quantity',
-        'payment_method_id',
-        'total',
-        'status'
+        'price'
     ];
 }
-
-
