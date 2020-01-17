@@ -21,6 +21,6 @@ class Variation extends Model
      */
     public function attributes()
     {
-        return $this->belongsTo(Attribute::class);
+        return $this->belongsToMany(Attribute::class, 'attribute_variations');
     }
 }
