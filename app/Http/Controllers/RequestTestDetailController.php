@@ -131,8 +131,7 @@ class RequestTestDetailController extends Controller
     public function delete($id)
     {
         try {
-            $data = RequestTestDetail::findOrFail($id);
-            $data->delete();
+            RequestTestDetail::findOrFail($id)->delete();
         } catch (ModelNotFoundException $e) {
             return response()->json(
               [

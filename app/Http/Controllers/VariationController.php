@@ -56,7 +56,7 @@ class VariationController extends Controller
                 'isSuccess' => true,
                 'message'   => 'El producto ha sido creado con exito!.',
                 'status'    => 200,
-                'objects'      => $data,
+                'objects'   => $data,
             ]
         );
     }
@@ -129,8 +129,7 @@ class VariationController extends Controller
     public function delete($id)
     {
         try {
-            $data = Variation::findOrFail($id);
-            $data->delete();
+            Variation::findOrFail($id)->delete();
         } catch (ModelNotFoundException $e) {
             return response()->json(
                 [

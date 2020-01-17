@@ -171,8 +171,9 @@ class ProductController extends Controller
     public function delete($id)
     {
         try {
-            $data = Product::findOrFail($id);
-            $data->delete();
+
+            Product::findOrFail($id)->delete();
+
         } catch (ModelNotFoundException $e) {
             return response()->json(
                 [

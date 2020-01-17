@@ -189,8 +189,7 @@ class SeparateDetailController extends Controller
     public function delete($id)
     {
         try {
-            $data = SeparateDetail::findOrFail($id);
-            $data->delete();
+            SeparateDetail::findOrFail($id)->delete();
         } catch (ModelNotFoundException $e) {
             return response()->json(
               [

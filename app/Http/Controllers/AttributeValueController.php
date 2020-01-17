@@ -111,8 +111,7 @@ class AttributeValueController extends Controller
     public function delete($id)
     {
         try {
-            $data = AttributesValues::findOrFail($id);
-            $data->delete();
+            AttributesValues::findOrFail($id)->delete();
         } catch (ModelNotFoundException $e) {
             return response()->json(
                 [

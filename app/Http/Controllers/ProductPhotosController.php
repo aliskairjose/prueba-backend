@@ -107,8 +107,7 @@ class ProductPhotosController extends Controller
     public function delete($id)
     {
         try {
-            $data = ProductPhoto::findOrFail($id);
-            $data->delete();
+            ProductPhoto::findOrFail($id)->delete();
         } catch (ModelNotFoundException $e) {
             return response()->json(
                 [

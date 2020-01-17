@@ -19,7 +19,7 @@ class Attribute extends JsonResource
             'id'=>$this->id,
             'description'=>$this->description,
             'product_id'=>$this->product_id,
-            'values' => new AttributeValueCollection((AttributesValues::where('attribute_id', $this->id)->get())),
+            'values' => new AttributeValueCollection($this->attributesValues),
         ];
     }
 }

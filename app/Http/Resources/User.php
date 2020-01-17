@@ -15,6 +15,7 @@ class User extends JsonResource
      */
     public function toArray($request)
     {
+
         return [
             'id'=> $this->id,
             'name'=> $this->name,
@@ -23,7 +24,7 @@ class User extends JsonResource
             'birthday'=> $this->birthday,
             'type_user'=> $this->type_user,
             'status'=> $this->status,
-            'products'=> new ProductCollection(Product::where('user_id',$this->id)->get()),
+            'products'=> new ProductCollection( $this->products ),
             'persistenceState'=> "Unchanged",
         ];
     }

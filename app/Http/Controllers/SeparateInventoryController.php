@@ -176,8 +176,7 @@ class SeparateInventoryController extends Controller
     public function delete($id)
     {
         try {
-            $data = SeparateInventory::findOrFail($id);
-            $data->delete();
+            SeparateInventory::findOrFail($id)->delete();
         } catch (ModelNotFoundException $e) {
             return response()->json(
               [

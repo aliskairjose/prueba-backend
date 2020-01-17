@@ -69,4 +69,12 @@ class User extends Authenticatable implements JWTSubject
     {
         $this->notify(new ResetPasswordNotification($token));
     }
+
+    /**
+     * Método publico que define la relacion uno a muchos con productos
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }

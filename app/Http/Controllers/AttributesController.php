@@ -57,7 +57,7 @@ class AttributesController extends Controller
                 'isSuccess' => true,
                 'message'   => 'El atributo se ha sido creado con exito!.',
                 'status'    => 200,
-                'objects'      => $data,
+                'objects'   => $data,
             ]
         );
     }
@@ -85,8 +85,8 @@ class AttributesController extends Controller
         return response()->json(
             [
                 'isSuccess' => true,
-                'objects'    => $data,
-                'status'    => 200
+                'status'    => 200,
+                'objects'   => $data
             ]
         );
     }
@@ -131,8 +131,7 @@ class AttributesController extends Controller
     public function delete($id)
     {
         try {
-            $data = Attribute::findOrFail($id);
-            $data->delete();
+            Attribute::findOrFail($id)->delete();
         } catch (ModelNotFoundException $e) {
             return response()->json(
                 [

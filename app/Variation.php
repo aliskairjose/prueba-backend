@@ -15,4 +15,12 @@ class Variation extends Model
      * @var array
      */
     protected $fillable = ['suggested_price', 'sale_price', 'product_id', 'stock'];
+
+    /**
+     * Método que muestra la relacion muchos a muchos con Attributes
+     */
+    public function attributes()
+    {
+        return $this->belongsTo(Attribute::class);
+    }
 }
