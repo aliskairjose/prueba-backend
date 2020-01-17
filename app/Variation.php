@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Http\Resources\AttributeValue;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
@@ -21,6 +22,6 @@ class Variation extends Model
      */
     public function attributes()
     {
-        return $this->belongsToMany(Attribute::class, 'attribute_variations');
+        return $this->belongsToMany(AttributesValues::class);
     }
 }
