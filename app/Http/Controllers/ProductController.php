@@ -59,15 +59,19 @@ class ProductController extends Controller
             );
 
             if ($request->type === 'variable') {
-
-                foreach ($request->variations as $variation) {
-                    Variation::create([
-                        'suggested_price' => $variation['suggested_price'],
-                        'sale_price' => $variation['sale_price'],
+                $variations = [];
+                foreach ($request->variations as $d) {
+                    $newVariation = Variation::create([
+                        'suggested_price' => $d['suggested_price'],
+                        'sale_price' => $d['sale_price'],
                         'product_id' => $product->id,
-                        'stock' => $variation['stock'],
+                        'stock' => $d['stock'],
                     ]);
+
+                    array_push($variations, $newVariation);
                 }
+
+                $product->variations = $variations;
             }
         } catch (Exception $e) {
             return response()->json(
