@@ -22,7 +22,7 @@ class Variation extends JsonResource
             'sale_price'=> $this->sale_price,
             'product_id'=> $this->product_id,
             'stock'=> $this->stock,
-            'attributes' => new AttributesVariationsCollection((AttributeVariation::where('variation_id', $this->id)->get())),
+            'attributes' => $this->attributes
         ];
     }
 }

@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ProductCollection;
 use App\Http\Resources\Product as ProductResource;
 use App\Product;
+use App\Variation;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use JWTAuth;
 
 class ProductController extends Controller
 {
@@ -41,13 +43,39 @@ class ProductController extends Controller
     {
 
         try {
-            $data = Product::create($request->all());
+            // $data = Product::create($request->all());
+            $user = $this->getAuthenticatedUser();
+
+            $product = Product::create(
+                [
+                    'name'              => $request->name,
+                    'description'       => $request->description,
+                    'type'              => $request->type,
+                    'stock'             => $request->stock,
+                    'sale_price'        => $request->sale_price,
+                    'suggested_price'   => $request->suggested_price,
+                    'user_id'           => $user->id,
+                ]
+            );
+
+            if ($request->type === 'variable') {
+
+                foreach ($request->variations as $variation) {
+                    Variation::create([
+                        'suggested_price' => $variation['suggested_price'],
+                        'sale_price' => $variation['sale_price'],
+                        'product_id' => $product->id,
+                        'stock' => $variation['stock'],
+                    ]);
+                }
+            }
         } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
                     'message'   => 'Ha ocurrido un error',
                     'status'    => 400,
+                    'error'     => $e
                 ]
             );
         }
@@ -57,7 +85,7 @@ class ProductController extends Controller
                 'isSuccess' => true,
                 'message'   => 'El producto ha sido creado con exito!.',
                 'status'    => 200,
-                'objects'      => $data,
+                'objects'   => $product
             ]
         );
     }
@@ -143,7 +171,6 @@ class ProductController extends Controller
         try {
             $data = Product::findOrFail($id);
             $data->update($request->all());
-
         } catch (Exception $e) {
             return response()->json(
                 [
@@ -173,7 +200,6 @@ class ProductController extends Controller
         try {
 
             Product::findOrFail($id)->delete();
-
         } catch (ModelNotFoundException $e) {
             return response()->json(
                 [
@@ -182,8 +208,7 @@ class ProductController extends Controller
                     'message'   => 'No se encontro producto para eliminar',
                 ]
             );
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
@@ -200,5 +225,21 @@ class ProductController extends Controller
                 'status'    => 200,
             ]
         );
+    }
+
+    private function getAuthenticatedUser()
+    {
+        try {
+            if (!$user = JWTAuth::parseToken()->authenticate()) {
+                return response()->json(['user_not_found'], 404);
+            }
+        } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            return response()->json(['token_expired'], $e->getStatusCode());
+        } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+            return response()->json(['token_invalid'], $e->getStatusCode());
+        } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
+            return response()->json(['token_absent'], $e->getStatusCode());
+        }
+        return $user;
     }
 }
