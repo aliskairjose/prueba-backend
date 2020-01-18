@@ -14,6 +14,11 @@ class Record extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'user_id'           => $this->user_id,
+            'text_reference'    => $this->text_reference,
+            'new_value'         => $this->new_value,
+            'previous_value'    => $this->previous_value,
+        ];
     }
 }

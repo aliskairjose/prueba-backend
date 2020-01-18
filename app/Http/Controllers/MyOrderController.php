@@ -34,22 +34,8 @@ class MyOrderController extends Controller
     public function store(Request $request)
     {
 
-       /*  $product = Product::findOrFail($request->get('product_id'));
-        $product_user_id = $product['user_id'];
-
-        return response()->json(
-            [
-                'isSuccess'     => true,
-                'message'       => 'El producto ha sido creado con exito!.',
-                'status'        => 200,
-                'product_id'    => $request->get('produc_id'),
-                'product'       => $product
-            ]
-        ); */
-
         try {
             $data = MyOrder::create($request->all());
-
         } catch (Exception $e) {
             return response()->json(
                 [
@@ -74,13 +60,31 @@ class MyOrderController extends Controller
 
     /**
      * Display the specified resource.
+     * Recide el id del usuario
      *
      * @param  int  $id
      * @return Response
      */
     public function show($id)
     {
-        //
+        try {
+            $data = new MyOrderResource(MyOrder::where('user_id', $id));
+        } catch (Exception $th) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'message'   => 'Ha ocurrido un error',
+                    'status'    => 400,
+                ]
+            );
+        }
+        return response()->json(
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'objects'   => $data
+            ]
+        );
     }
 
     /**
@@ -117,5 +121,4 @@ class MyOrderController extends Controller
 
         return 'Notificacion enviada con exito';
     }
-
 }

@@ -109,16 +109,24 @@ Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('passwo
     Route::put('product/photos/{id}', 'ProductPhotosController@update');
     Route::delete('product/photos/{id}', 'ProductPhotosController@delete');
 
-    // My Orders Routes
-    Route::post('myorders', 'MyOrderController@store');
-
     // RequestTest Routes
+    Route::get('requesttest/user/{id}', 'RequestTestController@myRequestTest');
    /*
     Route::get('requesttest', 'RequestTestController@index');
-    Route::get('requesttest/{id}', 'RequestTestController@show'); */
-    Route::get('requesttest/user/{id}', 'RequestTestController@myRequestTest');
-    /* Route::post('requesttest', 'RequestTestController@store');
+    Route::get('requesttest/{id}', 'RequestTestController@show');
+    Route::post('requesttest', 'RequestTestController@store');
     Route::put('requesttest/{id}', 'RequestTestController@update');
     Route::delete('requesttest/{id}', 'RequestTestController@delete');
     */
+
+    // My Orders Routes
+    Route::post('orders/myorders', 'MyOrderController@store');
+    Route::get('orders/myorders{id}', 'MyOrderController@show');
+
+    // Order History Routes
+    Route::get('orders/history', 'RecordController@index');
+    // Route::get('orders/history/{id}', 'RecordController@show');
+    Route::get('orders/history/{id}', 'RecordController@myRecord');
+    Route::post('orders/history', 'RecordController@store');
+    Route::delete('orders/history/{id}', 'RecordController@delete');
 // });

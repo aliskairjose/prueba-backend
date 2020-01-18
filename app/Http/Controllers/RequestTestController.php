@@ -94,8 +94,8 @@ class RequestTestController extends Controller
         return response()->json(
             [
                 'isSuccess' => true,
-                'objects'    => $data,
-                'status'    => 200
+                'status'    => 200,
+                'objects'   => $data,
             ]
         );
     }
@@ -139,8 +139,7 @@ class RequestTestController extends Controller
     public function delete($id)
     {
         try {
-            $data = RequestTest::findOrFail($id);
-            $data->delete();
+            RequestTest::findOrFail($id)->delete();
         } catch (ModelNotFoundException $e) {
             return response()->json(
                 [
