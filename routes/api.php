@@ -121,12 +121,11 @@ Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('passwo
 
     // My Orders Routes
     Route::post('orders/myorders', 'MyOrderController@store');
-    Route::get('orders/myorders{id}', 'MyOrderController@show');
+    Route::get('orders/myorders/{id}', 'MyOrderController@show');
 
     // Order History Routes
     Route::get('orders/history', 'RecordController@index');
-    // Route::get('orders/history/{id}', 'RecordController@show');
-    Route::get('orders/history/{id}', 'RecordController@myRecord');
+    Route::get('orders/history/{id}', 'RecordController@show');
     Route::post('orders/history', 'RecordController@store');
     Route::delete('orders/history/{id}', 'RecordController@delete');
 // });

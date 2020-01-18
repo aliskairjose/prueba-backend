@@ -61,43 +61,13 @@ class RecordController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Muestra e Record de un usuario  por el id de usuario.
      *
      * @param int $id
      * @return JsonResponse
      */
     public function show($id)
     {
-        try {
-            $data = new RecordResource((Record::findOrFail($id)));
-        } catch (Exception $e) {
-            return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => $e,
-                ]
-            );
-        }
-
-        return response()->json(
-            [
-                'isSuccess' => true,
-                'status'    => 200,
-                'objects'   => $data,
-            ]
-        );
-    }
-
-    /**
-     * Muestra e Record de un usuario  por el id de usuario.
-     *
-     * @param int $id
-     * @return JsonResponse
-     */
-    public function myRecord($id)
-    {
-
         try {
             $user = $this->getAuthenticatedUser();
             $data = new RecordResource(Record::where('user_id', $user->id));
