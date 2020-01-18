@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class AttributesValues extends Model
+class AttributeValue extends Model
 {
     use Notifiable;
 

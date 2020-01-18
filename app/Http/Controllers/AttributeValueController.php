@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\AttributeValue as AttributeValueResource;
-use App\AttributesValues;
+use App\AttributeValue;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -29,7 +29,7 @@ class AttributeValueController extends Controller
     public function store(Request $request)
     {
         try {
-            $data = AttributesValues::create($request->all());
+            $data = AttributeValue::create($request->all());
         } catch (Exception $e) {
             return response()->json(
                 [
@@ -59,7 +59,7 @@ class AttributeValueController extends Controller
     public function show($id)
     {
         try {
-            $data = new AttributeValueResource((AttributesValues::findOrFail($id)));
+            $data = new AttributeValueResource((AttributeValue::findOrFail($id)));
         } catch (Exception $e) {
             return response()->json(
                 [
@@ -111,7 +111,7 @@ class AttributeValueController extends Controller
     public function delete($id)
     {
         try {
-            AttributesValues::findOrFail($id)->delete();
+            AttributeValue::findOrFail($id)->delete();
         } catch (ModelNotFoundException $e) {
             return response()->json(
                 [

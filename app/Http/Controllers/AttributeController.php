@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\Attribute as AttributeResource;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class AttributesController extends Controller
+class AttributeController extends Controller
 {
     /**
      * Display a listing of the resource.
