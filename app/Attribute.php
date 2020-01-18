@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\Http\Resources\AttributeValue;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
@@ -20,17 +19,17 @@ class Attribute extends Model
     /**
      * Método que define la relacion de uno a muchos con attributes values
      */
-    public function attributesValues()
+    public function attributeValues()
     {
-        return $this->hasMany(AttributesValues::class);
+        return $this->hasMany(AttributeValue::class);
     }
 
-     /**
+    /**
      * Método que muestra la relacion muchos a muchos con Variations
      */
-    public function variatons()
+   /*  public function variations()
     {
         return $this->belongsTo(Variation::class);
-    }
+    } */
 
 }

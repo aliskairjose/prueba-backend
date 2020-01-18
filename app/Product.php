@@ -32,5 +32,15 @@ class Product extends Model
     public function variations()
     {
         return $this->hasMany(Variation::class);
+
     }
+    /**
+     * Método que deine la relacion de uno a muchos con product photos
+     */
+    public function photos()
+    {
+        return $this->hasMany(ProductPhoto::class);
+    }
+
+
 }

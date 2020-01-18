@@ -20,8 +20,8 @@ class Variation extends Model
     /**
      * Método que muestra la relacion muchos a muchos con Attributes
      */
-    public function attributes()
+    /* public function attributes()
     {
         return $this->belongsToMany(AttributeValue::class);
-    }
+    } */
 }
