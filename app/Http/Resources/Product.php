@@ -26,7 +26,7 @@ class Product extends JsonResource
           'sale_price'       => $this->sale_price,
           'suggested_price'  => $this->suggested_price,
           'user_id'          => $this->user_id,
-          'attributes'       => new AttributeCollection($this->attributes),
+        //   'attributes'       => new AttributeCollection($this->attributes),
           'variations'       => new VariationCollection($this->variations),
         //   'gallery'          => new ProductPhotoCollection((ProductPhoto::where('product_id', $this->id)->get())),
           'persistanceState' => 'Unchanged',

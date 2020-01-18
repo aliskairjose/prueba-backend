@@ -9,6 +9,6 @@ class ProductPhoto extends Model
 {
     use Notifiable;
 
-    protected $fillable = ['url', 'main', 'product_id'];
+    protected $fillable = ['url', 'main', 'product_id', 'variation_id'];
 
 }
