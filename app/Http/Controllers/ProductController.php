@@ -43,7 +43,6 @@ class ProductController extends Controller
     {
 
         try {
-            // $data = Product::create($request->all());
             $user = $this->getAuthenticatedUser();
 
             $product = Product::create(

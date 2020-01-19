@@ -40,8 +40,24 @@ class AttributeController extends Controller
      */
     public function store(Request $request)
     {
+
         try {
-            $data = Attribute::create($request->all());
+            $data = $request->all();
+            $attribute = Attribute::create($data);
+
+            if ($data['values']) {
+                $values = [];
+                foreach ($data['values'] as $v) {
+                    $newValues = $attribute->attributeValues()->create([
+                        'value' => $v['value']
+                    ]);
+
+                    array_push($values, $newValues);
+                }
+
+                $attribute->values = $values;
+
+            }
         } catch (Exception $e) {
             return response()->json(
                 [
@@ -57,7 +73,7 @@ class AttributeController extends Controller
                 'isSuccess' => true,
                 'message'   => 'El atributo se ha sido creado con exito!.',
                 'status'    => 200,
-                'objects'   => $data,
+                'objects'   => $attribute,
             ]
         );
     }
@@ -103,7 +119,6 @@ class AttributeController extends Controller
         try {
             $data = Attribute::findOrFail($id);
             $data->update($request->all());
-
         } catch (Exception $e) {
             return response()->json(
                 [
@@ -140,8 +155,7 @@ class AttributeController extends Controller
                     'message'   => 'No se encontro atributo para eliminar',
                 ]
             );
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
