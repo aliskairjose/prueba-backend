@@ -44,6 +44,10 @@ class ProductController extends Controller
     {
 
         try {
+            /* foreach ($request->attribute as $a) {
+                return $a['values'];
+            } */
+
             $user = $this->getAuthenticatedUser();
 
             $product = Product::create(
@@ -66,11 +70,34 @@ class ProductController extends Controller
                         'sale_price' => $d['sale_price'],
                         'stock' => $d['stock'],
                     ]);
-
                     array_push($variations, $newVariation);
                 }
 
                 $product->variations = $variations;
+            }
+
+            if ($request->attribute) {
+                $attributes = [];
+                $values = [];
+
+                foreach ($request->attribute as $a) {
+
+                    $newAttribute = $product->attributes()->create([
+                        'description' => $a['description']
+                    ]);
+
+                    array_push($attributes, $newAttribute);
+
+                     foreach ($a['values'] as $value) {
+                        $newValue = $newAttribute->attributeValues()->create([
+                            'value' => $value['value']
+                        ]);
+                        array_push($values, $newValue);
+                    }
+                    $newAttribute->values = $values;
+                }
+
+                $product->attributes = $attributes;
             }
         } catch (Exception $e) {
             return response()->json(
