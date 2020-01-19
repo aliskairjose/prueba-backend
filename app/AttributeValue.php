@@ -14,10 +14,10 @@ class AttributeValue extends Model
     /**
      * Método que muestra la relacion mucho a muchos con Variation
      */
-    /* public function variations()
+    public function variations()
     {
         return $this->belongsToMany(Variation::class);
-    } */
+    }
 
 
 }

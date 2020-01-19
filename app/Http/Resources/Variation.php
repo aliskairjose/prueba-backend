@@ -17,12 +17,12 @@ class Variation extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'=> $this->id,
-            'suggested_price'=> $this->suggested_price,
-            'sale_price'=> $this->sale_price,
-            'product_id'=> $this->product_id,
-            'stock'=> $this->stock,
-            // 'attributes' => new AttributeCollection($this->attributes)
+            'id'                => $this->id,
+            'suggested_price'   => $this->suggested_price,
+            'sale_price'        => $this->sale_price,
+            'product_id'        => $this->product_id,
+            'stock'             => $this->stock,
+            'attributes'        => []
         ];
     }
 }

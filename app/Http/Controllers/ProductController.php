@@ -61,10 +61,9 @@ class ProductController extends Controller
             if ($request->type === 'variable') {
                 $variations = [];
                 foreach ($request->variations as $d) {
-                    $newVariation = Variation::create([
+                    $newVariation = $product->variations()->create([
                         'suggested_price' => $d['suggested_price'],
                         'sale_price' => $d['sale_price'],
-                        'product_id' => $product->id,
                         'stock' => $d['stock'],
                     ]);
 

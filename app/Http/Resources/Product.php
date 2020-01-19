@@ -26,8 +26,8 @@ class Product extends JsonResource
             'sale_price'       => $this->sale_price,
             'suggested_price'  => $this->suggested_price,
             'user_id'          => $this->user_id,
-            'attributes'       => new AttributeCollection($this->attributes), //No funciona
-            // 'variations'       => new VariationCollection($this->variations), // Funciona pero le falta
+            // 'attributes'       => new AttributeCollection($this->attributes), //No funciona
+            'variations'       => new VariationCollection($this->variations), // Funciona pero le falta
             // 'gallery'          => new ProductPhotoCollection($this->photos), // Fuciona
             'persistanceState' => 'Unchanged',
         ];
