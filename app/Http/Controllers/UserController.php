@@ -22,9 +22,10 @@ class UserController extends Controller
      *
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = new UserCollection(User::all());
+
+        $data = new UserCollection((User::where('type_user', $request->type_user)->get()));
 
         return response()->json([
             [
@@ -136,8 +137,6 @@ class UserController extends Controller
             $user = $this->getAuthenticatedUser();
             $user->password = Hash::make($request->new_password);
             $user->save();
-
-
         } catch (QueryException $e) {
             $error = $e->getMessage();
 
