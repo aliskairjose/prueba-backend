@@ -28,7 +28,7 @@ class Product extends JsonResource
             'user_id'          => $this->user_id,
             'attributes'       => new AttributeCollection($this->attributes),
             'variations'       => new VariationCollection($this->variations),
-            // 'gallery'          => new ProductPhotoCollection($this->photos),
+            'gallery'          => new ProductPhotoCollection($this->photos),
             'persistanceState' => 'Unchanged',
         ];
     }

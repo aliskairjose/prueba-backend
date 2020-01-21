@@ -20,8 +20,7 @@ class ImporList extends JsonResource
             'user_id' => $this->user_id,
             'product_id' => $this->product_id,
             'variation_id' => $this->variation_id,
-            'product'      => new ProductCollection($this->products)
-            // 'product'      => new ProductCollection(Product::where('id', $this->product_id)->get())
+            'products'      => new ProductCollection($this->products)
         ];
     }
 }
