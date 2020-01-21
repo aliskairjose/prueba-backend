@@ -15,6 +15,7 @@ class ProductPhoto extends JsonResource
     public function toArray($request)
     {
         return [
+            'id'            => $this->id,
             'url'           => $this->url,
             'main'          => $this->main,
             'product_id'    => $this->product_id,

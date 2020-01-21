@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Attribute as AppAttribute;
-use App\Attribute;
-use App\Http\Resources\AttributeCollection;
-use Exception;
+use App\Http\Resources\CategoryCollection;
+use App\Http\Resources\Category as CategoryResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use App\Http\Resources\Attribute as AttributeResource;
+use App\Category;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Response;
 
-class AttributeController extends Controller
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,14 +20,15 @@ class AttributeController extends Controller
      */
     public function index()
     {
-        $data = new AttributeCollection(Attribute::all());
+        $data = Category::all();
+
 
         return response()->json([
             [
                 'isSuccess' => true,
                 'count'     => $data->count(),
                 'status'    => 200,
-                'objects'    => $data,
+                'objects'   => $data,
             ]
         ]);
     }
@@ -42,22 +43,7 @@ class AttributeController extends Controller
     {
 
         try {
-            $data = $request->all();
-            $attribute = Attribute::create($data);
-
-            if ($data['values']) {
-                $values = [];
-                foreach ($data['values'] as $v) {
-                    $newValues = $attribute->attributeValues()->create([
-                        'value' => $v['value']
-                    ]);
-
-                    array_push($values, $newValues);
-                }
-
-                $attribute->values = $values;
-
-            }
+            $data = Category::create($request->all());
         } catch (Exception $e) {
             return response()->json(
                 [
@@ -73,36 +59,7 @@ class AttributeController extends Controller
                 'isSuccess' => true,
                 'message'   => 'El item ha sido creado con exito!.',
                 'status'    => 200,
-                'objects'   => $attribute,
-            ]
-        );
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return JsonResponse
-     */
-    public function show($id)
-    {
-        try {
-            $data = new AttributeResource((Attribute::findOrFail($id)));
-        } catch (Exception $e) {
-            return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => $e,
-                ]
-            );
-        }
-
-        return response()->json(
-            [
-                'isSuccess' => true,
-                'status'    => 200,
-                'objects'   => $data
+                'objects'   => $data,
             ]
         );
     }
@@ -117,8 +74,7 @@ class AttributeController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $data = Attribute::findOrFail($id)->update($request->all());
-
+            $data = Category::findOrFail($id)->update($request->all());
         } catch (Exception $e) {
             return response()->json(
                 [
@@ -134,6 +90,36 @@ class AttributeController extends Controller
                 'status'    => 200,
                 'message'   => 'EL atributo se ha actualizado con exito!.',
                 'objects'   => $data
+
+            ]
+        );
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return JsonResponse
+     */
+    public function show($id)
+    {
+        try {
+            $data = Category::findOrFail($id);
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => $e,
+                ]
+            );
+        }
+
+        return response()->json(
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'objects'   => $data
             ]
         );
     }
@@ -142,12 +128,12 @@ class AttributeController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return JsonResponse
+     * @return Response
      */
     public function delete($id)
     {
         try {
-            Attribute::findOrFail($id)->delete();
+            Category::findOrFail($id)->delete();
         } catch (ModelNotFoundException $e) {
             return response()->json(
                 [
@@ -169,7 +155,7 @@ class AttributeController extends Controller
         return response()->json(
             [
                 'isSuccess' => true,
-                'message'   => 'El atributo ha sido eliminado!.',
+                'message'   => 'El item ha sido eliminado!.',
                 'status'    => 200,
             ]
         );

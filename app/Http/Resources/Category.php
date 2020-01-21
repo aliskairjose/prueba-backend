@@ -1,11 +1,10 @@
 <?php
 
 namespace App\Http\Resources;
-use App\Product;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ImporList extends JsonResource
+class Category extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,11 +15,8 @@ class ImporList extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'            => $this->id,
-            'user_id'       => $this->user_id,
-            'product_id'    => $this->product_id,
-            'variation_id'  => $this->variation_id,
-            // 'products'      => $this->products
+            'name' => $this->category,
+            'parent_category' => $this->parent_category
         ];
     }
 }

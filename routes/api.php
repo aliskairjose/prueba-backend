@@ -128,4 +128,11 @@ Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('passwo
     Route::get('orders/history/{id}', 'RecordController@show');
     Route::post('orders/history', 'RecordController@store');
     Route::delete('orders/history/{id}', 'RecordController@delete');
+
+    // Category Routes
+    Route::get('categories', 'CategoryController@index');
+    Route::get('categories/{id}', 'CategoryController@show');
+    Route::post('categories', 'CategoryController@store');
+    Route::delete('categories/{id}', 'CategoryController@delete');
+    Route::put('categories/{id}', 'CategoryController@update');
 // });

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ImporListCollection;
+use App\Http\Resources\ImportListCollection;
 use App\Http\Resources\ImportList as ImportListResource;
 use App\ImportList;
 use App\Product;
@@ -20,7 +20,7 @@ class ImportListController extends Controller
      */
     public function index()
     {
-        $data = new ImporListCollection(ImportList::all());
+        $data = new ImportListCollection(ImportList::all());
 
         return response()->json([
             [
@@ -71,8 +71,9 @@ class ImportListController extends Controller
     public function show($id)
     {
 
+        // return ImportList::findOrFail($id);
         try {
-            $data = new ImporListCollection((ImportList::findOrFail($id))->get());
+            $data = ImportList::findOrFail($id);
         } catch (ModelNotFoundException $e) {
             return response()->json(
                 [
@@ -142,7 +143,7 @@ class ImportListController extends Controller
         try {
             $user = $request->user_id;
             $product = $request->product_id;
-            $data = new ImporListCollection(ImportList::where('user_id', $user)->where('product_id', $product)->get());
+            $data = new ImportListCollection(ImportList::where('user_id', $user)->where('product_id', $product)->get());
             $idImportList = $data[0]['id'];
             $importDelete = ImportList::where('id', $idImportList)->delete();
         } catch (ModelNotFoundException $e) {
@@ -177,7 +178,7 @@ class ImportListController extends Controller
     {
 
         try {
-            $data = ImportList::where('user_id', $id)->get();
+            /*$data = new ImportListCollection((ImportList::where('user_id', $id)->get()));
 
             // $data = new ImportLilstResource()
 
@@ -201,7 +202,8 @@ class ImportListController extends Controller
 
             $object = [];
             $il_products = Product::whereIn('id', $il)->get();
-            $object = ['user_id' => $id,  'products' => $il_products];
+            $object = ['user_id' => $id,  'products' => $il_products];*/
+
         } catch (Exception $e) {
             return response()->json(
                 [
