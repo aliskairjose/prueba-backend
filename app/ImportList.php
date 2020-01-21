@@ -15,4 +15,12 @@ class ImportList extends Model
      * @var array
      */
     protected $fillable = ['user_id', 'product_id', 'variation_id'];
+
+    /**
+     * Relacion uno a muchos con productos
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }
