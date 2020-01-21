@@ -2,14 +2,15 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ImporList extends JsonResource
+class ImportList extends JsonResource
 {
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return array
      */
     public function toArray($request)
@@ -19,7 +20,7 @@ class ImporList extends JsonResource
           'user_id'      => $this->user_id,
           'product_id'   => $this->product_id,
           'variation_id' => $this->variation_id,
-          'products'     => new ProductCollection($this->produts)
+          'products'     => new ProductCollection($this->products)
         ];
     }
 }

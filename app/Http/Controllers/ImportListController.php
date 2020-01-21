@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ImporListCollection;
-use App\Http\Resources\ImporList as ImportListResource;
+use App\Http\Resources\ImportList as ImportListResource;
 use App\ImportList;
 use App\Product;
 use Exception;

@@ -10,9 +10,8 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
@@ -28,12 +27,12 @@ class UserController extends Controller
         $data = new UserCollection((User::where('type_user', $request->type_user)->get()));
 
         return response()->json([
-            [
-                'count'     => $data->count(),
-                'isSuccess' => true,
-                'objects'   => $data,
-                'status'    => 200
-            ]
+          [
+            'count'     => $data->count(),
+            'isSuccess' => true,
+            'objects'   => $data,
+            'status'    => 200
+          ]
         ]);
     }
 
@@ -60,20 +59,20 @@ class UserController extends Controller
             $data = new UserResource((User::findOrFail($id)));
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => $e,
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => $e,
+              ]
             );
         }
 
         return response()->json(
-            [
-                'isSuccess' => true,
-                'objects'   => $data,
-                'status'    => 200
-            ]
+          [
+            'isSuccess' => true,
+            'objects'   => $data,
+            'status'    => 200
+          ]
         );
     }
 
@@ -91,19 +90,19 @@ class UserController extends Controller
             $data->update($request->all());
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => $e,
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => $e,
+              ]
             );
         }
         return response()->json(
-            [
-                'isSuccess' => true,
-                'status'    => 200,
-                'message'   => 'EL producto se ha actualizado con exito!.',
-            ]
+          [
+            'isSuccess' => true,
+            'status'    => 200,
+            'message'   => 'EL producto se ha actualizado con exito!.',
+          ]
         );
     }
 
@@ -122,12 +121,12 @@ class UserController extends Controller
     {
         try {
             $validator = Validator::make(
-                $request->all(),
-                [
-                    'email' => 'required|email',
-                    'new_password' => 'required',
-                    'c_password' => 'required|same:new_password',
-                ]
+              $request->all(),
+              [
+                'email'        => 'required|email',
+                'new_password' => 'required',
+                'c_password'   => 'required|same:new_password',
+              ]
             );
             if ($validator->fails()) {
                 return response()->json(['error' => $validator->errors()], 401);
@@ -141,19 +140,19 @@ class UserController extends Controller
             $error = $e->getMessage();
 
             return response()->json([
-                'isSuccess' => false,
-                'messagge' => 'Error',
-                'status' => 409,
-                'error' => $error
+              'isSuccess' => false,
+              'messagge'  => 'Error',
+              'status'    => 409,
+              'error'     => $error
             ]);
         }
 
         return response()->json(
-            [
-                'isSuccess' => true,
-                'status' => 200,
-                'message' => 'Contraseña actualizada',
-            ]
+          [
+            'isSuccess' => true,
+            'status'    => 200,
+            'message'   => 'Contraseña actualizada',
+          ]
         );
     }
 
