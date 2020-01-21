@@ -62,6 +62,12 @@ class ProductController extends Controller
                 ]
             );
 
+//            $product->categories()->attach(4);
+            foreach ( $request->categories as $c)
+            {
+                $product->categories()->attach($c['id']);
+            }
+
             if ($request->type === 'variable') {
                 $variations = [];
                 foreach ($request->variations as $d) {

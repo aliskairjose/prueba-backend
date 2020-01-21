@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use App\Http\Resources\CategoryCollection;
-use App\Http\Resources\Category as CategoryResource;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -50,6 +49,7 @@ class CategoryController extends Controller
                 'isSuccess' => false,
                 'message'   => 'Ha ocurrido un error',
                 'status'    => 400,
+                'error'     => $e
               ]
             );
         }
@@ -105,7 +105,7 @@ class CategoryController extends Controller
     {
         try {
             $data = Category::findOrFail($id);
-            $data['products'] = $data->products;
+            $data[ 'products' ] = $data->products;
         } catch (Exception $e) {
             return response()->json(
               [
