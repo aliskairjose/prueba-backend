@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\CategoryCollection;
-use App\Http\Resources\Category as CategoryResource;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use App\Category;
+use App\Http\Resources\CategoryCollection;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
@@ -20,16 +18,16 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $data = Category::all();
-
+//        $data = Category::all();
+        $data = new CategoryCollection(Category::all());
 
         return response()->json([
-            [
-                'isSuccess' => true,
-                'count'     => $data->count(),
-                'status'    => 200,
-                'objects'   => $data,
-            ]
+          [
+            'isSuccess' => true,
+            'count'     => $data->count(),
+            'status'    => 200,
+            'objects'   => $data,
+          ]
         ]);
     }
 
@@ -44,23 +42,24 @@ class CategoryController extends Controller
 
         try {
             $data = Category::create($request->all());
+
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'message'   => 'Ha ocurrido un error',
-                    'status'    => 400,
-                ]
+              [
+                'isSuccess' => false,
+                'message'   => 'Ha ocurrido un error',
+                'status'    => 400,
+              ]
             );
         }
 
         return response()->json(
-            [
-                'isSuccess' => true,
-                'message'   => 'El item ha sido creado con exito!.',
-                'status'    => 200,
-                'objects'   => $data,
-            ]
+          [
+            'isSuccess' => true,
+            'message'   => 'El item ha sido creado con exito!.',
+            'status'    => 200,
+            'objects'   => $data,
+          ]
         );
     }
 
@@ -77,21 +76,21 @@ class CategoryController extends Controller
             $data = Category::findOrFail($id)->update($request->all());
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => $e,
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => $e,
+              ]
             );
         }
         return response()->json(
-            [
-                'isSuccess' => true,
-                'status'    => 200,
-                'message'   => 'EL atributo se ha actualizado con exito!.',
-                'objects'   => $data
+          [
+            'isSuccess' => true,
+            'status'    => 200,
+            'message'   => 'EL atributo se ha actualizado con exito!.',
+            'objects'   => $data
 
-            ]
+          ]
         );
     }
 
@@ -104,23 +103,23 @@ class CategoryController extends Controller
     public function show($id)
     {
         try {
-            $data = Category::findOrFail($id);
+            $data = new CategoryCollection((Category::findOrFail($id))->get());
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => $e,
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => $e,
+              ]
             );
         }
 
         return response()->json(
-            [
-                'isSuccess' => true,
-                'status'    => 200,
-                'objects'   => $data
-            ]
+          [
+            'isSuccess' => true,
+            'status'    => 200,
+            'objects'   => $data
+          ]
         );
     }
 
@@ -128,7 +127,7 @@ class CategoryController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return Response
+     * @return JsonResponse
      */
     public function delete($id)
     {
@@ -136,28 +135,28 @@ class CategoryController extends Controller
             Category::findOrFail($id)->delete();
         } catch (ModelNotFoundException $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => 'No se encontro atributo para eliminar',
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => 'No se encontro atributo para eliminar',
+              ]
             );
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => 'Ha ocurrido un error inesperado',
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => 'Ha ocurrido un error inesperado',
+              ]
             );
         }
 
         return response()->json(
-            [
-                'isSuccess' => true,
-                'message'   => 'El item ha sido eliminado!.',
-                'status'    => 200,
-            ]
+          [
+            'isSuccess' => true,
+            'message'   => 'El item ha sido eliminado!.',
+            'status'    => 200,
+          ]
         );
     }
 }
