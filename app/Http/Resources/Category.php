@@ -18,7 +18,6 @@ class Category extends JsonResource
         return [
           'name'            => $this->name,
           'parent_category' => $this->parent_category,
-          'products'        => $this->products
         ];
     }
 }

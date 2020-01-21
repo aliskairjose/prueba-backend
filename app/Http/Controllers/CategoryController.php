@@ -103,7 +103,9 @@ class CategoryController extends Controller
     public function show($id)
     {
         try {
-            $data = new CategoryCollection((Category::findOrFail($id))->get());
+//            $data = new CategoryCollection((Category::findOrFail($id))->get());
+            $data = Category::findOrFail($id);
+            $data['products'] = $data->products;
         } catch (Exception $e) {
             return response()->json(
               [
