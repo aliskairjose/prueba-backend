@@ -6,6 +6,7 @@ use App\Http\Resources\RecordCollection;
 use App\Http\Resources\Record as RecordResource;
 use App\Record;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use JWTAuth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;

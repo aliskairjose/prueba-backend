@@ -44,9 +44,6 @@ class ProductController extends Controller
     {
 
         try {
-            /* foreach ($request->attribute as $a) {
-                return $a['values'];
-            } */
 
             $user = $this->getAuthenticatedUser();
 
@@ -61,6 +58,11 @@ class ProductController extends Controller
                     'user_id'           => $user->id,
                 ]
             );
+
+            foreach ( $request->categories as $c)
+            {
+                $product->categories()->attach($c['id']);
+            }
 
             if ($request->type === 'variable') {
                 $variations = [];
