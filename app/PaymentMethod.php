@@ -9,13 +9,6 @@ class PaymentMethod extends Model
 {
     use Notifiable;
 
-    protected $fillable = [ 'name'];
+    protected $fillable = [ 'name','available'];
 
-    /**
-     * Relacion Mucho a Muchos con Productos
-     */
-    public function products()
-    {
-        return $this->belongsToMany(Product::class);
-    }
 }

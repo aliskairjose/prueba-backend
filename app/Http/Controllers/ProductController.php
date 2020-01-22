@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ProductCollection;
 use App\Http\Resources\Product as ProductResource;
+use App\Http\Resources\ProductCollection;
 use App\Product;
-use App\Variation;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -25,12 +24,12 @@ class ProductController extends Controller
         $data = new ProductCollection(Product::all());
 
         return response()->json([
-            [
-                'isSuccess' => true,
-                'count'     => $data->count(),
-                'status'    => 200,
-                'objects'    => $data,
-            ]
+          [
+            'isSuccess' => true,
+            'count'     => $data->count(),
+            'status'    => 200,
+            'objects'   => $data,
+          ]
         ]);
     }
 
@@ -43,34 +42,36 @@ class ProductController extends Controller
     public function store(Request $request)
     {
 
+//        return $request->all();
         try {
 
             $user = $this->getAuthenticatedUser();
 
             $product = Product::create(
-                [
-                    'name'              => $request->name,
-                    'description'       => $request->description,
-                    'type'              => $request->type,
-                    'stock'             => $request->stock,
-                    'sale_price'        => $request->sale_price,
-                    'suggested_price'   => $request->suggested_price,
-                    'user_id'           => $user->id,
-                ]
+              [
+                'name'             => $request->name,
+                'description'      => $request->description,
+                'type'             => $request->type,
+                'stock'            => $request->stock,
+                'sale_price'       => $request->sale_price,
+                'suggested_price'  => $request->suggested_price,
+                'user_id'          => $user->id,
+                'privated_product' => $request->privated_product,
+                'active'           => $user->approve_product
+              ]
             );
 
-            foreach ( $request->categories as $c)
-            {
-                $product->categories()->attach($c['id']);
+            foreach ($request->categories as $c) {
+                $product->categories()->attach($c[ 'id' ]);
             }
 
             if ($request->type === 'variable') {
                 $variations = [];
                 foreach ($request->variations as $d) {
                     $newVariation = $product->variations()->create([
-                        'suggested_price' => $d['suggested_price'],
-                        'sale_price' => $d['sale_price'],
-                        'stock' => $d['stock'],
+                      'suggested_price' => $d[ 'suggested_price' ],
+                      'sale_price'      => $d[ 'sale_price' ],
+                      'stock'           => $d[ 'stock' ],
                     ]);
                     array_push($variations, $newVariation);
                 }
@@ -85,14 +86,14 @@ class ProductController extends Controller
                 foreach ($request->attribute as $a) {
 
                     $newAttribute = $product->attributes()->create([
-                        'description' => $a['description']
+                      'description' => $a[ 'description' ]
                     ]);
 
                     array_push($attributes, $newAttribute);
 
-                     foreach ($a['values'] as $value) {
+                    foreach ($a[ 'values' ] as $value) {
                         $newValue = $newAttribute->attributeValues()->create([
-                            'value' => $value['value']
+                          'value' => $value[ 'value' ]
                         ]);
                         array_push($values, $newValue);
                     }
@@ -103,29 +104,29 @@ class ProductController extends Controller
             }
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'message'   => 'Ha ocurrido un error',
-                    'status'    => 400,
-                    'error'     => $e
-                ]
+              [
+                'isSuccess' => false,
+                'message'   => 'Ha ocurrido un error',
+                'status'    => 400,
+                'error'     => $e
+              ]
             );
         }
 
         return response()->json(
-            [
-                'isSuccess' => true,
-                'message'   => 'El item ha sido creado con exito!.',
-                'status'    => 200,
-                'objects'   => $product
-            ]
+          [
+            'isSuccess' => true,
+            'message'   => 'El item ha sido creado con exito!.',
+            'status'    => 200,
+            'objects'   => $product
+          ]
         );
     }
 
     /**
      * Display the specified resource.
      *
-     * @param int $id
+     * @param  int  $id
      * @return JsonResponse
      */
     public function show($id)
@@ -134,27 +135,27 @@ class ProductController extends Controller
             $data = new ProductResource((Product::findOrFail($id)));
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => $e,
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => $e,
+              ]
             );
         }
 
         return response()->json(
-            [
-                'isSuccess' => true,
-                'objects'    => $data,
-                'status'    => 200
-            ]
+          [
+            'isSuccess' => true,
+            'objects'   => $data,
+            'status'    => 200
+          ]
         );
     }
 
     /**
      * Display the specified resource.
      *
-     * @param int $id
+     * @param  int  $id
      * @return JsonResponse
      */
     public function myProducts($id)
@@ -163,31 +164,31 @@ class ProductController extends Controller
             $data = new ProductCollection(Product::where('user_id', $id)->get());
             if (count($data) === 0) {
                 return response()->json(
-                    [
-                        'isSuccess' => true,
-                        'message'   => 'No existen producto asignados al usuario',
-                        'status'    => 200,
-                        'objects'    => $data
-                    ]
+                  [
+                    'isSuccess' => true,
+                    'message'   => 'No existen producto asignados al usuario',
+                    'status'    => 200,
+                    'objects'   => $data
+                  ]
                 );
             }
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => $e
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => $e
+              ]
             );
         }
 
         return response()->json(
-            [
-                'isSuccess' => true,
-                'status'    => 200,
-                'count'     => count($data),
-                'objects'    => $data
-            ]
+          [
+            'isSuccess' => true,
+            'status'    => 200,
+            'count'     => count($data),
+            'objects'   => $data
+          ]
         );
     }
 
@@ -205,19 +206,19 @@ class ProductController extends Controller
             $data->update($request->all());
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => $e,
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => $e,
+              ]
             );
         }
         return response()->json(
-            [
-                'isSuccess' => true,
-                'status'    => 200,
-                'message'   => 'EL producto se ha actualizado con exito!.',
-            ]
+          [
+            'isSuccess' => true,
+            'status'    => 200,
+            'message'   => 'EL producto se ha actualizado con exito!.',
+          ]
         );
     }
 
@@ -234,28 +235,28 @@ class ProductController extends Controller
             Product::findOrFail($id)->delete();
         } catch (ModelNotFoundException $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => 'No se encontro producto para eliminar',
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => 'No se encontro producto para eliminar',
+              ]
             );
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => $e,
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => $e,
+              ]
             );
         }
 
         return response()->json(
-            [
-                'isSuccess' => true,
-                'message'   => 'El producto ha sido eliminado!.',
-                'status'    => 200,
-            ]
+          [
+            'isSuccess' => true,
+            'message'   => 'El producto ha sido eliminado!.',
+            'status'    => 200,
+          ]
         );
     }
 
