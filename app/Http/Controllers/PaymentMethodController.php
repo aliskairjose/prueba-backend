@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PaymentMethod as PaymentMethodResource;
+use App\Http\Resources\PaymentMethodCollection;
 use App\PaymentMethod;
-use App\Http\Resources\CategoryCollection;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -18,16 +19,15 @@ class PaymentMethodController extends Controller
      */
     public function index()
     {
-//        $data = Category::all();
-        $data = new CategoryCollection(PaymentMethod::all());
+        $data = new PaymentMethodCollection(PaymentMethod::all());
 
         return response()->json([
-            [
-                'isSuccess' => true,
-                'count'     => $data->count(),
-                'status'    => 200,
-                'objects'   => $data,
-            ]
+          [
+            'isSuccess' => true,
+            'count'     => $data->count(),
+            'status'    => 200,
+            'objects'   => $data,
+          ]
         ]);
     }
 
@@ -42,36 +42,36 @@ class PaymentMethodController extends Controller
 
         try {
             $rules = [
-                'name' => 'required|unique:payment_methods|max:255',
+              'name' => 'required|unique:payment_methods|max:255',
             ];
 
             $customMessages = [
-                'required' => 'The :attribute field is required.',
-                'unique' => 'The :attribute already exists.'
+              'required' => 'The :attribute field is required.',
+              'unique'   => 'The :attribute already exists.'
             ];
 
-            $this->validate($request,$rules,$customMessages);
+            $this->validate($request, $rules, $customMessages);
 
             $data = PaymentMethod::create($request->all());
 
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'message'   => 'Ha ocurrido un error',
-                    'status'    => 400,
-                    'error'     => $e
-                ]
+              [
+                'isSuccess' => false,
+                'message'   => 'Ha ocurrido un error',
+                'status'    => 400,
+                'error'     => $e
+              ]
             );
         }
 
         return response()->json(
-            [
-                'isSuccess' => true,
-                'message'   => 'El item ha sido creado con exito!.',
-                'status'    => 200,
-                'objects'   => $data,
-            ]
+          [
+            'isSuccess' => true,
+            'message'   => 'El item ha sido creado con exito!.',
+            'status'    => 200,
+            'objects'   => $data,
+          ]
         );
     }
 
@@ -88,21 +88,21 @@ class PaymentMethodController extends Controller
             $data = PaymentMethod::findOrFail($id)->update($request->all());
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => $e,
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => $e,
+              ]
             );
         }
         return response()->json(
-            [
-                'isSuccess' => true,
-                'status'    => 200,
-                'message'   => 'EL Método de pago se ha actualizado con exito!.',
-                'objects'   => $data
+          [
+            'isSuccess' => true,
+            'status'    => 200,
+            'message'   => 'EL Método de pago se ha actualizado con exito!.',
+            'objects'   => $data
 
-            ]
+          ]
         );
     }
 
@@ -115,24 +115,23 @@ class PaymentMethodController extends Controller
     public function show($id)
     {
         try {
-            $data = PaymentMethod::findOrFail($id);
-            $data[ 'products' ] = $data->products;
+            $data = new PaymentMethodResource((PaymentMethod::findOrFail($id)));
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => $e,
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => $e,
+              ]
             );
         }
 
         return response()->json(
-            [
-                'isSuccess' => true,
-                'status'    => 200,
-                'objects'   => $data
-            ]
+          [
+            'isSuccess' => true,
+            'status'    => 200,
+            'objects'   => $data
+          ]
         );
     }
 
@@ -148,28 +147,28 @@ class PaymentMethodController extends Controller
             PaymentMethod::findOrFail($id)->delete();
         } catch (ModelNotFoundException $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => 'No se encontró Método de pago para eliminar',
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => 'No se encontró Método de pago para eliminar',
+              ]
             );
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => 'Ha ocurrido un error inesperado',
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => 'Ha ocurrido un error inesperado',
+              ]
             );
         }
 
         return response()->json(
-            [
-                'isSuccess' => true,
-                'message'   => 'El item ha sido eliminado!.',
-                'status'    => 200,
-            ]
+          [
+            'isSuccess' => true,
+            'message'   => 'El item ha sido eliminado!.',
+            'status'    => 200,
+          ]
         );
     }
 }

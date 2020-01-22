@@ -15,7 +15,7 @@ class Product extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'description', 'type', 'stock', 'sale_price', 'suggested_price', 'user_id',
+      'name', 'description', 'type', 'stock', 'sale_price', 'suggested_price', 'user_id',
     ];
 
     /**
@@ -34,6 +34,7 @@ class Product extends Model
         return $this->hasMany(Variation::class);
 
     }
+
     /**
      * Método que deine la relacion de uno a muchos con product photos
      */
@@ -48,6 +49,14 @@ class Product extends Model
     public function categories()
     {
         return $this->belongsToMany(Category::class);
+    }
+
+    /**
+     * Relacion uno a uno con Usuario
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
 

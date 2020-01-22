@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Product;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class User extends JsonResource
@@ -17,15 +16,18 @@ class User extends JsonResource
     {
 
         return [
-            'id'=> $this->id,
-            'name'=> $this->name,
-            'surname'=> $this->surname,
-            'email'=> $this->email,
-            'birthday'=> $this->birthday,
-            'type_user'=> $this->type_user,
-            'status'=> $this->status,
-            'products'=> new ProductCollection( $this->products ),
-            'persistenceState'=> "Unchanged",
+          'id'                => $this->id,
+          'name'              => $this->name,
+          'surname'           => $this->surname,
+          'email'             => $this->email,
+          'birthday'          => $this->birthday,
+          'type_user'         => $this->type_user,
+          'status'            => $this->status,
+          'register_approved' => $this->register_approved,
+          'banned'            => $this->banned,
+          'approve_product'   => $this->approve_product,
+          'products'          => new ProductCollection($this->products),
+          'persistenceState'  => "Unchanged",
         ];
     }
 }
