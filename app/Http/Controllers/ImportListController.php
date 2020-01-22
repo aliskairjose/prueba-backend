@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ImportListCollection;
-use App\Http\Resources\ImportList as ImportListResource;
 use App\ImportList;
 use App\Product;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ImportListController extends Controller
 {
@@ -178,7 +178,8 @@ class ImportListController extends Controller
     {
 
         try {
-            $data = ImportList::where('user_id', $id)->get();
+            $user = $this->getAuthenticatedUser();
+            $data = ImportList::where('user_id', $user->id)->get();
 
             // ImportList Array
             $il = [];
@@ -219,5 +220,21 @@ class ImportListController extends Controller
             'objects'   => $object,
           ]
         );
+    }
+
+    private function getAuthenticatedUser()
+    {
+        try {
+            if (!$user = JWTAuth::parseToken()->authenticate()) {
+                return response()->json(['user_not_found'], 404);
+            }
+        } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            return response()->json(['token_expired'], $e->getStatusCode());
+        } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+            return response()->json(['token_invalid'], $e->getStatusCode());
+        } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
+            return response()->json(['token_absent'], $e->getStatusCode());
+        }
+        return $user;
     }
 }
