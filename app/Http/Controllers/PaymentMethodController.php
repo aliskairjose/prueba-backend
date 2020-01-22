@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use \PayU;
 
 class PaymentMethodController extends Controller
 {
@@ -18,6 +19,12 @@ class PaymentMethodController extends Controller
      */
     public function index()
     {
+        \Environment::setPaymentsCustomUrl("https://sandbox.api.payulatam.com/payments-api/4.0/service.cgi");
+// URL de Consultas
+        \Environment::setReportsCustomUrl("https://sandbox.api.payulatam.com/reports-api/4.0/service.cgi");
+// URL de Suscripciones para Pagos Recurrentes
+        \Environment::setSubscriptionsCustomUrl("https://sandbox.api.payulatam.com/payments-api/rest/v4.9/");
+
 //        $data = Category::all();
         $data = new CategoryCollection(PaymentMethod::all());
 
