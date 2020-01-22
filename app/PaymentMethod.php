@@ -11,11 +11,4 @@ class PaymentMethod extends Model
 
     protected $fillable = [ 'name','available'];
 
-    /**
-     * Relacion Mucho a Muchos con Productos
-     */
-    public function products()
-    {
-        return $this->belongsToMany(Product::class);
-    }
 }
