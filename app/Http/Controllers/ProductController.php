@@ -48,13 +48,15 @@ class ProductController extends Controller
 
             $product = Product::create(
               [
-                'name'            => $request->name,
-                'description'     => $request->description,
-                'type'            => $request->type,
-                'stock'           => $request->stock,
-                'sale_price'      => $request->sale_price,
-                'suggested_price' => $request->suggested_price,
-                'user_id'         => $user->id,
+                'name'             => $request->name,
+                'description'      => $request->description,
+                'type'             => $request->type,
+                'stock'            => $request->stock,
+                'sale_price'       => $request->sale_price,
+                'suggested_price'  => $request->suggested_price,
+                'user_id'          => $user->id,
+                'privated_product' => $request->privated_product,
+                'active'           => $user->approve_product
               ]
             );
 
