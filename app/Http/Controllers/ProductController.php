@@ -42,6 +42,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
 
+//        return $request->all();
         try {
 
             $user = $this->getAuthenticatedUser();
