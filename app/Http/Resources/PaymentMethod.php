@@ -16,6 +16,7 @@ class PaymentMethod extends JsonResource
     {
         return [
             'name'            => $this->name,
+            'available' =>$this->available
         ];
     }
 }
