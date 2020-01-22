@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ImportListCollection;
 use App\ImportList;
 use App\Product;
 use Exception;
@@ -14,26 +13,59 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class ImportListController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Muestra los productos de Mi lista de importacion
      *
      * @return JsonResponse
      */
     public function index()
     {
-        $data = new ImportListCollection(ImportList::all());
+        try {
+            $user = $this->getAuthenticatedUser();
+            $data = ImportList::where('user_id', $user->id)->get();
 
-        return response()->json([
+            // ImportList Array
+            $il = [];
+
+            foreach ($data as $d) {
+                array_push($il, $d->product_id);
+            }
+
+            if ($data->isEmpty()) {
+                return response()->json(
+                  [
+                    'isSuccess' => true,
+                    'status'    => 200,
+                    'message'   => 'No se encontro data',
+                    'objects'   => $data
+                  ]
+                );
+            }
+
+            $object = [];
+            $il_products = Product::whereIn('id', $il)->get();
+            $object = ['user_id' => $user->id, 'products' => $il_products];
+
+        } catch (Exception $e) {
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => 'Ha ocurrido un error inesperado',
+                'error'     => $e
+              ]
+            );
+        }
+        return response()->json(
           [
             'isSuccess' => true,
-            'count'     => $data->count(),
             'status'    => 200,
-            'objects'   => $data,
+            'objects'   => $object,
           ]
-        ]);
+        );
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Agrega producto a mi lista de importacion
      *
      * @param  Request  $request
      * @return JsonResponse
@@ -41,7 +73,14 @@ class ImportListController extends Controller
     public function store(Request $request)
     {
         try {
-            $data = ImportList::create($request->all());
+            $user = $this->getAuthenticatedUser();
+            $data = ImportList::create(
+              [
+                'user_id'      => $user->id,
+                'product_id'   => $request->product_id,
+                'variation_id' => $request->variation_id
+              ]
+            );
         } catch (Exception $e) {
             return response()->json(
               [
@@ -63,46 +102,7 @@ class ImportListController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return JsonResponse
-     */
-    public function show($id)
-    {
-
-        // return ImportList::findOrFail($id);
-        try {
-            $data = ImportList::findOrFail($id);
-        } catch (ModelNotFoundException $e) {
-            return response()->json(
-              [
-                'isSuccess' => true,
-                'status'    => 200,
-                'message'   => 'No se encontro coincidencia',
-              ]
-            );
-        } catch (Exception $e) {
-            return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'message'   => $e,
-              ]
-            );
-        }
-
-        return response()->json(
-          [
-            'isSuccess' => true,
-            'status'    => 200,
-            'objects'   => $data,
-          ]
-        );
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Actualiza los productos de mi lista de importacion
      *
      * @param  Request  $request
      * @param  int  $id
@@ -132,20 +132,21 @@ class ImportListController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Elimina producto de mi lista de importacion usando el id del producto
      *
      * @param  int  $id
      * @return JsonResponse
      */
-    public function delete(Request $request)
+    public function delete($id)
     {
 
         try {
-            $user = $request->user_id;
-            $product = $request->product_id;
+            /*$user = $this->getAuthenticatedUser();
+            $product = $id;
             $data = new ImportListCollection(ImportList::where('user_id', $user)->where('product_id', $product)->get());
             $idImportList = $data[ 0 ][ 'id' ];
-            $importDelete = ImportList::where('id', $idImportList)->delete();
+            $importDelete = ImportList::where('id', $idImportList)->delete();*/
+            ImportList::findOrFail($id)->delete();
         } catch (ModelNotFoundException $e) {
             return response()->json(
               [
@@ -169,55 +170,6 @@ class ImportListController extends Controller
             'isSuccess' => true,
             'message'   => 'El producto ha sido eliminado!.',
             'status'    => 200,
-            'deletes'   => $importDelete
-          ]
-        );
-    }
-
-    public function myImportList($id)
-    {
-
-        try {
-            $user = $this->getAuthenticatedUser();
-            $data = ImportList::where('user_id', $user->id)->get();
-
-            // ImportList Array
-            $il = [];
-
-            foreach ($data as $d) {
-                array_push($il, $d->product_id);
-            }
-
-            if ($data->isEmpty()) {
-                return response()->json(
-                  [
-                    'isSuccess' => true,
-                    'status'    => 200,
-                    'message'   => 'No se encontro data',
-                    'objects'   => $data
-                  ]
-                );
-            }
-
-            $object = [];
-            $il_products = Product::whereIn('id', $il)->get();
-            $object = ['user_id' => $id, 'products' => $il_products];
-
-        } catch (Exception $e) {
-            return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'message'   => 'Ha ocurrido un error inesperado',
-                'error'     => $e
-              ]
-            );
-        }
-        return response()->json(
-          [
-            'isSuccess' => true,
-            'status'    => 200,
-            'objects'   => $object,
           ]
         );
     }

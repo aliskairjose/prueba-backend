@@ -47,11 +47,9 @@ Route::delete('products/{id}', 'ProductController@delete');
 
 // ImportList Routes
 Route::get('importlist', 'ImportListController@index');
-Route::get('importlist/{id}', 'ImportListController@show');
-Route::get('importlist/user/{id}', 'ImportListController@myImportList');
 Route::post('importlist', 'ImportListController@store');
 Route::put('importlist/{id}', 'ImportListController@update');
-Route::delete('importlist/delete', 'ImportListController@delete');
+Route::delete('importlist/{id}', 'ImportListController@delete');
 
 // Variations Routes
 Route::get('variations', 'VariationController@index');
