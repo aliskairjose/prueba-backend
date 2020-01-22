@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PaymentMethod as PaymentMethodResource;
+use App\Http\Resources\PaymentMethodCollection;
 use App\PaymentMethod;
-use App\Http\Resources\CategoryCollection;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -19,22 +20,15 @@ class PaymentMethodController extends Controller
      */
     public function index()
     {
-        \Environment::setPaymentsCustomUrl("https://sandbox.api.payulatam.com/payments-api/4.0/service.cgi");
-// URL de Consultas
-        \Environment::setReportsCustomUrl("https://sandbox.api.payulatam.com/reports-api/4.0/service.cgi");
-// URL de Suscripciones para Pagos Recurrentes
-        \Environment::setSubscriptionsCustomUrl("https://sandbox.api.payulatam.com/payments-api/rest/v4.9/");
-
-//        $data = Category::all();
-        $data = new CategoryCollection(PaymentMethod::all());
+        $data = new PaymentMethodCollection(PaymentMethod::all());
 
         return response()->json([
-            [
-                'isSuccess' => true,
-                'count'     => $data->count(),
-                'status'    => 200,
-                'objects'   => $data,
-            ]
+          [
+            'isSuccess' => true,
+            'count'     => $data->count(),
+            'status'    => 200,
+            'objects'   => $data,
+          ]
         ]);
     }
 
@@ -122,8 +116,7 @@ class PaymentMethodController extends Controller
     public function show($id)
     {
         try {
-            $data = PaymentMethod::findOrFail($id);
-            $data[ 'products' ] = $data->products;
+            $data = new PaymentMethodResource((PaymentMethod::findOrFail($id)));
         } catch (Exception $e) {
             return response()->json(
                 [
