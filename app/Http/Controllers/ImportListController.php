@@ -23,12 +23,12 @@ class ImportListController extends Controller
         $data = new ImportListCollection(ImportList::all());
 
         return response()->json([
-            [
-                'isSuccess' => true,
-                'count'     => $data->count(),
-                'status'    => 200,
-                'objects'    => $data,
-            ]
+          [
+            'isSuccess' => true,
+            'count'     => $data->count(),
+            'status'    => 200,
+            'objects'   => $data,
+          ]
         ]);
     }
 
@@ -44,21 +44,21 @@ class ImportListController extends Controller
             $data = ImportList::create($request->all());
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'message'   => 'Ha ocurrido un error',
-                    'status'    => 400,
-                ]
+              [
+                'isSuccess' => false,
+                'message'   => 'Ha ocurrido un error',
+                'status'    => 400,
+              ]
             );
         }
 
         return response()->json(
-            [
-                'isSuccess' => true,
-                'message'   => 'La lista de importacion ha sido creada con exito!.',
-                'status'    => 200,
-                'objects'      => $data,
-            ]
+          [
+            'isSuccess' => true,
+            'message'   => 'La lista de importacion ha sido creada con exito!.',
+            'status'    => 200,
+            'objects'   => $data,
+          ]
         );
     }
 
@@ -76,28 +76,28 @@ class ImportListController extends Controller
             $data = ImportList::findOrFail($id);
         } catch (ModelNotFoundException $e) {
             return response()->json(
-                [
-                    'isSuccess' => true,
-                    'status'    => 200,
-                    'message'   => 'No se encontro coincidencia',
-                ]
+              [
+                'isSuccess' => true,
+                'status'    => 200,
+                'message'   => 'No se encontro coincidencia',
+              ]
             );
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => $e,
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => $e,
+              ]
             );
         }
 
         return response()->json(
-            [
-                'isSuccess' => true,
-                'status'    => 200,
-                'objects'   => $data,
-            ]
+          [
+            'isSuccess' => true,
+            'status'    => 200,
+            'objects'   => $data,
+          ]
         );
     }
 
@@ -115,19 +115,19 @@ class ImportListController extends Controller
             $data->update($request->all());
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => $e,
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => $e,
+              ]
             );
         }
         return response()->json(
-            [
-                'isSuccess' => true,
-                'status'    => 200,
-                'message'   => 'EL producto se ha actualizado con exito!.',
-            ]
+          [
+            'isSuccess' => true,
+            'status'    => 200,
+            'message'   => 'EL producto se ha actualizado con exito!.',
+          ]
         );
     }
 
@@ -144,33 +144,33 @@ class ImportListController extends Controller
             $user = $request->user_id;
             $product = $request->product_id;
             $data = new ImportListCollection(ImportList::where('user_id', $user)->where('product_id', $product)->get());
-            $idImportList = $data[0]['id'];
+            $idImportList = $data[ 0 ][ 'id' ];
             $importDelete = ImportList::where('id', $idImportList)->delete();
         } catch (ModelNotFoundException $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => 'No se encontro lista de importacion para eliminar',
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => 'No se encontro lista de importacion para eliminar',
+              ]
             );
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => 'Ha ocurrido un error inesperado',
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => 'Ha ocurrido un error inesperado',
+              ]
             );
         }
 
         return response()->json(
-            [
-                'isSuccess' => true,
-                'message'   => 'El producto ha sido eliminado!.',
-                'status'    => 200,
-                'deletes'   => $importDelete
-            ]
+          [
+            'isSuccess' => true,
+            'message'   => 'El producto ha sido eliminado!.',
+            'status'    => 200,
+            'deletes'   => $importDelete
+          ]
         );
     }
 
@@ -178,9 +178,7 @@ class ImportListController extends Controller
     {
 
         try {
-            $data = new ImportListCollection((ImportList::where('user_id', $id)->get()));
-
-            // $data = new ImportLilstResource()
+            $data = ImportList::where('user_id', $id)->get();
 
             // ImportList Array
             $il = [];
@@ -191,34 +189,35 @@ class ImportListController extends Controller
 
             if ($data->isEmpty()) {
                 return response()->json(
-                    [
-                        'isSuccess' => true,
-                        'status'    => 200,
-                        'message'   => 'No se encontro data',
-                        'objects'   => $data
-                    ]
+                  [
+                    'isSuccess' => true,
+                    'status'    => 200,
+                    'message'   => 'No se encontro data',
+                    'objects'   => $data
+                  ]
                 );
             }
 
             $object = [];
             $il_products = Product::whereIn('id', $il)->get();
-            $object = ['user_id' => $id,  'products' => $il_products];
+            $object = ['user_id' => $id, 'products' => $il_products];
 
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => 'Ha ocurrido un error inesperado',
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => 'Ha ocurrido un error inesperado',
+                'error'     => $e
+              ]
             );
         }
         return response()->json(
-            [
-                'isSuccess' => true,
-                'status'    => 200,
-                'objects'   => $object
-            ]
+          [
+            'isSuccess' => true,
+            'status'    => 200,
+            'objects'   => $object,
+          ]
         );
     }
 }
