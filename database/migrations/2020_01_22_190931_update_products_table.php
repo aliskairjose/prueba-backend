@@ -15,7 +15,7 @@ class UpdateProductsTable extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             $table->boolean('privated_product')->default(0);
-            $table->boolean('active')->default(0);
+            $table->boolean('active')->default(1);
         });
 
     }
