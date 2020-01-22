@@ -178,7 +178,7 @@ class ImportListController extends Controller
     {
 
         try {
-            /*$data = new ImportListCollection((ImportList::where('user_id', $id)->get()));
+            $data = new ImportListCollection((ImportList::where('user_id', $id)->get()));
 
             // $data = new ImportLilstResource()
 
@@ -202,7 +202,7 @@ class ImportListController extends Controller
 
             $object = [];
             $il_products = Product::whereIn('id', $il)->get();
-            $object = ['user_id' => $id,  'products' => $il_products];*/
+            $object = ['user_id' => $id,  'products' => $il_products];
 
         } catch (Exception $e) {
             return response()->json(

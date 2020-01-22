@@ -44,9 +44,6 @@ class ProductController extends Controller
     {
 
         try {
-            /* foreach ($request->attribute as $a) {
-                return $a['values'];
-            } */
 
             $user = $this->getAuthenticatedUser();
 
@@ -62,7 +59,6 @@ class ProductController extends Controller
                 ]
             );
 
-//            $product->categories()->attach(4);
             foreach ( $request->categories as $c)
             {
                 $product->categories()->attach($c['id']);
