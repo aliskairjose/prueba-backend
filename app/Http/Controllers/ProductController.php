@@ -202,8 +202,7 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $data = Product::findOrFail($id);
-            $data->update($request->all());
+            $data = Product::findOrFail($id)->update($request->all());
         } catch (Exception $e) {
             return response()->json(
               [
