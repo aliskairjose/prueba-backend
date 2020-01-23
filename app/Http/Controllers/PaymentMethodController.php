@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\PaymentMethod as PaymentMethodResource;
-use App\Http\Resources\PaymentMethodCollection;
 use App\PaymentMethod;
+use App\Http\Resources\PaymentMethodCollection;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use \PayU;
 
 class PaymentMethodController extends Controller
 {
@@ -23,12 +21,12 @@ class PaymentMethodController extends Controller
         $data = new PaymentMethodCollection(PaymentMethod::all());
 
         return response()->json([
-          [
-            'isSuccess' => true,
-            'count'     => $data->count(),
-            'status'    => 200,
-            'objects'   => $data,
-          ]
+            [
+                'isSuccess' => true,
+                'count'     => $data->count(),
+                'status'    => 200,
+                'objects'   => $data,
+            ]
         ]);
     }
 
@@ -116,7 +114,8 @@ class PaymentMethodController extends Controller
     public function show($id)
     {
         try {
-            $data = new PaymentMethodResource((PaymentMethod::findOrFail($id)));
+            $data = PaymentMethod::findOrFail($id);
+            $data[ 'products' ] = $data->products;
         } catch (Exception $e) {
             return response()->json(
                 [

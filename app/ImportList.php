@@ -14,7 +14,7 @@ class ImportList extends Model
      *
      * @var array
      */
-    protected $fillable = ['user_id', 'product_id', 'variation_id'];
+    protected $fillable = ['user_id', 'product_id', 'variation_id','imported_to_store','date_imported_store'];
 
     /**
      * Relacion uno a muchos con productos
