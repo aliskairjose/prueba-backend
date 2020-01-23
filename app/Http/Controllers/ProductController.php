@@ -42,8 +42,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
 
-        return $this->getAuthenticatedUser();
-        /*try {
+        try {
 
             $user = $this->getAuthenticatedUser();
 
@@ -130,7 +129,7 @@ class ProductController extends Controller
             'status'    => 200,
             'objects'   => $product
           ]
-        );*/
+        );
     }
 
     /**
