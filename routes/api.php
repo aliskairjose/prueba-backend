@@ -49,7 +49,7 @@ Route::delete('products/{id}', 'ProductController@delete');
 Route::get('importlist', 'ImportListController@index');
 Route::post('importlist', 'ImportListController@store');
 Route::put('importlist/{id}', 'ImportListController@update');
-Route::delete('importlist', 'ImportListController@delete');
+Route::delete('importlist/{id}', 'ImportListController@delete');
 
 // Variations Routes
 Route::get('variations', 'VariationController@index');
