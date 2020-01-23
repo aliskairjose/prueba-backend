@@ -13,6 +13,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class UserController extends Controller
 {
@@ -170,5 +171,55 @@ class UserController extends Controller
             return response()->json(['token_absent'], $e->getStatusCode());
         }
         return $user;
+    }
+
+    /**
+     * Update the column banned to specific user.
+     *
+     * @param  Request  $request
+     * @param  int  $id
+     * @return JsonResponse
+     */
+    public function banUser(Request $request)
+    {
+        try {
+            $rules = [
+                'user_id' => 'required',
+                'banea'=>'required'
+            ];
+            $customMessages = [
+                'required' => 'The :attribute field is required.',
+            ];
+            $this->validate($request,$rules,$customMessages);
+
+            $user_post = User::findOrFail($request->user_id);
+            $user_post->banned = $request->banea;
+            $user_post->save();
+
+        }catch (ModelNotFoundException $e) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => 'No se encontro el usuario',
+                ]
+            );
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => $e,
+                ]
+            );
+        }
+
+        return response()->json(
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'message'   => 'EL usuario se ha actualizado con exito!.',
+            ]
+        );
     }
 }
