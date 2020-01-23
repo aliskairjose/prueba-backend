@@ -36,6 +36,8 @@ Route::get('users', 'UserController@index');
 Route::get('users/{id}', 'UserController@show');
 Route::put('users/{id}', 'UserController@update');
 Route::post('users/changepassword', 'UserController@changePassword');
+Route::post('users/banUser', 'UserController@banUser');
+
 
 // Product Routes
 Route::get('products', 'ProductController@index');
