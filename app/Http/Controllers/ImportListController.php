@@ -134,14 +134,13 @@ class ImportListController extends Controller
     /**
      * Elimina producto de mi lista de importacion usando el id del producto
      *
-     * @param  int  $id
      * @return JsonResponse
      */
-    public function delete($id)
+    public function delete(Request $request)
     {
 
         try {
-            ImportList::findOrFail($id)->delete();
+            ImportList::findOrFail($request->id)->delete();
         } catch (ModelNotFoundException $e) {
             return response()->json(
               [
