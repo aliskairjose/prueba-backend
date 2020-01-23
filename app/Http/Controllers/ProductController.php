@@ -42,10 +42,20 @@ class ProductController extends Controller
     public function store(Request $request)
     {
 
-//        return $request->all();
-        try {
+        return $this->getAuthenticatedUser();
+        /*try {
 
             $user = $this->getAuthenticatedUser();
+
+            if($request->type!=='SIMPLE' && $request->type!=='VARIABLE'){
+                return response()->json(
+                    [
+                        'isSuccess' => false,
+                        'status'    => 400,
+                        'message'   => 'El tipo de producto, debe ser VARIABLE o SIMPLE',
+                    ]
+                );
+            }
 
             $product = Product::create(
               [
@@ -120,7 +130,7 @@ class ProductController extends Controller
             'status'    => 200,
             'objects'   => $product
           ]
-        );
+        );*/
     }
 
     /**
@@ -266,11 +276,11 @@ class ProductController extends Controller
                 return response()->json(['user_not_found'], 404);
             }
         } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
-            return response()->json(['token_expired'], $e->getStatusCode());
+            return response()->json(['token_expired']);
         } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
-            return response()->json(['token_invalid'], $e->getStatusCode());
+            return response()->json(['token_invalid']);
         } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
-            return response()->json(['token_absent'], $e->getStatusCode());
+            return response()->json(['token_absent']);
         }
         return $user;
     }
