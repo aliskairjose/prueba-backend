@@ -147,7 +147,8 @@ class ImportListController extends Controller
               [
                 'isSuccess' => false,
                 'status'    => 400,
-                'message'   => 'No se encontro lista de importacion para eliminar',
+                'message'   => 'No se producto en lista de importacion para eliminar',
+                'error'     => $e
               ]
             );
         } catch (Exception $e) {
