@@ -47,6 +47,16 @@ class ProductController extends Controller
 
             $user = $this->getAuthenticatedUser();
 
+            if($request->type!=='SIMPLE' && $request->type!=='VARIABLE'){
+                return response()->json(
+                    [
+                        'isSuccess' => false,
+                        'status'    => 400,
+                        'message'   => 'El tipo de producto, debe ser VARIABLE o SIMPLE',
+                    ]
+                );
+            }
+
             $product = Product::create(
               [
                 'name'             => $request->name,
