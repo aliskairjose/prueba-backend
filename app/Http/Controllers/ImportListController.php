@@ -141,11 +141,6 @@ class ImportListController extends Controller
     {
 
         try {
-            /*$user = $this->getAuthenticatedUser();
-            $product = $id;
-            $data = new ImportListCollection(ImportList::where('user_id', $user)->where('product_id', $product)->get());
-            $idImportList = $data[ 0 ][ 'id' ];
-            $importDelete = ImportList::where('id', $idImportList)->delete();*/
             ImportList::findOrFail($id)->delete();
         } catch (ModelNotFoundException $e) {
             return response()->json(
