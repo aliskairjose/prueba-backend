@@ -34,9 +34,8 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::get('users', 'UserController@index');
     Route::get('users/{id}', 'UserController@show');
     Route::put('users/{id}', 'UserController@update');
+    Route::post('users', 'UserController@store');
     Route::post('users/changepassword', 'UserController@changePassword');
-    Route::post('users/supplier', 'UserController@createSupplier');
-    Route::put('users/supplier', 'UserController@updateSupplier');
     Route::post('users/banuser', 'UserController@banUser');
 
 
@@ -53,6 +52,7 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::post('importlist', 'ImportListController@store');
     Route::put('importlist/{id}', 'ImportListController@update');
     Route::delete('importlist/{id}', 'ImportListController@delete');
+    Route::put('importlist/importstore/{id}', 'ImportListController@updateImportedToStore');
 
 // Variations Routes
     Route::get('variations', 'VariationController@index');
