@@ -101,7 +101,7 @@ return [
     |
     */
 
-    'ttl' => env('JWT_TTL', 2880), // dos dias
+    'ttl' => env('JWT_TTL', 4320), // 3 dias
 //    'ttl' => env('JWT_TTL', 60),
 
     /*
