@@ -22,6 +22,7 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  Request  $request
      * @return JsonResponse
      */
     public function index(Request $request)
@@ -125,9 +126,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-//        return $data = User::findOrFail($id);
         try {
-//            $data = User::findOrFail($id)->update($request);
             $data = User::findOrFail($id);
 
             $data->name = $request->name;
