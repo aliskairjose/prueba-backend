@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Date;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ImportListController extends Controller
@@ -27,7 +28,11 @@ class ImportListController extends Controller
             $il = [];
 
             foreach ($data as $d) {
-                array_push($il, $d->product_id);
+//                array_push($il, $d->product_id);
+                $product = Product::where('id', $d->product_id)->get();
+                $product[0]['id'] = $d->id;
+                array_push($il, $product[0]);
+
             }
 
             if ($data->isEmpty()) {
@@ -41,9 +46,7 @@ class ImportListController extends Controller
                 );
             }
 
-            $object = [];
-            $il_products = Product::whereIn('id', $il)->get();
-            $object = ['user_id' => $user->id, 'products' => $il_products];
+            $object = ['user_id' => $user->id, 'products' => $il];
 
         } catch (Exception $e) {
             return response()->json(
@@ -78,7 +81,8 @@ class ImportListController extends Controller
               [
                 'user_id'      => $user->id,
                 'product_id'   => $request->product_id,
-                'variation_id' => $request->variation_id
+                'variation_id' => $request->variation_id,
+                'date_imported_store' => now()
               ]
             );
         } catch (Exception $e) {
@@ -87,6 +91,7 @@ class ImportListController extends Controller
                 'isSuccess' => false,
                 'message'   => 'Ha ocurrido un error',
                 'status'    => 400,
+                'error'     => $e
               ]
             );
         }

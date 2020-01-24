@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\User as UserResource;
 use App\Http\Resources\UserCollection;
+use App\Mail\User as UserMail;
 use App\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -15,7 +16,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use App\Mail\User as UserMail;
 
 class UserController extends Controller
 {
@@ -261,6 +261,39 @@ class UserController extends Controller
           [
             'isSuccess' => true,
             'message'   => 'El supplier se ha sido creado con exito!.',
+            'status'    => 200,
+            'objects'   => $data
+          ]
+        );
+    }
+
+    public function updateSupplier(Request $request, $id)
+    {
+        try {
+            $data = User::findOrFail($id)->update($request);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'message'   => 'No se encontro registro a actualizar',
+                'status'    => 400
+              ]
+            );
+        } catch (Exception $e) {
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'message'   => 'Ha ocurrido un error inesperado',
+                'status'    => 400,
+                'error'     => $e
+              ]
+            );
+        }
+
+        return response()->json(
+          [
+            'isSuccess' => true,
+            'message'   => 'El registro se actualizo con exito',
             'status'    => 200,
             'objects'   => $data
           ]
