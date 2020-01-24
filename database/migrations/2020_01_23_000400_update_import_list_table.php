@@ -15,7 +15,7 @@ class UpdateImportListTable extends Migration
     {
         Schema::table('import_lists', function (Blueprint $table) {
             $table->boolean('imported_to_store')->default(0);
-            $table->dateTime('date_imported_store');
+            $table->dateTime('date_imported_store')->useCurrent = true;
         });
     }
 
