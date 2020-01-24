@@ -8,7 +8,6 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Date;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ImportListController extends Controller
@@ -30,8 +29,9 @@ class ImportListController extends Controller
             foreach ($data as $d) {
 //                array_push($il, $d->product_id);
                 $product = Product::where('id', $d->product_id)->get();
-                $product[0]['id'] = $d->id;
-                array_push($il, $product[0]);
+                $product[ 0 ][ 'id' ] = $d->id;
+                $product[ 0 ][ 'product_id' ] = $d->product_id;
+                array_push($il, $product[ 0 ]);
 
             }
 
@@ -79,9 +79,9 @@ class ImportListController extends Controller
             $user = $this->getAuthenticatedUser();
             $data = ImportList::create(
               [
-                'user_id'      => $user->id,
-                'product_id'   => $request->product_id,
-                'variation_id' => $request->variation_id,
+                'user_id'             => $user->id,
+                'product_id'          => $request->product_id,
+                'variation_id'        => $request->variation_id,
                 'date_imported_store' => now()
               ]
             );
@@ -116,8 +116,15 @@ class ImportListController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $data = ImportList::findOrFail($id);
-            $data->update($request->all());
+            ImportList::findOrFail($id)->update($request->all());
+        } catch (ModelNotFoundException $e) {
+            return response()->json(
+              [
+                'isSuccess' => true,
+                'status'    => 200,
+                'message'   => 'No se encontro registro!.',
+              ]
+            );
         } catch (Exception $e) {
             return response()->json(
               [
@@ -173,6 +180,44 @@ class ImportListController extends Controller
             'status'    => 200,
           ]
         );
+    }
+
+
+    /**
+     * @param  Request  $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function updateImportedToStore(Request $request, $id)
+    {
+
+        try {
+            ImportList::findOrFail($id)->update($request->all());
+        } catch (ModelNotFoundException $e) {
+            return response()->json(
+              [
+                'isSuccess' => true,
+                'status'    => 200,
+                'message'   => 'No se encontro registro!.',
+              ]
+            );
+        } catch (Exception $e) {
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => $e,
+              ]
+            );
+        }
+        return response()->json(
+          [
+            'isSuccess' => true,
+            'status'    => 200,
+            'message'   => 'El registro se ha actualizado con exito!.',
+          ]
+        );
+
     }
 
     private function getAuthenticatedUser()
