@@ -19,6 +19,7 @@ class Product extends JsonResource
         $user = new Resource($this->user);
         return [
           'id'               => $this->id,
+          'id_lista'         => 0,
           'name'             => $this->name,
           'description'      => $this->description,
           'type'             => $this->type,
