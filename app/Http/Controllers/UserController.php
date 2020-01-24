@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -44,11 +43,48 @@ class UserController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  Request  $request
-     * @return Response
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $password = Str::random(10);
+            $data = User::create(
+              [
+                'name'              => $request->name,
+                'surname'           => $request->surname,
+                'email'             => $request->email,
+                'birthday'          => $request->birthday,
+                'type_user'         => 'supplier',
+                'status'            => $request->status,
+                'register_approved' => $request->register_approved,
+                'banned'            => $request->banned,
+                'approve_product'   => $request->approve_product,
+                'password'          => Hash::make($password),
+              ]
+            );
+
+        } catch (Exception $e) {
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'message'   => 'Ha ocurrido un error',
+                'status'    => 400,
+                'error'     => $e
+              ]
+            );
+        }
+
+        $this->sendNotification($request->email, $password);
+
+        return response()->json(
+          [
+            'isSuccess' => true,
+            'message'   => 'El supplier se ha sido creado con exito!.',
+            'status'    => 200,
+            'objects'   => $data
+          ]
+        );
     }
 
     /**
@@ -89,37 +125,50 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+//        return $data = User::findOrFail($id);
         try {
+//            $data = User::findOrFail($id)->update($request);
             $data = User::findOrFail($id);
-            $data->update($request->all());
+
+            $data->name = $request->name;
+            $data->surname = $request->surname;
+            $data->email = $request->email;
+            $data->birthday = $request->birthday;
+            $data->status = $request->status;
+            $data->register_approved = $request->register_approved;
+            $data->banned = $request->banned;
+            $data->approve_product = $request->approve_product;
+            $data->save();
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'message'   => 'No se encontro registro a actualizar',
+                'status'    => 400
+              ]
+            );
         } catch (Exception $e) {
             return response()->json(
               [
                 'isSuccess' => false,
+                'message'   => 'Ha ocurrido un error inesperado',
                 'status'    => 400,
-                'message'   => $e,
+                'error'     => $e
               ]
             );
         }
+
         return response()->json(
           [
             'isSuccess' => true,
+            'message'   => 'El registro se actualizo con exito',
             'status'    => 200,
-            'message'   => 'EL producto se ha actualizado con exito!.',
+            'objects'   => $data
           ]
         );
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 
     public function changePassword(Request $request)
     {
@@ -228,77 +277,7 @@ class UserController extends Controller
 
     public function createSupplier(Request $request)
     {
-        try {
-            $password = Str::random(10);
-            $data = User::create(
-              [
-                'name'              => $request->name,
-                'surname'           => $request->surname,
-                'email'             => $request->email,
-                // 'birthday'          => $request->birthday,
-                'type_user'         => 'supplier',
-                'status'            => $request->status,
-                'register_approved' => $request->register_approved,
-                'banned'            => $request->banned,
-                'approve_product'   => $request->approve_product,
-                'password'          => Hash::make($password),
-              ]
-            );
 
-        } catch (Exception $e) {
-            return response()->json(
-              [
-                'isSuccess' => false,
-                'message'   => 'Ha ocurrido un error',
-                'status'    => 400,
-                'error'     => $e
-              ]
-            );
-        }
-
-        $this->sendNotification($request->email, $password);
-
-        return response()->json(
-          [
-            'isSuccess' => true,
-            'message'   => 'El supplier se ha sido creado con exito!.',
-            'status'    => 200,
-            'objects'   => $data
-          ]
-        );
-    }
-
-    public function updateSupplier(Request $request, $id)
-    {
-        try {
-            $data = User::findOrFail($id)->update($request);
-        } catch (ModelNotFoundException $e) {
-            return response()->json(
-              [
-                'isSuccess' => false,
-                'message'   => 'No se encontro registro a actualizar',
-                'status'    => 400
-              ]
-            );
-        } catch (Exception $e) {
-            return response()->json(
-              [
-                'isSuccess' => false,
-                'message'   => 'Ha ocurrido un error inesperado',
-                'status'    => 400,
-                'error'     => $e
-              ]
-            );
-        }
-
-        return response()->json(
-          [
-            'isSuccess' => true,
-            'message'   => 'El registro se actualizo con exito',
-            'status'    => 200,
-            'objects'   => $data
-          ]
-        );
     }
 
     private function sendNotification($email, $password)
