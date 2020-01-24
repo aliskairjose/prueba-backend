@@ -20,6 +20,8 @@ class ImportList extends JsonResource
           'user_id'      => $this->user_id,
           'product_id'   => $this->product_id,
           'variation_id' => $this->variation_id,
+          'imported_to_store' =>$this->importe_to_store,
+          'date_imported_store' => $this->date_importe_store,
           'products'     => new ProductCollection($this->products)
         ];
     }

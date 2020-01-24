@@ -35,6 +35,8 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::get('users/{id}', 'UserController@show');
     Route::put('users/{id}', 'UserController@update');
     Route::post('users/changepassword', 'UserController@changePassword');
+    Route::post('users/supplier', 'UserController@createSupplier');
+    Route::put('users/supplier', 'UserController@updateSupplier');
     Route::post('users/banuser', 'UserController@banUser');
 
 
@@ -110,13 +112,13 @@ Route::group(['middleware' => 'jwt.verify'], function () {
 
 // RequestTest Routes
     Route::get('requesttest/user/{id}', 'RequestTestController@myRequestTest');
-    /*
+
      Route::get('requesttest', 'RequestTestController@index');
      Route::get('requesttest/{id}', 'RequestTestController@show');
      Route::post('requesttest', 'RequestTestController@store');
      Route::put('requesttest/{id}', 'RequestTestController@update');
      Route::delete('requesttest/{id}', 'RequestTestController@delete');
-     */
+
 
 // My Orders Routes
     Route::post('orders/myorders', 'MyOrderController@store');
