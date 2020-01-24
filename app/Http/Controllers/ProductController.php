@@ -42,7 +42,6 @@ class ProductController extends Controller
     public function store(Request $request)
     {
 
-//        return $request->all();
         try {
 
             $user = $this->getAuthenticatedUser();
@@ -276,11 +275,11 @@ class ProductController extends Controller
                 return response()->json(['user_not_found'], 404);
             }
         } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
-            return response()->json(['token_expired'], $e->getStatusCode());
+            return response()->json(['token_expired']);
         } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
-            return response()->json(['token_invalid'], $e->getStatusCode());
+            return response()->json(['token_invalid']);
         } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
-            return response()->json(['token_absent'], $e->getStatusCode());
+            return response()->json(['token_absent']);
         }
         return $user;
     }
