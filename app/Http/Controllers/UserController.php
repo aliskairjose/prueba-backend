@@ -15,6 +15,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserController extends Controller
@@ -228,14 +229,14 @@ class UserController extends Controller
     public function createSupplier(Request $request)
     {
         try {
-            $password = "123456789**abcde";
+            $password = Str::random(10);
             $data = User::create(
               [
                 'name'              => $request->name,
                 'surname'           => $request->surname,
                 'email'             => $request->email,
                 // 'birthday'          => $request->birthday,
-                'type_user'         => $request->type_user,
+                'type_user'         => 'supplier',
                 'status'            => $request->status,
                 'register_approved' => $request->register_approved,
                 'banned'            => $request->banned,
