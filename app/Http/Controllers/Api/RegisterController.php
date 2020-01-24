@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\User;
+use App\Role;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
@@ -29,6 +30,39 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         try {
+            $input = $request->all();
+
+            if($request->get('role_id')){
+                $rol = Role::find($request->get('role_id'));
+
+                if($rol==NULL){
+                    return response()->json(
+                        [
+                            'isSuccess' => false,
+                            'messagge' => 'El rol ingresado, no existe',
+                            'status' => 409,
+                        ]
+                    );
+                }
+
+            }else{
+                $rol = Role::where('name', 'DROPSHIPPER')->first();
+                if($rol==NULL){
+                    return response()->json(
+                        [
+                            'isSuccess' => false,
+                            'messagge' => 'El rol DROPSHIPPER, no existe',
+                            'status' => 409,
+                        ]
+                    );
+                }
+                $input['role_id'] = '';
+                $input['role_id'] = $rol->id;
+            }
+
+            $input['type_user'] = '';
+            $input['type_user'] = $rol->name;
+
             $validator = Validator::make(
                 $request->all(),
                 [
@@ -54,9 +88,11 @@ class RegisterController extends Controller
                 );
             }
 
-            $input = $request->all();
+
             $input['password'] = bcrypt($input['password']);
+
             $user = User::create($input);
+            var_dump($user);
 
         } catch (QueryException $e) {
             $error = $e->getMessage();
