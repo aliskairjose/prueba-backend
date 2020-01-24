@@ -6,14 +6,16 @@ use App\Http\Resources\User as UserResource;
 use App\Http\Resources\UserCollection;
 use App\User;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Mail\User as UserMail;
 
 class UserController extends Controller
 {
@@ -184,42 +186,96 @@ class UserController extends Controller
     {
         try {
             $rules = [
-                'user_id' => 'required',
-                'banea'=>'required'
+              'user_id' => 'required',
+              'banea'   => 'required'
             ];
             $customMessages = [
-                'required' => 'The :attribute field is required.',
+              'required' => 'The :attribute field is required.',
             ];
-            $this->validate($request,$rules,$customMessages);
+            $this->validate($request, $rules, $customMessages);
 
             $user_post = User::findOrFail($request->user_id);
             $user_post->banned = $request->banea;
             $user_post->save();
 
-        }catch (ModelNotFoundException $e) {
+        } catch (ModelNotFoundException $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => 'No se encontro el usuario',
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => 'No se encontro el usuario',
+              ]
             );
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => $e,
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => $e,
+              ]
             );
         }
 
         return response()->json(
-            [
-                'isSuccess' => true,
-                'status'    => 200,
-                'message'   => 'EL usuario se ha actualizado con exito!.',
-            ]
+          [
+            'isSuccess' => true,
+            'status'    => 200,
+            'message'   => 'EL usuario se ha actualizado con exito!.',
+          ]
         );
+    }
+
+    public function createSupplier(Request $request)
+    {
+        try {
+            $password = "123456789**abcde";
+            $data = User::create(
+              [
+                'name'              => $request->name,
+                'surname'           => $request->surname,
+                'email'             => $request->email,
+                // 'birthday'          => $request->birthday,
+                'type_user'         => $request->type_user,
+                'status'            => $request->status,
+                'register_approved' => $request->register_approved,
+                'banned'            => $request->banned,
+                'approve_product'   => $request->approve_product,
+                'password'          => Hash::make($password),
+              ]
+            );
+
+        } catch (Exception $e) {
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'message'   => 'Ha ocurrido un error',
+                'status'    => 400,
+                'error'     => $e
+              ]
+            );
+        }
+
+        $this->sendNotification($request->email, $password);
+
+        return response()->json(
+          [
+            'isSuccess' => true,
+            'message'   => 'El supplier se ha sido creado con exito!.',
+            'status'    => 200,
+            'objects'   => $data
+          ]
+        );
+    }
+
+    private function sendNotification($email, $password)
+    {
+        try {
+            // Usando queue en lugar de send, el correo se envia en segundo plano!
+            Mail::to($email)->queue(new UserMail($password));
+        } catch (\Exception $e) {
+            return 'Error al mandar la notificacion';
+        }
+
+        return 'Notificacion enviada con exito';
     }
 }

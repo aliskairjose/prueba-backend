@@ -43,8 +43,8 @@ class RequestTestController extends Controller
      */
     public function store(Request $request)
     {
-
-        try {
+        $this->sendNotification('kervingonzalez@gmail.com');
+        /*try {
             $data = RequestTest::create($request->all());
         } catch (Exception $e) {
             return response()->json(
@@ -68,7 +68,7 @@ class RequestTestController extends Controller
                 'Notification'  => $notification,
                 'objects'       => $data,
             ]
-        );
+        );*/
     }
 
     /**

@@ -10,8 +10,9 @@ use App\Http\Resources\MyOrder as MyOrderResource;
 use App\Http\Resources\MyOrderCollection;
 use App\Mail\MyOrder as MailMyOrder;
 use Exception;
-use Illuminate\Contracts\Mail\Mailer;
 use App\User;
+use Illuminate\Support\Facades\Mail;
+
 
 class MyOrderController extends Controller
 {
@@ -29,7 +30,7 @@ class MyOrderController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  Request  $request
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
@@ -63,7 +64,7 @@ class MyOrderController extends Controller
      * Recide el id del usuario
      *
      * @param  int  $id
-     * @return Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
@@ -114,7 +115,7 @@ class MyOrderController extends Controller
     {
         try {
             // Usando queue en lugar de send, el correo se envia en segundo plano!
-            Mailer::to($email)->queue(new MailMyOrder());
+            Mail::to($email)->queue(new MailMyOrder());
         } catch (\Exception $e) {
             return 'Error al mandar la notificacion';
         }
