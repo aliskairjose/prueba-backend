@@ -144,4 +144,11 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::delete('paymentmethods/{id}', 'PaymentMethodController@delete');
     Route::put('paymentmethods/{id}', 'PaymentMethodController@update');
 
+    //Role Routes
+    Route::get('roles', 'RoleController@index');
+    Route::get('roles/{id}', 'RoleController@show');
+    Route::post('roles', 'RoleController@store');
+    Route::delete('roles/{id}', 'RoleController@delete');
+    Route::put('roles/{id}', 'RoleController@update');
+
 });
