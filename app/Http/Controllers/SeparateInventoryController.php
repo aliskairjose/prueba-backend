@@ -185,8 +185,7 @@ class SeparateInventoryController extends Controller
                 'message'   => 'No se encontro Separate Inventory para eliminar',
               ]
             );
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
               [
                 'isSuccess' => false,
@@ -209,7 +208,7 @@ class SeparateInventoryController extends Controller
     {
         try {
             // Usando queue en lugar de send, el correo se envia en segundo plano!
-            Mail::to($email)->queue( new \App\Mail\SeparateInventory());
+            Mail::to($email)->queue(new \App\Mail\SeparateInventory());
         } catch (\Exception $e) {
             return 'Error al mandar la notificacion';
         }
