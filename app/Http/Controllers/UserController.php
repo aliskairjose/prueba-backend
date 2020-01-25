@@ -30,14 +30,14 @@ class UserController extends Controller
 
         $data = new UserCollection((User::where('type_user', $request->type_user)->get()));
 
-        return response()->json([
+        return response()->json(
           [
             'count'     => $data->count(),
             'isSuccess' => true,
             'objects'   => $data,
             'status'    => 200
           ]
-        ]);
+        );
     }
 
     /**

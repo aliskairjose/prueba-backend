@@ -22,14 +22,14 @@ class AttributeController extends Controller
     {
         $data = new AttributeCollection(Attribute::all());
 
-        return response()->json([
+        return response()->json(
             [
                 'isSuccess' => true,
                 'count'     => $data->count(),
                 'status'    => 200,
                 'objects'    => $data,
             ]
-        ]);
+        );
     }
 
     /**

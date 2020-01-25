@@ -18,14 +18,14 @@ class RecordController extends Controller
     {
         $data = new RecordCollection(Record::all());
 
-        return response()->json([
+        return response()->json(
             [
                 'isSuccess' => true,
                 'count'     => $data->count(),
                 'status'    => 200,
                 'objects'   => $data,
             ]
-        ]);
+        );
     }
 
     /**

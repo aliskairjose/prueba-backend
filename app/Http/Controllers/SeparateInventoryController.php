@@ -23,14 +23,14 @@ class SeparateInventoryController extends Controller
     {
         $data = new SeparateInventoryCollection(SeparateInventory::all());
 
-        return response()->json([
+        return response()->json(
           [
             'isSuccess' => true,
             'count'     => $data->count(),
             'status'    => 200,
             'objects'   => $data,
           ]
-        ]);
+        );
     }
 
     /**

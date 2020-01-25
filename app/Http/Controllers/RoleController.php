@@ -20,14 +20,14 @@ class RoleController extends Controller
     {
         $data = new RoleCollection(Role::all());
 
-        return response()->json([
+        return response()->json(
             [
                 'isSuccess' => true,
                 'count'     => $data->count(),
                 'status'    => 200,
                 'objects'   => $data,
             ]
-        ]);
+        );
     }
 
     /**

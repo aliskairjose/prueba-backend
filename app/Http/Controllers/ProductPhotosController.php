@@ -17,14 +17,14 @@ class ProductPhotosController extends Controller
     {
         $data = new ProductPhotoCollection(ProductPhoto::all());
 
-        return response()->json([
+        return response()->json(
             [
                 'isSuccess' => true,
                 'count'     => $data->count(),
                 'status'    => 200,
                 'objects'   => $data,
             ]
-        ]);
+        );
     }
 
 

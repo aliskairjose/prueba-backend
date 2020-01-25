@@ -21,14 +21,14 @@ class VariationController extends Controller
     {
         $data = new VariationCollection(Variation::all());
 
-        return response()->json([
+        return response()->json(
             [
                 'count'     => $data->count(),
                 'isSuccess' => true,
                 'objects'    => $data,
                 'status'    => 200
             ]
-        ]);
+        );
     }
 
     /**

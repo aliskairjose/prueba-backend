@@ -25,14 +25,14 @@ class RequestTestController extends Controller
     {
         $data = new RequestTestCollection(RequestTest::all());
 
-        return response()->json([
+        return response()->json(
             [
                 'isSuccess' => true,
                 'count'     => $data->count(),
                 'status'    => 200,
                 'objects'   => $data,
             ]
-        ]);
+        );
     }
 
     /**
