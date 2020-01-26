@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ImportList;
+use App\Http\Resources\Product as ProductResource;
 use App\Product;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -27,12 +28,15 @@ class ImportListController extends Controller
             $il = [];
 
             foreach ($data as $d) {
-//                array_push($il, $d->product_id);
-                $product = Product::where('id', $d->product_id)->get();
-                $product[ 0 ][ 'id' ] = $d->id;
-                $product[ 0 ][ 'product_id' ] = $d->product_id;
-                array_push($il, $product[ 0 ]);
-
+                $product = Product::findOrFail($d->product_id);
+                $prod_res = new ProductResource(Product::findOrFail($d->product_id));
+                $product->id = $d->id;
+                $product->product_id = $d->product_id;
+                $product->attributes = $prod_res->attributes;
+                $product->variations = $prod_res->variations;
+                $product->gallery = $prod_res->gallery;
+                $product->categories = $prod_res->categories;
+                array_push($il, $product);
             }
 
             if ($data->isEmpty()) {
@@ -40,7 +44,7 @@ class ImportListController extends Controller
                   [
                     'isSuccess' => true,
                     'status'    => 200,
-                    'message'   => 'No se encontro data',
+                    'message'   => 'No se encontró data',
                     'objects'   => $data
                   ]
                 );
@@ -48,7 +52,17 @@ class ImportListController extends Controller
 
             $object = ['user_id' => $user->id, 'products' => $il];
 
-        } catch (Exception $e) {
+        }
+        catch ( ModelNotFoundException $e){
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'error'     => $e
+              ]
+            );
+        }
+        catch (Exception $e) {
             return response()->json(
               [
                 'isSuccess' => false,
