@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\ImportList;
 use App\Http\Resources\Product as ProductResource;
+use App\ImportList;
 use App\Product;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -34,7 +34,10 @@ class ImportListController extends Controller
                 $product->product_id = $d->product_id;
                 $product->attributes = $prod_res->attributes;
                 $product->variations = $prod_res->variations;
-                $product->gallery = $prod_res->gallery;
+                $product->gallery = [];
+                if($prod_res->gallery !== null){
+                    $product->gallery = $prod_res->gallery;
+                }
                 $product->categories = $prod_res->categories;
                 array_push($il, $product);
             }
@@ -52,8 +55,7 @@ class ImportListController extends Controller
 
             $object = ['user_id' => $user->id, 'products' => $il];
 
-        }
-        catch ( ModelNotFoundException $e){
+        } catch (ModelNotFoundException $e) {
             return response()->json(
               [
                 'isSuccess' => false,
@@ -61,8 +63,7 @@ class ImportListController extends Controller
                 'error'     => $e
               ]
             );
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
               [
                 'isSuccess' => false,
