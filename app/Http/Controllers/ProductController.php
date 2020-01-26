@@ -23,14 +23,14 @@ class ProductController extends Controller
     {
         $data = new ProductCollection(Product::all());
 
-        return response()->json([
+        return response()->json(
           [
             'isSuccess' => true,
             'count'     => $data->count(),
             'status'    => 200,
             'objects'   => $data,
           ]
-        ]);
+        );
     }
 
     /**
