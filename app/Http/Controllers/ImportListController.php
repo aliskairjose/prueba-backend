@@ -36,7 +36,7 @@ class ImportListController extends Controller
                 $product->attributes = $prod_res->attributes;
                 $product->variations = $prod_res->variations;
                 $product->gallery = [];
-                if($prod_res->gallery !== null){
+                if ($prod_res->gallery !== null) {
                     $product->gallery = $prod_res->gallery;
                 }
                 $product->categories = $prod_res->categories;
@@ -242,13 +242,21 @@ class ImportListController extends Controller
      * @param $id
      * @return JsonResponse
      */
-    public function updateProductName(Request $request, $id){
+    public function updateProductName(Request $request, $id)
+    {
         try {
             $data = ImportList::find($id);
             $data->product_name = $request->product_name;
             $data->save();
-        }
-        catch ( ModelNotFoundException $e){
+        } catch (ModelNotFoundException $e) {
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => $e,
+              ]
+            );
+        } catch (Exception $e) {
             return response()->json(
               [
                 'isSuccess' => false,
@@ -257,15 +265,13 @@ class ImportListController extends Controller
               ]
             );
         }
-        catch ( Exception $e){
-            return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'message'   => $e,
-              ]
-            );
-        }
+        return response()->json(
+          [
+            'isSuccess' => true,
+            'status'    => 200,
+            'message'   => 'Item actualizado',
+          ]
+        );
     }
 
     private function getAuthenticatedUser()

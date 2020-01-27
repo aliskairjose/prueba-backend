@@ -54,7 +54,7 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::put('importlist/{id}', 'ImportListController@update');
     Route::delete('importlist/{id}', 'ImportListController@delete');
     Route::put('importlist/importstore/{id}', 'ImportListController@updateImportedToStore');
-    Route::put('importlist/product/update', 'ImportListController@updateProductName');
+    Route::put('importlist/product/update/{id}', 'ImportListController@updateProductName');
 
 // Variations Routes
     Route::get('variations', 'VariationController@index');
