@@ -11,8 +11,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-<<<<<<< HEAD
-=======
         // $this->call(UsersTableSeeder::class);
         // $this->call('UserSeeder');
         // $this->call('ProductSeeder');
@@ -22,7 +20,6 @@ class DatabaseSeeder extends Seeder
         // $this->call('AttributesVariationsSeeder');
         // $this->call('SeparateInventorySeeder');
          $this->call('RolesTableSeeder');
->>>>>>> 173414a450a046f12267f0c4ff17ed2ab9d5980b
 
     }
 }
