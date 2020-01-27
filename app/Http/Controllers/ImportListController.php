@@ -31,6 +31,7 @@ class ImportListController extends Controller
                 $product = Product::findOrFail($d->product_id);
                 $prod_res = new ProductResource(Product::findOrFail($d->product_id));
                 $product->id = $d->id;
+                $product->name = $d->product_name;
                 $product->product_id = $d->product_id;
                 $product->attributes = $prod_res->attributes;
                 $product->variations = $prod_res->variations;
