@@ -21,6 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('login', 'Api\AuthController@login');
 Route::post('register', 'Api\RegisterController@register');
+Route::post('sendMail', 'UserController@sendMail');
 
 // Password Reset Routes
 Route::post('password/email', 'Api\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
@@ -53,6 +54,7 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::put('importlist/{id}', 'ImportListController@update');
     Route::delete('importlist/{id}', 'ImportListController@delete');
     Route::put('importlist/importstore/{id}', 'ImportListController@updateImportedToStore');
+    Route::put('importlist/product/update/{id}', 'ImportListController@updateProductName');
 
 // Variations Routes
     Route::get('variations', 'VariationController@index');

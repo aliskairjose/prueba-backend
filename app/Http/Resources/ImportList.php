@@ -16,13 +16,14 @@ class ImportList extends JsonResource
     public function toArray($request)
     {
         return [
-          'id'           => $this->id,
-          'user_id'      => $this->user_id,
-          'product_id'   => $this->product_id,
-          'variation_id' => $this->variation_id,
-          'imported_to_store' =>$this->importe_to_store,
+          'id'                  => $this->id,
+          'user_id'             => $this->user_id,
+          'product_id'          => $this->product_id,
+          'variation_id'        => $this->variation_id,
+          'imported_to_store'   => $this->importe_to_store,
           'date_imported_store' => $this->date_importe_store,
-          'products'     => new ProductCollection($this->products)
+          'product_name'        => $this->product_name,
+          'products'            => new ProductCollection($this->products)
         ];
     }
 }
