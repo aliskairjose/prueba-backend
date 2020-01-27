@@ -93,11 +93,13 @@ class ImportListController extends Controller
     {
         try {
             $user = $this->getAuthenticatedUser();
+            $product = Product::find($request->product_id);
             $data = ImportList::create(
               [
                 'user_id'             => $user->id,
                 'product_id'          => $request->product_id,
                 'variation_id'        => $request->variation_id,
+                'product_name'        => $product->name,
                 'date_imported_store' => now()
               ]
             );
