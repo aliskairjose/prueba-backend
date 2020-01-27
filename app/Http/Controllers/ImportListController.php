@@ -235,6 +235,38 @@ class ImportListController extends Controller
 
     }
 
+    /**
+     * Actualiza el nombre del producto solo en la lista de importación
+     * @param  Request  $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function updateProductName(Request $request, $id){
+        try {
+            $data = ImportList::find($id);
+            $data->product_name = $request->product_name;
+            $data->save();
+        }
+        catch ( ModelNotFoundException $e){
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => $e,
+              ]
+            );
+        }
+        catch ( Exception $e){
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => $e,
+              ]
+            );
+        }
+    }
+
     private function getAuthenticatedUser()
     {
         try {
