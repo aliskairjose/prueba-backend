@@ -19,7 +19,7 @@ class PayuController extends Controller
         $client = new \GuzzleHttp\Client(
             array(
 
-                'basse_uri'=>$paymentUrl,
+                'base_uri'=>$paymentUrl,
                 \GuzzleHttp\RequestOptions::VERIFY => false
 
 
