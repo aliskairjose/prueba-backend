@@ -39,7 +39,7 @@ class PayuController extends Controller
 
         try {
             $response = $client->request('POST', '/', ['json'=>$data_request]);
-            echo $response->getStatusCode();
+          //  echo $response->getStatusCode();
 
         } catch (RequestException $e) {
             echo $e->getRequest() . "\n";
