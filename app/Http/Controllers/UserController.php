@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Swift_SwiftException;
 
 class UserController extends Controller
 {
@@ -30,14 +31,14 @@ class UserController extends Controller
 
         $data = new UserCollection((User::where('type_user', $request->type_user)->get()));
 
-        return response()->json([
+        return response()->json(
           [
             'count'     => $data->count(),
             'isSuccess' => true,
             'objects'   => $data,
             'status'    => 200
           ]
-        ]);
+        );
     }
 
     /**
@@ -274,9 +275,33 @@ class UserController extends Controller
         );
     }
 
-    public function createSupplier(Request $request)
+    public function sendMail(Request $request)
     {
+//        return $request->all();
+        try {
+            // Usando queue en lugar de send, el correo se envia en segundo plano!
+            Mail::to($request->email)->queue(new UserMail($request->password));
+        }
+        catch ( Swift_SwiftException $e){
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'error'     => $e,
+                'message'   => 'Error al enviar el mail'
+              ]
+            );
+        }
+        catch (Exception $e) {
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'error'     => $e,
+                'message'   => 'Error al mandar la notificacion'
+              ]
+            );
+        }
 
+        return 'Notificacion enviada con exito';
     }
 
     private function sendNotification($email, $password)
@@ -284,8 +309,14 @@ class UserController extends Controller
         try {
             // Usando queue en lugar de send, el correo se envia en segundo plano!
             Mail::to($email)->queue(new UserMail($password));
-        } catch (\Exception $e) {
-            return 'Error al mandar la notificacion';
+        } catch (Exception $e) {
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'error'     => $e,
+                'message'   => 'Error al mandar la notificacion'
+              ]
+            );
         }
 
         return 'Notificacion enviada con exito';

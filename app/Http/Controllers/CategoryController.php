@@ -21,14 +21,14 @@ class CategoryController extends Controller
 //        $data = Category::all();
         $data = new CategoryCollection(Category::all());
 
-        return response()->json([
+        return response()->json(
           [
             'isSuccess' => true,
             'count'     => $data->count(),
             'status'    => 200,
             'objects'   => $data,
           ]
-        ]);
+        );
     }
 
     /**

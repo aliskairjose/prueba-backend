@@ -24,8 +24,10 @@ class User extends JsonResource
           'type_user'         => $this->type_user,
           'status'            => $this->status,
           'register_approved' => $this->register_approved,
+          'approve_product'   => $this->approve_product,
           'banned'            => $this->banned,
-          'role_id'              => $this->role_id,
+          'role_id'           => $this->role_id,
+          'role'              => $this->role,
           'products'          => new ProductCollection($this->products),
           'persistenceState'  => "Unchanged",
         ];

@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         // $this->call('AttributesValuesSeeder');
         // $this->call('AttributesVariationsSeeder');
         // $this->call('SeparateInventorySeeder');
-        // $this->call('SeparateDetailSeeder');
+         $this->call('RolesTableSeeder');
 
     }
 }

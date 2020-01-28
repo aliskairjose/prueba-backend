@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Resources\MyOrderDetail as MyOrderDetailResource;
@@ -25,7 +26,7 @@ class MyOrderDetailController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  Request  $request
-     * @return Response
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
