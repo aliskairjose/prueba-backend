@@ -27,7 +27,6 @@ Route::post('sendMail', 'UserController@sendMail');
 Route::post('password/email', 'Api\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
 Route::post('password/reset', 'Api\ResetPasswordController@reset')->name('password.reset');
 
-//Route::group(['middleware' => 'auth.jwt'], function () {
 Route::group(['middleware' => 'jwt.verify'], function () {
     Route::get('logout', 'ApiController@logout');
 
@@ -155,5 +154,5 @@ Route::group(['middleware' => 'jwt.verify'], function () {
 
     //Payu routes
     Route::get('payu/payment_methods', 'PayuController@getPaymentMethods');
-
+    Route::get('payu/metododospago', 'PayuController@metododospago');
 });

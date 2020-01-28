@@ -46,13 +46,13 @@ class ProductController extends Controller
 
             $user = $this->getAuthenticatedUser();
 
-            if($request->type!=='SIMPLE' && $request->type!=='VARIABLE'){
+            if ($request->type !== 'SIMPLE' && $request->type !== 'VARIABLE') {
                 return response()->json(
-                    [
-                        'isSuccess' => false,
-                        'status'    => 400,
-                        'message'   => 'El tipo de producto, debe ser VARIABLE o SIMPLE',
-                    ]
+                  [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => 'El tipo de producto, debe ser VARIABLE o SIMPLE',
+                  ]
                 );
             }
 
@@ -74,7 +74,7 @@ class ProductController extends Controller
                 $product->categories()->attach($c[ 'id' ]);
             }
 
-            if ($request->type === 'variable') {
+            if ($request->type === 'VARIABLE') {
                 $variations = [];
                 foreach ($request->variations as $d) {
                     $newVariation = $product->variations()->create([
