@@ -15,11 +15,12 @@ class PayuController extends Controller
         $apiKey = "bnvg2pvyuCDiX1G4kvFpWT8uDc"; //Ingrese aquí su propio apiKey.
         $merchantId = "1"; //Ingrese aquí su Id de Comercio.
         true; //Dejarlo True cuando sean pruebas.
-        $paymentUrl = "https://sandbox.api.payulatam.com/payments-api/4.0/service.cgi/";
+        $paymentUrl = "https://sandbox.api.payulatam.com/payments-api/4.0/service.cgi";
         $client = new \GuzzleHttp\Client(
             array(
 
-                \GuzzleHttp\RequestOptions::VERIFY => false,
+                'basse_uri'=>$paymentUrl,
+                \GuzzleHttp\RequestOptions::VERIFY => false
 
 
             )
@@ -37,7 +38,7 @@ class PayuController extends Controller
         );
 
         try {
-            $response = $client->request('POST', $paymentUrl, $data_request);
+            $response = $client->request('POST', '/', $data_request);
             echo $response->getStatusCode();
 
         } catch (RequestException $e) {
