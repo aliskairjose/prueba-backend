@@ -35,10 +35,7 @@ class ImportListController extends Controller
                 $product->product_id = $d->product_id;
                 $product->attributes = $prod_res->attributes;
                 $product->variations = $prod_res->variations;
-                $product->gallery = [];
-                if ($prod_res->gallery !== null) {
-                    $product->gallery = $prod_res->gallery;
-                }
+                $product->gallery = $prod_res->photos;
                 $product->categories = $prod_res->categories;
                 array_push($il, $product);
             }
