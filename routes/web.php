@@ -12,7 +12,7 @@
 */
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Database\Connection;
+
 
 
 Route::get('/', function () {

@@ -153,4 +153,7 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::delete('roles/{id}', 'RoleController@delete');
     Route::put('roles/{id}', 'RoleController@update');
 
+    //Payu routes
+    Route::get('payu/payment_methods', 'PayuController@getPaymentMethods');
+
 });
