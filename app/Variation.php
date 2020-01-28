@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\Http\Resources\AttributeValue;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
@@ -17,5 +16,9 @@ class Variation extends Model
      */
     protected $fillable = ['suggested_price', 'sale_price', 'product_id', 'stock'];
 
+    public function attributeValues()
+    {
+        return $this->belongsToMany(AttributeValue::class);
+    }
 
 }

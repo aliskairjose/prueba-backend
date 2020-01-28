@@ -4,64 +4,50 @@
 namespace App\Http\Controllers;
 
 
-use GuzzleHttp\Client;
+use PrintuCo\LaravelPayU\LaravelPayU;
 
 class PayuController extends Controller
 {
 
+    private $banks =array();
+
     public function getPaymentMethods()
     {
+        LaravelPayU::setPayUEnvironment();
 
-        $apiKey = "bnvg2pvyuCDiX1G4kvFpWT8uDc"; //Ingrese aquí su propio apiKey.
-        $merchantId = "1"; //Ingrese aquí su Id de Comercio.
-        true; //Dejarlo True cuando sean pruebas.
-        $paymentUrl = "https://sandbox.api.payulatam.com/payments-api/4.0/service.cgi";
-        $client = new \GuzzleHttp\Client(
-            array(
+        $array=\PayUPayments::getPaymentMethods('es');
+        return response()->json([
+            [
+                'isSuccess' => true,
+                //  'count' => $data->count(),
+                'status' => 200,
+                'objects' =>  $array
+            ]
+        ]);
+    }
 
-                'base_uri'=>$paymentUrl,
-                \GuzzleHttp\RequestOptions::VERIFY => false
+    public function getPseBanks()
+    {
 
 
-            )
-        );
-        // $client->setDefaultOption('verify', false);
-        $data_request = array(
-            'verify' => false,
-            "test" => 1,
-            "language" => "en",
-            "command" => "GET_PAYMENT_METHODS",
-            "merchant" => array(
-                "apiLogin" => "pRRXKOl8ikMmt9u",
-                "apiKey" => "4Vj8eK4rloUd272L48hsrarnUA"
-            )
-        );
+        LaravelPayU::getPSEBanks(function($response) {
+            //... Usar datos de bancos
 
-        try {
-            $response = $client->request('POST', '/', ['json'=>$data_request]);
-            echo $response->getStatusCode();
+            $this->banks=$response;
 
-        } catch (RequestException $e) {
-            echo $e->getRequest() . "\n";
-            if ($e->hasResponse()) {
-                echo $e->getResponse() . "\n";
-            }
-        }
 
-        /* foreach ($payment_methods as $payment_method) {
-             $payment_method->country;
-             $payment_method->description;
-             $payment_method->id;
-         }*/
+        }, function($error) {
 
+        });
 
         return response()->json([
             [
                 'isSuccess' => true,
                 //  'count' => $data->count(),
                 'status' => 200,
-                'objects' => $response->getBody()
+                'objects' =>  $this->banks
             ]
         ]);
     }
+
 }
