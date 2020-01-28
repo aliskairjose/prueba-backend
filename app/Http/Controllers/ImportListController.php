@@ -31,13 +31,11 @@ class ImportListController extends Controller
                 $product = Product::findOrFail($d->product_id);
                 $prod_res = new ProductResource(Product::findOrFail($d->product_id));
                 $product->id = $d->id;
+                $product->name = $d->product_name;
                 $product->product_id = $d->product_id;
                 $product->attributes = $prod_res->attributes;
                 $product->variations = $prod_res->variations;
-                $product->gallery = [];
-                if($prod_res->gallery !== null){
-                    $product->gallery = $prod_res->gallery;
-                }
+                $product->gallery = $prod_res->photos;
                 $product->categories = $prod_res->categories;
                 array_push($il, $product);
             }
@@ -92,11 +90,13 @@ class ImportListController extends Controller
     {
         try {
             $user = $this->getAuthenticatedUser();
+            $product = Product::find($request->product_id);
             $data = ImportList::create(
               [
                 'user_id'             => $user->id,
                 'product_id'          => $request->product_id,
                 'variation_id'        => $request->variation_id,
+                'product_name'        => $product->name,
                 'date_imported_store' => now()
               ]
             );
@@ -241,13 +241,21 @@ class ImportListController extends Controller
      * @param $id
      * @return JsonResponse
      */
-    public function updateProductName(Request $request, $id){
+    public function updateProductName(Request $request, $id)
+    {
         try {
             $data = ImportList::find($id);
             $data->product_name = $request->product_name;
             $data->save();
-        }
-        catch ( ModelNotFoundException $e){
+        } catch (ModelNotFoundException $e) {
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => $e,
+              ]
+            );
+        } catch (Exception $e) {
             return response()->json(
               [
                 'isSuccess' => false,
@@ -256,15 +264,13 @@ class ImportListController extends Controller
               ]
             );
         }
-        catch ( Exception $e){
-            return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'message'   => $e,
-              ]
-            );
-        }
+        return response()->json(
+          [
+            'isSuccess' => true,
+            'status'    => 200,
+            'message'   => 'Item actualizado',
+          ]
+        );
     }
 
     private function getAuthenticatedUser()
