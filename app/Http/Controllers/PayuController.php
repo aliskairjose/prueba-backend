@@ -15,7 +15,7 @@ class PayuController extends Controller
         $apiKey = "bnvg2pvyuCDiX1G4kvFpWT8uDc"; //Ingrese aquí su propio apiKey.
         $merchantId = "1"; //Ingrese aquí su Id de Comercio.
         true; //Dejarlo True cuando sean pruebas.
-        $paymentUrl = "https://sandbox.api.payulatam.com/payments-api/4.0/service.cgi";
+        $paymentUrl = "https://sandbox.api.payulatam.com/payments-api/4.0/service.cgi/";
         $client = new \GuzzleHttp\Client(
             array(
 
