@@ -4,8 +4,7 @@
 namespace App\Http\Controllers;
 
 
-use GuzzleHttp\Client;
-
+use PrintuCo\LaravelPayU\LaravelPayU;
 class PayuController extends Controller
 {
 
@@ -63,5 +62,27 @@ class PayuController extends Controller
                 'objects' => $response->getBody()
             ]
         ]);
+    }
+
+    public function metododospago(){
+       $a=LaravelPayU::getPSEBanks(function($banks) {
+           //... Usar datos de bancos
+
+           foreach($banks as $bank) {
+               var_dump($bank);
+           }
+
+           return response()->json([
+               [
+                   'isSuccess' => true,
+                   //  'count' => $data->count(),
+                   'status' => 200,
+                   'objects' => $banks
+               ]
+           ]);
+       }, function($error) {
+
+       });
+
     }
 }

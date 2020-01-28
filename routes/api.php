@@ -154,5 +154,5 @@ Route::group(['middleware' => 'jwt.verify'], function () {
 
     //Payu routes
     Route::get('payu/payment_methods', 'PayuController@getPaymentMethods');
-
+    Route::get('payu/metododospago', 'PayuController@metododospago');
 });
