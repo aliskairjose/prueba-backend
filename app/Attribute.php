@@ -24,12 +24,5 @@ class Attribute extends Model
         return $this->hasMany(AttributeValue::class);
     }
 
-    /**
-     * Método que muestra la relacion muchos a muchos con Variations
-     */
-   /*  public function variations()
-    {
-        return $this->belongsTo(Variation::class);
-    } */
 
 }
