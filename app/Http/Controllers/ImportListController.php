@@ -37,7 +37,9 @@ class ImportListController extends Controller
                 $product->name = $d->product_name;
                 $product->product_id = $d->product_id;
                 $product->attributes = new AttributeCollection( $prod_res->attributes);
+
                 $product->variations = new VariationCollection($prod_res->variations);
+
                 $product->gallery = new ProductPhotoCollection($prod_res->photos);
                 $product->categories = $prod_res->categories;
                 array_push($il, $product);

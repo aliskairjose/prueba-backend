@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\AttributeValue as AttributeValueResource;
 use App\AttributeValue;
+use App\Http\Resources\AttributeValueCollection;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -19,7 +20,25 @@ class AttributeValueController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            $data = new AttributeValueCollection(AttributeValue::all());
+        } catch ( Exception $e) {
+            return response()->json(
+                [
+                    'isSucces'  => false,
+                    'status'    => 400,
+                    'error'     => $e,
+                ]
+                );
+        }
+
+        return response()->json(
+            [
+                'isSucces'  => true,
+                'status'    => 200,
+                'objects'   => $data
+            ]
+            );
     }
 
     /**
@@ -61,7 +80,7 @@ class AttributeValueController extends Controller
     public function show($id)
     {
         try {
-            $data = new AttributeValueResource((AttributeValue::findOrFail($id)));
+            $data = new AttributeValueResource(AttributeValue::findOrFail($id));
         } catch (Exception $e) {
             return response()->json(
                 [

@@ -71,8 +71,6 @@ class VariationController extends Controller
     {
         try {
             $data = new VariationResource((Variation::findOrFail($id)));
-//            $data = Variation::findOrFail($id);
-//            $data->attributeValues;
         } catch (Exception $e) {
             return response()->json(
               [
