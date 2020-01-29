@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\AttributeCollection;
 use App\Http\Resources\Product as ProductResource;
+use App\Http\Resources\ProductPhotoCollection;
+use App\Http\Resources\VariationCollection;
 use App\ImportList;
 use App\Product;
 use Exception;
@@ -33,11 +36,12 @@ class ImportListController extends Controller
                 $product->id = $d->id;
                 $product->name = $d->product_name;
                 $product->product_id = $d->product_id;
-                $product->attributes = $prod_res->attributes;
-                $product->variations = $prod_res->variations;
-                $product->gallery = $prod_res->photos;
+                $product->attributes = new AttributeCollection( $prod_res->attributes);
+                $product->variations = new VariationCollection($prod_res->variations);
+                $product->gallery = new ProductPhotoCollection($prod_res->photos);
                 $product->categories = $prod_res->categories;
                 array_push($il, $product);
+                // array_push($il, $prod_res);
             }
 
             if ($data->isEmpty()) {
