@@ -16,9 +16,9 @@ class Variation extends Model
      */
     protected $fillable = ['suggested_price', 'sale_price', 'product_id', 'stock'];
 
-    /* public function attributeValues()
+    public function attributeValues()
     {
-        return $this->belongsToMany(AttributeValue::class);
-    } */
+        return $this->belongsToMany(AttributeValue::class, 'attribute_variations');
+    }
 
 }
