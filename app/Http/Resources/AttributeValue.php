@@ -18,7 +18,7 @@ class AttributeValue extends JsonResource
           'id'           => $this->id,
           'value'        => $this->value,
           'attribute_id' => $this->attribute_id,
-          'attributes'   => $this->attributes
+          'name'         => $this->attribute->description
         ];
     }
 }
