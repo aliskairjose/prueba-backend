@@ -23,7 +23,7 @@ class Variation extends JsonResource
           'sale_price'       => $this->sale_price,
           'product_id'       => $this->product_id,
           'stock'            => $this->stock,
-          'attributes_value' => $this->attributeValues
+          'attributes_value' => $this->attributeValues,
         ];
     }
 }
