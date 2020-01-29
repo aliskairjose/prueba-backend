@@ -15,10 +15,10 @@ class AttributeValue extends JsonResource
     public function toArray($request)
     {
         return [
-          'id'           => $this->id,
-          'value'        => $this->value,
-          'attribute_id' => $this->attribute_id,
-          'name'         => $this->attribute->description
+          'id'             => $this->id,
+          'value'          => $this->value,
+          'attribute_id'   => $this->attribute_id,
+          'attribute_name' => $this->attribute->description
         ];
     }
 }
