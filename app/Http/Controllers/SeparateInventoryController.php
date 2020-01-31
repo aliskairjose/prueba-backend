@@ -50,7 +50,7 @@ class SeparateInventoryController extends Controller
               [
                 'user_id'     => $user->id,
                 'suplier_id'  => $request->supplier_id,
-                'status'      => $request - status,
+                'status'      => $request->status,
                 'quantity'    => $request->quantity,
                 'product_id'  => $request->product_id,
                 'varition_id' => $request->variation_id
