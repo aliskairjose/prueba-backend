@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\Landing as LandingResource;
+use App\Http\Resources\LandingCollection;
 use App\Landing;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -18,11 +19,11 @@ class LandingController extends Controller
      * @param $id
      * @return JsonResponse
      */
-    public function show()
+    public function index()
     {
         try {
             $user = $this->getAuthenticatedUser();
-            $data = new LandingResource(Landing::where('user_id', $user->id));
+            $data = new LandingCollection(Landing::where('user_id', $user->id));
         } catch (ModelNotFoundException $e) {
             return response()->json(
               [

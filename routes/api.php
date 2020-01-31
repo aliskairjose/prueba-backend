@@ -160,8 +160,8 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::get('payu/metododospago', 'PayuController@metododospago');
 
     // Landing Page Routes
-    Route::get('landing', 'LandingController@show');
-    Route::get('landing', 'LandingController@store');
+    Route::get('landing', 'LandingController@index');
+    Route::post('landing', 'LandingController@store');
     Route::put('landing/{id}', 'LandingController@update');
-    Route::delete('landing/{id}', 'LandingController@update');
+    Route::delete('landing/{id}', 'LandingController@delete');
 });
