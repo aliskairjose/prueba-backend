@@ -14,7 +14,7 @@ class Attribute extends Model
      *
      * @var array
      */
-    protected $fillable = ['description', 'product_id'];
+    protected $fillable = ['description', 'product_id', 'isVariation'];
 
     /**
      * Método que define la relacion de uno a muchos con attributes values
