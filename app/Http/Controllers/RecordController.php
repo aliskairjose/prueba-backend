@@ -36,8 +36,6 @@ class RecordController extends Controller
      */
     public function store(Request $request)
     {
-
-
         try {
             $data = Record::create($request->all());
         } catch (Exception $e) {
@@ -101,8 +99,7 @@ class RecordController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $data = Record::findOrFail($id);
-            $data->update($request->all());
+            Record::findOrFail($id)->update($request->all());
         } catch (Exception $e) {
             return response()->json(
                 [

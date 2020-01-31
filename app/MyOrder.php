@@ -22,4 +22,12 @@ class MyOrder extends Model
         'product_id',
         'variation_id'
     ];
+
+    /**
+     * Relacion uno a muhos con RecordController (OrderHistory)
+     */
+    public function records()
+    {
+        return $this->hasMany(Record::class);
+    }
 }

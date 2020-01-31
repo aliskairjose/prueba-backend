@@ -122,6 +122,9 @@ Route::group(['middleware' => 'jwt.verify'], function () {
 
 
     // My Orders Routes
+    Route::get('orders/myorders', 'MyOrderController@index');
+    Route::get('orders/myorders/supplier/{id}', 'MyOrderController@supplier');
+    Route::get('orders/myorders/dropshipper/{id}', 'MyOrderController@dropshipper');
     Route::post('orders/myorders', 'MyOrderController@store');
     Route::get('orders/myorders/{id}', 'MyOrderController@show');
 
@@ -155,4 +158,10 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     //Payu routes
     Route::get('payu/payment_methods', 'PayuController@getPaymentMethods');
     Route::get('payu/metododospago', 'PayuController@metododospago');
+
+    // Landing Page Routes
+    Route::get('landing', 'LandingController@index');
+    Route::post('landing', 'LandingController@store');
+    Route::put('landing/{id}', 'LandingController@update');
+    Route::delete('landing/{id}', 'LandingController@delete');
 });
