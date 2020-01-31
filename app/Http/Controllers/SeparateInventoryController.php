@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class SeparateInventoryController extends Controller
 {
@@ -21,6 +22,7 @@ class SeparateInventoryController extends Controller
      */
     public function index()
     {
+
         $data = new SeparateInventoryCollection(SeparateInventory::all());
 
         return response()->json(
@@ -42,7 +44,18 @@ class SeparateInventoryController extends Controller
     public function store(Request $request)
     {
         try {
-            $data = SeparateInventory::create($request->all());
+            $user = $this->getAuthenticatedUser();
+//            $data = SeparateInventory::create($request->all());
+            $data = SeparateInventory::create(
+              [
+                'user_id'     => $user->id,
+                'suplier_id'  => $request->supplier_id,
+                'status'      => $request->status,
+                'quantity'    => $request->quantity,
+                'product_id'  => $request->product_id,
+                'varition_id' => $request->variation_id
+              ]
+            );
         } catch (Exception $e) {
             return response()->json(
               [
@@ -215,5 +228,21 @@ class SeparateInventoryController extends Controller
         }
 
         return 'Notificacion enviada con exito';
+    }
+
+    private function getAuthenticatedUser()
+    {
+        try {
+            if (!$user = JWTAuth::parseToken()->authenticate()) {
+                return response()->json(['user_not_found'], 404);
+            }
+        } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            return response()->json(['token_expired']);
+        } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+            return response()->json(['token_invalid']);
+        } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
+            return response()->json(['token_absent']);
+        }
+        return $user;
     }
 }
