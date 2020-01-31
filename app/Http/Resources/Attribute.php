@@ -18,6 +18,7 @@ class Attribute extends JsonResource
             'id'            => $this->id,
             'description'   => $this->description,
             'product_id'    => $this->product_id,
+            'isVariation'   => $this->isVariation,
             'values'        => new AttributeValueCollection($this->attributeValues),
         ];
     }
