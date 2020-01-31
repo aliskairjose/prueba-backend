@@ -2,35 +2,55 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use App\MyOrder;
-use App\Product;
-use App\Http\Resources\MyOrder as MyOrderResource;
 use App\Http\Resources\MyOrderCollection;
 use App\Mail\MyOrder as MailMyOrder;
-use Exception;
+use App\MyOrder;
 use App\User;
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Mail;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 
 class MyOrderController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * Lista todas las ordenes
      *
-     * @return Response
+     * @return JsonResponse
      */
     public function index()
     {
-        //
+        try {
+            $data = new MyOrderCollection(MyOrder::all());
+        } catch (Exception $e) {
+            return response()->json(
+              [
+                'isSUccess' => false,
+                'status'    => 400,
+                'error'     => $e
+              ]
+            );
+        }
+        return response()->json(
+          [
+            'isSucess' => true,
+            'status'   => 200,
+            'count'    => $data->count(),
+            'objects'  => $data
+          ]
+        );
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
@@ -39,52 +59,105 @@ class MyOrderController extends Controller
             $data = MyOrder::create($request->all());
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'message'   => 'Ha ocurrido un error',
-                    'status'    => 400,
-                ]
+              [
+                'isSuccess' => false,
+                'message'   => 'Ha ocurrido un error',
+                'status'    => 400,
+              ]
             );
         }
         $user = User::findOrFail($request->get('suplier_id'));
-        $notification = $this->sendNotification($user['email']);
+        $notification = $this->sendNotification($user[ 'email' ]);
         return response()->json(
-            [
-                'isSuccess'     => true,
-                'message'       => 'El producto ha sido creado con exito!.',
-                'status'        => 200,
-                'Notification'  => $notification,
-                'objects'       => $data,
-            ]
+          [
+            'isSuccess'    => true,
+            'message'      => 'El producto ha sido creado con exito!.',
+            'status'       => 200,
+            'Notification' => $notification,
+            'objects'      => $data,
+          ]
         );
     }
 
     /**
      * Display the specified resource.
-     * Recide el id del usuario
+     * Recide el id del usuario supplier y lista todas las ordenes de ese usuario Supplier
      *
      * @param  int  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function show($id)
+    public function supplier($id)
     {
         try {
-            $data = new MyOrderResource(MyOrder::where('user_id', $id));
-        } catch (Exception $th) {
+
+            $data = new MyOrderCollection(MyOrder::where('suplier_id', $id)->get());
+
+        } catch (ModelNotFoundException $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'message'   => 'Ha ocurrido un error',
-                    'status'    => 400,
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'error'     => $e,
+              ]
+            );
+        } catch (Exception $e) {
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'error'     => $e,
+              ]
             );
         }
+
         return response()->json(
-            [
-                'isSuccess' => true,
-                'status'    => 200,
-                'objects'   => $data
-            ]
+          [
+            'isSuccess' => true,
+            'count'     => $data->count(),
+            'status'    => 200,
+            'objects'   => $data,
+          ]
+        );
+    }
+
+    /**
+     * Display the specified resource.
+     * Recide el id del usuario dropshipper y lista todas las ordenes de ese usuario Supplier
+     *
+     * @param  int  $id
+     * @return JsonResponse
+     */
+    public function dropshipper($id)
+    {
+        try {
+
+            $data = new MyOrderCollection(MyOrder::where('user_id', $id)->get());
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'error'     => $e,
+              ]
+            );
+        } catch (Exception $e) {
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'error'     => $e,
+              ]
+            );
+        }
+
+        return response()->json(
+          [
+            'isSuccess' => true,
+            'count'     => $data->count(),
+            'status'    => 200,
+            'objects'   => $data,
+          ]
         );
     }
 
@@ -121,5 +194,21 @@ class MyOrderController extends Controller
         }
 
         return 'Notificacion enviada con exito';
+    }
+
+    private function getAuthenticatedUser()
+    {
+        try {
+            if (!$user = JWTAuth::parseToken()->authenticate()) {
+                return response()->json(['user_not_found'], 404);
+            }
+        } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            return response()->json(['token_expired']);
+        } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+            return response()->json(['token_invalid']);
+        } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
+            return response()->json(['token_absent']);
+        }
+        return $user;
     }
 }
