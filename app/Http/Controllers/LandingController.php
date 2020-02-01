@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\Landing as LandingResource;
-use App\Http\Resources\LandingCollection;
-use App\Landing;
+use App\Http\Resources\LandingPage as LandingPageResource;
+use App\Http\Resources\LandingPageCollection;
+use App\LandingPage;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -23,7 +23,7 @@ class LandingController extends Controller
     {
         try {
             $user = $this->getAuthenticatedUser();
-            $data = new LandingCollection(Landing::where('user_id', $user->id));
+            $data = new LandingPageCollection(LandingPage::where('user_id', $user->id)->get());
         } catch (ModelNotFoundException $e) {
             return response()->json(
               [
@@ -56,7 +56,7 @@ class LandingController extends Controller
     {
         try {
             $user = $this->getAuthenticatedUser();
-            $data = Landing::create(
+            $data = LandingPage::create(
               [
                 'user_id'    => $user->id,
                 'product_id' => $request->product_id,
@@ -85,7 +85,7 @@ class LandingController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            Landing::findOrFail($id)->update($request->all());
+            LandingPage::findOrFail($id)->update($request->all());
         } catch (ModelNotFoundException $e) {
             return response()->json(
               [
@@ -109,7 +109,7 @@ class LandingController extends Controller
           [
             'isSuccess' => true,
             'status'    => 200,
-            'message'   => 'El Landing page ha sido actualizado'
+            'message'   => 'El LandingPage page ha sido actualizado'
           ]
         );
     }
@@ -117,7 +117,7 @@ class LandingController extends Controller
     public function delete($id)
     {
         try {
-            Landing::findOrFaail($id)->delete();
+            LandingPage::findOrFaail($id)->delete();
         } catch (Exception $e) {
             return response()->json(
               [
@@ -132,7 +132,7 @@ class LandingController extends Controller
           [
             'isSuccess' => true,
             'status'    => 200,
-            'message'   => 'El Landing page ha sido eliminado'
+            'message'   => 'El LandingPage page ha sido eliminado'
           ]
         );
     }

@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class Landing extends JsonResource
+class LandingPage extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,7 +19,7 @@ class Landing extends JsonResource
           'id'         => $this->id,
           'user_id'    => $this->user_id,
           'product_id' => $this->product_id,
-          'product'    => $this->product
+          'product'    => new Product($this->product)
         ];
     }
 }
