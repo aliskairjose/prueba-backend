@@ -159,7 +159,7 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::get('payu/payment_methods', 'PayuController@getPaymentMethods');
     Route::get('payu/metododospago', 'PayuController@metododospago');
 
-    // Landing Page Routes
+    // LandingPage Page Routes
     Route::get('landing', 'LandingController@index');
     Route::post('landing', 'LandingController@store');
     Route::put('landing/{id}', 'LandingController@update');
