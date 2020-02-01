@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\Product as ProductResource;
 use App\Http\Resources\ProductCollection;
 use App\Product;
+use App\ProductPhoto;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -86,6 +87,23 @@ class ProductController extends Controller
                 }
 
                 $product->variations = $variations;
+            }
+
+            if ($request->gallery) {
+                $galleries = [];
+
+                foreach ($request->gallery as $p) {
+                    $path = $p->photo->store('public/images/products/'.$p->product_id);
+                    $newPhoto = ProductPhoto::create(
+                      [
+                        'url'        => $path,
+                        'main'       => $p->main,
+                        'product_id' => $p->product_id
+                      ]
+                    );
+                    array_push($galleries, $newPhoto);
+                }
+                $product->galley = $galleries;
             }
 
             if ($request->attribute) {

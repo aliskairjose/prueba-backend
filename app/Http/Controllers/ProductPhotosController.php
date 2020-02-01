@@ -36,8 +36,6 @@ class ProductPhotosController extends Controller
      */
     public function store(Request $request)
     {
-
-
         try {
             if ($request->hasFile('photo')) {
 

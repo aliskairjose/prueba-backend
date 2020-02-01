@@ -18,7 +18,8 @@ class Landing extends JsonResource
         return [
           'id'         => $this->id,
           'user_id'    => $this->user_id,
-          'product_id' => $this->product_id
+          'product_id' => $this->product_id,
+          'product'    => $this->product
         ];
     }
 }
