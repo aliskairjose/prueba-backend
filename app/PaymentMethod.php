@@ -9,6 +9,6 @@ class PaymentMethod extends Model
 {
     use Notifiable;
 
-    protected $fillable = [ 'name','available'];
+    protected $fillable = [ 'id', 'name','available'];
 
 }
