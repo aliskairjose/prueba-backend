@@ -105,8 +105,6 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::put('product/photos/{id}', 'ProductPhotosController@update');
     Route::delete('product/photos/{id}', 'ProductPhotosController@delete');
 
-
-
     // My Orders Routes
     Route::get('orders/myorders', 'MyOrderController@index');
     Route::get('orders/myorders/supplier/{id}', 'MyOrderController@supplier');
