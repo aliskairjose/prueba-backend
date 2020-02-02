@@ -112,7 +112,7 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::get('orders/myorders/supplier/{id}', 'MyOrderController@supplier');
     Route::get('orders/myorders/dropshipper/{id}', 'MyOrderController@dropshipper');
     Route::post('orders/myorders', 'MyOrderController@store');
-    Route::post('orders/myorders/{id}', 'MyOrderController@store');
+    Route::put('orders/myorders/{id}', 'MyOrderController@update');
     Route::get('orders/myorders/{id}', 'MyOrderController@show');
 
     // Order History Routes
