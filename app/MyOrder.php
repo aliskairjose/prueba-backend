@@ -20,7 +20,17 @@ class MyOrder extends Model
         'type',
         'quantity',
         'product_id',
-        'variation_id'
+        'variation_id',
+        'notes',
+        'price',
+        'total_order',
+        'name',
+        'surname',
+        'street_address',
+        'country',
+        'state',
+        'city',
+        'zip_cde'
     ];
 
     /**
