@@ -145,7 +145,7 @@ class PayuController extends Controller
             //Cookie de la sesión actual.
             \PayUParameters::USER_AGENT => $transaction['userAgent'],
         );
-
+        $parameters[\PayUParameters::NOTIFY_URL] = $$oder['notifyUrl'];
 
         if ($transaction['paymentMethod'] != 'PSE') {
             // -- Datos de la tarjeta de crédito --
@@ -188,6 +188,7 @@ class PayuController extends Controller
 
             //Página de respuesta a la cual será redirigido el pagador.
             $parameters[\PayUParameters::RESPONSE_URL] = $pse['RESPONSE_URL'];
+           
 
             $response = \PayUPayments::doAuthorizationAndCapture($parameters, 'es');
             
