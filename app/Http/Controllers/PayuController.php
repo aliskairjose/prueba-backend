@@ -55,16 +55,8 @@ class PayuController extends Controller
     {
        
         LaravelPayU::setPayUEnvironment();
-        LaravelPayU::setAccountOnTesting(false);
-       /*\PayU::$apiKey = 'qRJ0DZ4IE0gzO29qhIm0Nx232E';
-        \PayU::$apiLogin = 'q0cueP96fjb3yd5';
-        \PayU::$merchantId = '827079';
-        \PayU::$isTest = false;
-
-        \Environment::setPaymentsCustomUrl("https://api.payulatam.com/payments-api/4.0/service.cgi");
-        \Environment::setReportsCustomUrl("https://api.payulatam.com/reports-api/4.0/service.cgi");
-        \Environment::setSubscriptionsCustomUrl("https://api.payulatam.com/payments-api/rest/v4.9/");
-      */
+        LaravelPayU::setAccountOnTesting(true);
+    
         $data = $request->data;
         $reference = "DROPI_PAYMENT_" . date('Ymdhis_a');
         $transaction = $data['transaction'];
@@ -73,7 +65,7 @@ class PayuController extends Controller
         $buyer = $oder['buyer'];
         $value = $oder['amount'];
 
-        echo LaravelPayU::getAccountId();
+        //echo \Environment::getPaymentsUrl();
         $parameters = array(
             //Ingrese aquí el identificador de la cuenta.
             \PayUParameters::ACCOUNT_ID =>LaravelPayU::getAccountId(),
