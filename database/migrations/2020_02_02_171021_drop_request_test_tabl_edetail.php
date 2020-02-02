@@ -14,6 +14,7 @@ class DropRequestTestTablEdetail extends Migration
     public function up()
     {
         //
+        Schema::drop('request_test');
     }
 
     /**

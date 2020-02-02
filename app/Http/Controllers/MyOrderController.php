@@ -170,7 +170,26 @@ class MyOrderController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+          $data = MyOrder::findOrFail($id)->update($request->all());
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => $e,
+                ]
+            );
+        }
+        return response()->json(
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'message'   => 'La orden se ha actualizado con exito!.',
+                'objects'   => $data
+
+            ]
+        );
     }
 
     /**
