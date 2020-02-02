@@ -53,10 +53,18 @@ class PayuController extends Controller
 
     public function sendPayment(Request $request)
     {
-        LaravelPayU::setAccountOnTesting(false);
+       
         LaravelPayU::setPayUEnvironment();
+        LaravelPayU::setAccountOnTesting(false);
+       /*\PayU::$apiKey = 'qRJ0DZ4IE0gzO29qhIm0Nx232E';
+        \PayU::$apiLogin = 'q0cueP96fjb3yd5';
+        \PayU::$merchantId = '827079';
+        \PayU::$isTest = false;
 
-
+        \Environment::setPaymentsCustomUrl("https://api.payulatam.com/payments-api/4.0/service.cgi");
+        \Environment::setReportsCustomUrl("https://api.payulatam.com/reports-api/4.0/service.cgi");
+        \Environment::setSubscriptionsCustomUrl("https://api.payulatam.com/payments-api/rest/v4.9/");
+      */
         $data = $request->data;
         $reference = "DROPI_PAYMENT_" . date('Ymdhis_a');
         $transaction = $data['transaction'];
@@ -65,9 +73,11 @@ class PayuController extends Controller
         $buyer = $oder['buyer'];
         $value = $oder['amount'];
 
+        echo LaravelPayU::getAccountId();
         $parameters = array(
             //Ingrese aquí el identificador de la cuenta.
-            \PayUParameters::ACCOUNT_ID => "512321",
+            \PayUParameters::ACCOUNT_ID =>LaravelPayU::getAccountId(),
+           
             //Ingrese aquí el código de referencia.
             \PayUParameters::REFERENCE_CODE => $reference,
             //Ingrese aquí la descripción.
@@ -155,6 +165,23 @@ class PayuController extends Controller
             $parameters[\PayUParameters::CREDIT_CARD_EXPIRATION_DATE] = $credit_card['expirationDate'];
             //Ingrese aquí el código de seguridad de la tarjeta de crédito
             $parameters[\PayUParameters::CREDIT_CARD_SECURITY_CODE] = $credit_card['securityCode'];
+
+
+            $response = \PayUPayments::doAuthorizationAndCapture($parameters, 'es');
+
+            if($response){
+                $response->transactionResponse->orderId;
+                $response->transactionResponse->transactionId;
+                $response->transactionResponse->state;
+                if($response->transactionResponse->state)
+                if($response->transactionResponse->state=="PENDING"){
+                    $response->transactionResponse->pendingReason;
+                    $response->transactionResponse->extraParameters->BANK_URL;
+                }
+                $response->transactionResponse->responseCode;
+            }
+
+
         } else {
 
             $pse = $transaction['extraParameters'];
@@ -169,18 +196,31 @@ class PayuController extends Controller
 
             //Página de respuesta a la cual será redirigido el pagador.
             $parameters[\PayUParameters::RESPONSE_URL] = $pse['RESPONSE_URL'];
-        }
-        $response = \PayUPayments::doAuthorizationAndCapture($parameters, 'es');
 
-        if ($response) {
-            $response->transactionResponse->orderId;
-            $response->transactionResponse->transactionId;
-            $response->transactionResponse->state;
-            if ($response->transactionResponse->state == "PENDING") {
-                $response->transactionResponse->pendingReason;
+            $response = \PayUPayments::doAuthorizationAndCapture($parameters, 'es');
+            
+            if($response){
+                $response->transactionResponse->orderId;
+                $response->transactionResponse->transactionId;
+                $response->transactionResponse->state;
+                if($response->transactionResponse->state=="PENDING"){
+                    $response->transactionResponse->pendingReason;
+                    $response->transactionResponse->trazabilityCode;
+                    $response->transactionResponse->authorizationCode;
+                    $response->transactionResponse->extraParameters->URL_PAYMENT_RECEIPT_HTML;
+                    $response->transactionResponse->extraParameters->REFERENCE;
+                    $response->transactionResponse->extraParameters->BAR_CODE;
+                }
+                $response->transactionResponse->responseCode;
             }
-
+            
         }
+
+       
+
+        
+      
+   
 
         return response()->json([
             [
