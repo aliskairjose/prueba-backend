@@ -92,7 +92,6 @@ class RegisterController extends Controller
             $input['password'] = bcrypt($input['password']);
 
             $user = User::create($input);
-            var_dump($user);
 
         } catch (QueryException $e) {
             $error = $e->getMessage();
@@ -107,7 +106,8 @@ class RegisterController extends Controller
         return response()->json([
             'isSuccess' => true,
             'status' => 201,
-            'message' => 'EL usuario ha sido creado.'
+            'message' => 'EL usuario ha sido creado.',
+            'objects' => $user
         ]);
 
     }
