@@ -98,12 +98,6 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::put('separateinventories/detail/{id}', 'SeparateDetailController@update');
     Route::delete('separateinventories/detail/{id}', 'SeparateDetailController@delete');
 
-    // RequestTestDetail Routes
-    Route::get('requesttest/detail', 'RequestTestDeailController@index');
-    Route::get('requesttest/detail/{id}', 'RequestTestDeailController@show');
-    Route::post('requesttest/detail', 'RequestTestDeailController@store');
-    Route::put('requesttest/detail/{id}', 'RequestTestDeailController@update');
-    Route::delete('requesttest/detail/{id}', 'RequestTestDeailController@delete');
 
     // ProductPhoto Routes
     Route::get('product/photos', 'ProductPhotosController@index');
@@ -111,14 +105,6 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::put('product/photos/{id}', 'ProductPhotosController@update');
     Route::delete('product/photos/{id}', 'ProductPhotosController@delete');
 
-    // RequestTest Routes
-    Route::get('requesttest/user/{id}', 'RequestTestController@myRequestTest');
-
-    Route::get('requesttest', 'RequestTestController@index');
-    Route::get('requesttest/{id}', 'RequestTestController@show');
-    Route::post('requesttest', 'RequestTestController@store');
-    Route::put('requesttest/{id}', 'RequestTestController@update');
-    Route::delete('requesttest/{id}', 'RequestTestController@delete');
 
 
     // My Orders Routes
@@ -126,6 +112,7 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::get('orders/myorders/supplier/{id}', 'MyOrderController@supplier');
     Route::get('orders/myorders/dropshipper/{id}', 'MyOrderController@dropshipper');
     Route::post('orders/myorders', 'MyOrderController@store');
+    Route::post('orders/myorders/{id}', 'MyOrderController@store');
     Route::get('orders/myorders/{id}', 'MyOrderController@show');
 
     // Order History Routes
