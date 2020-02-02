@@ -171,8 +171,22 @@ class MyOrderController extends Controller
     public function update(Request $request, $id)
     {
         try {
-          $data = MyOrder::findOrFail($id)->update($request->all());
-        } catch (Exception $e) {
+        $data = MyOrder::findOrFail($id);
+        $data->status = $request->status;
+        $data->save();
+
+        }
+        catch( ModelNotFoundException $e){
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => 'No se encontro registro',
+                    '$error'    => $e
+                ]
+            );
+        }
+        catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
@@ -186,7 +200,7 @@ class MyOrderController extends Controller
                 'isSuccess' => true,
                 'status'    => 200,
                 'message'   => 'La orden se ha actualizado con exito!.',
-                'objects'   => $data
+                // 'objects'   => $data
 
             ]
         );
