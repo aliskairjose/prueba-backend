@@ -92,7 +92,6 @@ class RegisterController extends Controller
             $input['password'] = bcrypt($input['password']);
 
             $user = User::create($input);
-            var_dump($user);
 
         } catch (QueryException $e) {
             $error = $e->getMessage();

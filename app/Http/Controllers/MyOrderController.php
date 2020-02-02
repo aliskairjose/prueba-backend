@@ -63,6 +63,7 @@ class MyOrderController extends Controller
                 'isSuccess' => false,
                 'message'   => 'Ha ocurrido un error',
                 'status'    => 400,
+                'error'     => $e
               ]
             );
         }
