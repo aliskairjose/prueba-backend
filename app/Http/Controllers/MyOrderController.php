@@ -72,7 +72,7 @@ class MyOrderController extends Controller
         return response()->json(
           [
             'isSuccess'    => true,
-            'message'      => 'El producto ha sido creado con exito!.',
+            'message'      => 'El registro ha sido creado con exito!.',
             'status'       => 200,
             'Notification' => $notification,
             'objects'      => $data,
