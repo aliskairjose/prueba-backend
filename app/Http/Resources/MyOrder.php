@@ -3,8 +3,8 @@
 namespace App\Http\Resources;
 
 use App\Product;
-use Illuminate\Http\Resources\Json\JsonResource;
 use App\User;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class MyOrder extends JsonResource
 {
@@ -23,10 +23,10 @@ class MyOrder extends JsonResource
         return [
           'id'                => $this->id,
           'user_id'           => $this->user_id,
-          'user_name'         => $user->name. " " . $user->surname,
+          'user_name'         => $user->name." ".$user->surname,
           'type_user'         => $user->type_user,
           'suplier_id'        => $this->suplier_id,
-          'suplier_name'      => $supplier->name. " " . $supplier->surname,
+          'suplier_name'      => $supplier->name." ".$supplier->surname,
           'payment_method_id' => $this->payment_method_id,
           'status'            => $this->status,
           'dir'               => $this->dir,
@@ -36,7 +36,9 @@ class MyOrder extends JsonResource
           'product_id'        => $this->product_id,
           'product'           => Product::findOrFail($this->product_id),
           'variation_id'      => $this->variation_id,
-        //   'history'           => $this->records
+          'created_at'        => $this->created_at,
+          'updated_at'        => $this->updated_at,
+          //   'history'           => $this->records
         ];
     }
 }
