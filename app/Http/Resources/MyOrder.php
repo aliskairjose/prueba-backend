@@ -24,6 +24,7 @@ class MyOrder extends JsonResource
           'id'                => $this->id,
           'user_id'           => $this->user_id,
           'user_name'         => $user->name. " " . $user->surname,
+          'type_user'         => $user->type_user,
           'suplier_id'        => $this->suplier_id,
           'suplier_name'      => $supplier->name. " " . $supplier->surname,
           'payment_method_id' => $this->payment_method_id,
