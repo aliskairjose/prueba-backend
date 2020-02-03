@@ -55,11 +55,20 @@ class MyOrderController extends Controller
      */
     public function store(Request $request)
     {
-
+        /*$user = User::findOrFail($request->user_id);
+        $wallet = $user->wallet;
+        $product = Product::findOrFail($request->product_id);
+        return response()->json(
+          [
+            'user'    => $user,
+            'wallet'  => $wallet,
+            'product' => $product
+          ]
+        );*/
         try {
 
             $user = User::findOrFail($request->user_id);
-            $wallet = $user->wallet();
+            $wallet = $user->wallet;
             $product = Product::findOrFail($request->product_id);
 
             // Valida que el saldo en la wallet sea mayor al total de la orden
@@ -85,11 +94,28 @@ class MyOrderController extends Controller
             }
 
             $data = MyOrder::create($request->all());
+
             $newSaldo = $wallet->amount - $request->total_order;
             $wallet->amount = $newSaldo;
             $wallet->save();
 
-        } catch (Exception $e) {
+            $newStock = $product->stock - $request->quantity;
+            $product->stock = $newStock;
+            $product->save();
+
+        }
+        catch (ModelNotFoundException $e)
+        {
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'message'   => 'No se encontro registro',
+                'status'    => 400,
+                'error'     => $e
+              ]
+            );
+        }
+        catch (Exception $e) {
             return response()->json(
               [
                 'isSuccess' => false,
@@ -99,8 +125,10 @@ class MyOrderController extends Controller
               ]
             );
         }
+
         $user = User::findOrFail($request->get('suplier_id'));
         $notification = $this->sendNotification($user[ 'email' ]);
+
         return response()->json(
           [
             'isSuccess'    => true,
