@@ -29,7 +29,7 @@ class User extends JsonResource
           'role_id'           => $this->role_id,
           'role'              => $this->role,
           'products'          => new ProductCollection($this->products),
-            'wallet'            => isset($this->wallet->amount)?$this->wallet->amount:0.00,
+//          'wallet'            => $this->wallet->amount,
           'persistenceState'  => "Unchanged",
         ];
     }
