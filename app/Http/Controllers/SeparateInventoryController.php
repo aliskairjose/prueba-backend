@@ -160,8 +160,7 @@ class SeparateInventoryController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $data = SeparateInventory::findOrFail($id);
-            $data->update($request->all());
+            SeparateInventory::findOrFail($id)->update($request->all());
 
         } catch (Exception $e) {
             return response()->json(

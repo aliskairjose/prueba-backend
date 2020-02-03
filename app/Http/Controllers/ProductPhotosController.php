@@ -77,8 +77,7 @@ class ProductPhotosController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $data = ProductPhoto::findOrFail($id);
-            $data->update($request->all());
+            ProductPhoto::findOrFail($id)->update($request->all());
         } catch (Exception $e) {
             return response()->json(
                 [

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\MyOrderCollection;
 use App\Mail\MyOrder as MailMyOrder;
 use App\MyOrder;
+use App\Product;
 use App\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -56,7 +57,38 @@ class MyOrderController extends Controller
     {
 
         try {
+
+            $user = User::findOrFail($request->user_id);
+            $wallet = $user->wallet();
+            $product = Product::findOrFail($request->product_id);
+
+            // Valida que el saldo en la wallet sea mayor al total de la orden
+            if ($request->total_order > $wallet->amount ) {
+                return response()->json(
+                  [
+                    'isSuccess' => false,
+                    'message'   => 'No posee saldo suficiente en la wallet',
+                    'status'    => 400,
+                  ]
+                );
+            }
+
+            // Valida que la colicitud de producto sea menor a la existencia en stock
+            if ($request->quantity > $product->stock) {
+                return response()->json(
+                  [
+                    'isSuccess' => false,
+                    'message'   => 'No posee producto suficiente en stock',
+                    'status'    => 400,
+                  ]
+                );
+            }
+
             $data = MyOrder::create($request->all());
+            $newSaldo = $wallet->amount - $request->total_order;
+            $wallet->amount = $newSaldo;
+            $wallet->save();
+
         } catch (Exception $e) {
             return response()->json(
               [
@@ -172,36 +204,34 @@ class MyOrderController extends Controller
     public function update(Request $request, $id)
     {
         try {
-        $data = MyOrder::findOrFail($id);
-        $data->status = $request->status;
-        $data->save();
+            $data = MyOrder::findOrFail($id);
+            $data->status = $request->status;
+            $data->save();
 
-        }
-        catch( ModelNotFoundException $e){
+        } catch (ModelNotFoundException $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => 'No se encontro registro',
-                    '$error'    => $e
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => 'No se encontro registro',
+                '$error'    => $e
+              ]
             );
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => $e,
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => $e,
+              ]
             );
         }
         return response()->json(
-            [
-                'isSuccess' => true,
-                'status'    => 200,
-                'message'   => 'La orden se ha actualizado con exito!.',
-            ]
+          [
+            'isSuccess' => true,
+            'status'    => 200,
+            'message'   => 'La orden se ha actualizado con exito!.',
+          ]
         );
     }
 

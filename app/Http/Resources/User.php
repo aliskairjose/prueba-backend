@@ -3,7 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-
+use App\Http\Resources\Wallet as WalletResource;
 class User extends JsonResource
 {
     /**
@@ -29,6 +29,7 @@ class User extends JsonResource
           'role_id'           => $this->role_id,
           'role'              => $this->role,
           'products'          => new ProductCollection($this->products),
+          'wallet'            => $this->wallet->amount,
           'persistenceState'  => "Unchanged",
         ];
     }

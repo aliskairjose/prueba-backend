@@ -83,4 +83,13 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->belongsTo(Role::class);
     }
+
+    /**
+     * Relacion uno a uno con wallet
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function wallet()
+    {
+        return $this->hasOne(Wallet::class);
+    }
 }
