@@ -167,7 +167,7 @@ class MyOrderController extends Controller
      *
      * @param  Request  $request
      * @param  int  $id
-     * @return Response
+     * @return JsonResponse
      */
     public function update(Request $request, $id)
     {
@@ -201,8 +201,6 @@ class MyOrderController extends Controller
                 'isSuccess' => true,
                 'status'    => 200,
                 'message'   => 'La orden se ha actualizado con exito!.',
-                // 'objects'   => $data
-
             ]
         );
     }

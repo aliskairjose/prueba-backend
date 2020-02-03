@@ -30,12 +30,10 @@ class PayuController extends Controller
     public function getPseBanks()
     {
 
-
         LaravelPayU::getPSEBanks(function ($response) {
             //... Usar datos de bancos
 
             $this->banks = $response;
-
 
         }, function ($error) {
 

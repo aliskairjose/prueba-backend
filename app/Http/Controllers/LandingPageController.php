@@ -11,7 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
-class LandingController extends Controller
+class LandingPageController extends Controller
 {
 
     /**
@@ -43,6 +43,41 @@ class LandingController extends Controller
               ]
             );
         }
+        return response()->json(
+          [
+            'isSuccess' => true,
+            'status'    => 200,
+            'objects'   => $data
+          ]
+        );
+    }
+
+    public function getByUrl(Request $request)
+    {
+        try {
+            $data = new LandingPageCollection(LandingPage::where('url', $request->url)->get());
+        }
+        catch ( ModelNotFoundException $e){
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => 'No se encontro registro',
+                'error'     => $e
+              ]
+            );
+        }
+        catch (Exception $e){
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => 'Ha ocurrido un error',
+                'error'     => $e
+              ]
+            );
+        }
+
         return response()->json(
           [
             'isSuccess' => true,
