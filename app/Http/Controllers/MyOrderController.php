@@ -55,16 +55,6 @@ class MyOrderController extends Controller
      */
     public function store(Request $request)
     {
-        /*$user = User::findOrFail($request->user_id);
-        $wallet = $user->wallet;
-        $product = Product::findOrFail($request->product_id);
-        return response()->json(
-          [
-            'user'    => $user,
-            'wallet'  => $wallet,
-            'product' => $product
-          ]
-        );*/
         try {
 
             $user = User::findOrFail($request->user_id);
@@ -95,10 +85,12 @@ class MyOrderController extends Controller
 
             $data = MyOrder::create($request->all());
 
+            // Actualiza el saldo de la wallet
             $newSaldo = $wallet->amount - $request->total_order;
             $wallet->amount = $newSaldo;
             $wallet->save();
 
+            // Actualiza el stock de producto
             $newStock = $product->stock - $request->quantity;
             $product->stock = $newStock;
             $product->save();
