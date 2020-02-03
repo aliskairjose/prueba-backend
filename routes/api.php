@@ -146,8 +146,15 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::post('payu/send_payment', 'PayuController@sendPayment');
 
     // LandingPage Page Routes
-    Route::get('landing', 'LandingController@index');
-    Route::post('landing', 'LandingController@store');
-    Route::put('landing/{id}', 'LandingController@update');
-    Route::delete('landing/{id}', 'LandingController@delete');
+    Route::get('landing', 'LandingPageController@index');
+    Route::post('landing', 'LandingPageController@store');
+    Route::post('landing/url', 'LandingPageController@getByUrl');
+    Route::put('landing/{id}', 'LandingPageController@update');
+    Route::delete('landing/{id}', 'LandingPageController@delete');
+
+    // Wallet Route
+    Route::get('wallet', 'WalletController@index');
+    Route::get('wallet/{id}', 'WalletController@show');
+    Route::post('wallet', 'WalletController@store');
+    Route::put('wallet/{id}', 'WalletController@update');
 });

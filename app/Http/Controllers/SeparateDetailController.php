@@ -159,8 +159,7 @@ class SeparateDetailController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $data = SeparateDetail::findOrFail($id);
-            $data->update($request->all());
+            SeparateDetail::findOrFail($id)->update($request->all());
 
         } catch (Exception $e) {
             return response()->json(

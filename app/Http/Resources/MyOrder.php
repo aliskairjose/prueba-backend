@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Product;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\User;
 
@@ -32,6 +33,7 @@ class MyOrder extends JsonResource
           'type'              => $this->type,
           'quantity'          => $this->quantity,
           'product_id'        => $this->product_id,
+          'product'           => Product::findOrFail($this->product_id),
           'variation_id'      => $this->variation_id,
         //   'history'           => $this->records
         ];
