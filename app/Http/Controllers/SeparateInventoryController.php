@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\SeparateInventory as SeparateInventoryResource;
 use App\Http\Resources\SeparateInventoryCollection;
+use App\Product;
 use App\SeparateInventory;
 use App\User;
 use Exception;
@@ -44,7 +45,34 @@ class SeparateInventoryController extends Controller
     public function store(Request $request)
     {
         try {
-            $user = $this->getAuthenticatedUser();
+//            $user = $this->getAuthenticatedUser();
+
+            $user = User::findOrFail($request->user_id);
+            $wallet = $user->wallet;
+            $product = Product::findOrFail($request->product_id);
+            $total = $request->quantity * $product->sale->price;
+
+            if ($total > $wallet->amount) {
+                return response()->json(
+                  [
+                    'isSuccess' => false,
+                    'message'   => 'No posee saldo suficiente en la wallet',
+                    'status'    => 400,
+                  ]
+                );
+            }
+
+            // Valida que la colicitud de producto sea menor a la existencia en stock
+            if ($request->quantity > $product->stock) {
+                return response()->json(
+                  [
+                    'isSuccess' => false,
+                    'message'   => 'No posee producto suficiente en stock',
+                    'status'    => 400,
+                  ]
+                );
+            }
+
 //            $data = SeparateInventory::create($request->all());
             $data = SeparateInventory::create(
               [
@@ -56,6 +84,7 @@ class SeparateInventoryController extends Controller
                 'varition_id' => $request->variation_id
               ]
             );
+
         } catch (Exception $e) {
             return response()->json(
               [
@@ -67,6 +96,16 @@ class SeparateInventoryController extends Controller
             );
         }
 
+        // Actualiza el saldo de la wallet
+        $newSaldo = $wallet->amount - $request->total_order;
+        $wallet->amount = $newSaldo;
+        $wallet->save();
+
+        // Actualiza el stock de producto
+        $newStock = $product->stock - $request->quantity;
+        $product->stock = $newStock;
+        $product->save();
+        
         $user = User::findOrFail($request->get('user_id'));
         $notification = $this->sendNotification($user[ 'email' ]);
 

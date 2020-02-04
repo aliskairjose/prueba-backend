@@ -22,4 +22,5 @@ class SeparateInventory extends Model
         'product_id',
         'variation_id'
     ];
+
 }
