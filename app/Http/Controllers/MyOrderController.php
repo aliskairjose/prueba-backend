@@ -84,6 +84,13 @@ class MyOrderController extends Controller
             }
 
             $data = MyOrder::create($request->all());
+            \App\HistoryOrder::create(
+              [
+                'order_id' => $data->id,
+                'user_id'  => $data->user_id,
+                'status'   => $data->status
+              ]
+            );
 
             // Actualiza el saldo de la wallet
             $newSaldo = $wallet->amount - $request->total_order;

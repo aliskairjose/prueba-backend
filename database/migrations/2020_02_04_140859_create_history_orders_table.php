@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOrderRecordsTable extends Migration
+class CreateHistoryOrdersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateOrderRecordsTable extends Migration
      */
     public function up()
     {
-        Schema::create('history_records', function (Blueprint $table) {
+        Schema::create('history_orders', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedInteger('order_id')->index('order_id')->nullable(false);
             $table->unsignedInteger('user_id')->nullable(false);
@@ -31,6 +31,6 @@ class CreateOrderRecordsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('history_records');
+        Schema::dropIfExists('history_orders');
     }
 }

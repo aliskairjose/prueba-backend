@@ -34,11 +34,11 @@ class MyOrder extends Model
     ];
 
     /**
-     * Relacion uno a muchos con RecordController (OrderHistory)
+     * Relacion uno a muchos con HistoryOrders (HistoryOrders)
      */
-    public function records()
+    public function history()
     {
-        return $this->hasMany(Record::class);
+        return $this->hasMany(HistoryOrder::class);
     }
 
 }
