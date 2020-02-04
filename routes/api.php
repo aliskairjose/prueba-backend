@@ -91,13 +91,13 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::put('separateinventories/{id}', 'SeparateInventoryController@update');
     Route::delete('separateinventories/{id}', 'SeparateInventoryController@delete');
 
-    // SeparateInventoryDetail Routes
-    Route::get('separateinventories/detail', 'SeparateDetailController@index');
-    Route::get('separateinventories/detail/{id}', 'SeparateDetailController@show');
-    Route::get('separateinventories/detail/{id}', 'SeparateDetailController@getBySeparateInventoryId');
-    Route::post('separateinventories/detail', 'SeparateDetailController@store');
-    Route::put('separateinventories/detail/{id}', 'SeparateDetailController@update');
-    Route::delete('separateinventories/detail/{id}', 'SeparateDetailController@delete');
+    // HistoryInventories Routes
+    Route::get('inventories/history', 'HistoryInventoriesController@index');
+    Route::get('inventories/history/{id}', 'HistoryInventoriesController@show');
+    Route::get('inventories/history/{id}', 'HistoryInventoriesController@getByHistoryInventoriesId');
+    Route::post('inventories/history', 'HistoryInventoriesController@store');
+    Route::put('inventories/history/{id}', 'HistoryInventoriesController@update');
+    Route::delete('inventories/history/{id}', 'HistoryInventoriesController@delete');
 
 
     // ProductPhoto Routes
