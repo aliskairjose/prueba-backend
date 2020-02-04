@@ -3,17 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\Product as ProductResource;
-use App\Http\Resources\SeparateDetail as SeparateDetailResource;
-use App\Http\Resources\SeparateDetailCollection;
+use App\Http\Resources\HistoryInventories as HistoryInventoriesResource;
+use App\Http\Resources\HistoryInventoriesCollection;
 use App\Product;
-use App\SeparateDetail;
+use App\HistoryInventories;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class SeparateDetailController extends Controller
+class HistoryInventoriesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -22,7 +22,7 @@ class SeparateDetailController extends Controller
      */
     public function index()
     {
-        $data = new SeparateDetailCollection(SeparateDetail::all());
+        $data = new HistoryInventoriesCollection(HistoryInventories::all());
 
         return response()->json(
           [
@@ -51,7 +51,7 @@ class SeparateDetailController extends Controller
                 $variation = DB::table('variations')->where('product_id', '=', $request->get('product_id'))->get();
                 if ($variation->count() !== 0) {
                     foreach ($variation as $v) {
-                        $data = SeparateDetail::create(
+                        $data = HistoryInventories::create(
                           [
                             'separate_inventory_id' => $request->get('separate_inventory_id'),
                             'product_id'            => $request->get('product_id'),
@@ -62,7 +62,7 @@ class SeparateDetailController extends Controller
                         );
                     }
                 } else {
-                    $data = SeparateDetail::create(
+                    $data = HistoryInventories::create(
                       [
                         'separate_inventory_id' => $request->get('separate_inventory_id'),
                         'product_id'            => $request->get('product_id'),
@@ -73,7 +73,7 @@ class SeparateDetailController extends Controller
                     );
                 }
             } else {
-                $data = SeparateDetail::create(
+                $data = HistoryInventories::create(
                   [
                     'separate_inventory_id' => $request->get('separate_inventory_id'),
                     'product_id'            => $request->get('product_id'),
@@ -115,7 +115,7 @@ class SeparateDetailController extends Controller
     public function show($id)
     {
         try {
-            $data = new SeparateDetailResource((SeparateDetail::findOrFail($id)));
+            $data = new HistoryInventoriesResource((HistoryInventories::findOrFail($id)));
         } catch (Exception $e) {
             return response()->json(
               [
@@ -142,9 +142,9 @@ class SeparateDetailController extends Controller
      * @return JsonResponse
      */
 
-    public function getBySeparateInventoryId($id)
+    public function getByHistoryInventoriesId($id)
     {
-        $data = new SeparateDetailResource(SeparateDetail::where('separate_inventory_id', $id)->get());
+        $data = new HistoryInventoriesResource(HistoryInventories::where('separate_inventory_id', $id)->get());
         return $data;
     }
 
@@ -159,7 +159,7 @@ class SeparateDetailController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            SeparateDetail::findOrFail($id)->update($request->all());
+            HistoryInventories::findOrFail($id)->update($request->all());
 
         } catch (Exception $e) {
             return response()->json(
@@ -188,13 +188,13 @@ class SeparateDetailController extends Controller
     public function delete($id)
     {
         try {
-            SeparateDetail::findOrFail($id)->delete();
+            HistoryInventories::findOrFail($id)->delete();
         } catch (ModelNotFoundException $e) {
             return response()->json(
               [
                 'isSuccess' => false,
                 'status'    => 400,
-                'message'   => 'No se encontro SeparateDetail para eliminar',
+                'message'   => 'No se encontro HistoryInventories para eliminar',
               ]
             );
         }

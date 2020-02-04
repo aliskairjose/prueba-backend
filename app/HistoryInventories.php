@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class SeparateDetail extends Model
+class HistoryInventories extends Model
 {
     use Notifiable;
 
