@@ -31,6 +31,6 @@ class CreateOrderRecordsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('order_records');
+        Schema::dropIfExists('history_records');
     }
 }
