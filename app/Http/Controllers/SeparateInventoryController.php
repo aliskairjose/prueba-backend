@@ -78,8 +78,8 @@ class SeparateInventoryController extends Controller
                 );
             }
 
-            $sepInv = SeparateInventory::where('user_id', $user->id)->where('product_id', $request->product_id)->get();
-            if($sepInv->count() === 0){
+            $data = SeparateInventory::where('user_id', $user->id)->where('product_id', $request->product_id)->get();
+            if($data->count() === 0){
                 // Crea un nuevo registro
                 $data = SeparateInventory::create(
                   [
@@ -93,10 +93,11 @@ class SeparateInventoryController extends Controller
                 );
             }
             else{
-//                return $sepInv;
-                $sepInv->quantity = $request->quantity + $sepInv->quantity;
-                $sepInv->save();
-                $data = $sepInv;
+//                return $sepInv[0]->quantity;
+                $data = $data[0];
+                $data->quantity = $request->quantity + $data->quantity;
+                $data->save();
+//                $data = $sepInv;
             }
 
 
