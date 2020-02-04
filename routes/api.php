@@ -157,4 +157,10 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::get('wallet/{id}', 'WalletController@show');
     Route::post('wallet', 'WalletController@store');
     Route::put('wallet/{id}', 'WalletController@update');
+
+    // WithdrawalRequest Routes
+    Route::get('withdrawal', 'WithdrawalRequestController@index');
+    Route::get('withdrawal/{id}', 'WithdrawalRequestController@show');
+    Route::post('withdrawal', 'WithdrawalRequestController@store');
+    Route::put('withdrawal/{id}', 'WithdrawalRequestController@update');
 });
