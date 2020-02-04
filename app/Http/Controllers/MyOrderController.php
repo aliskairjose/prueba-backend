@@ -84,6 +84,13 @@ class MyOrderController extends Controller
             }
 
             $data = MyOrder::create($request->all());
+            \App\HistoryOrder::create(
+              [
+                'order_id' => $data->id,
+                'user_id'  => $data->user_id,
+                'status'   => $data->status
+              ]
+            );
 
             // Actualiza el saldo de la wallet
             $newSaldo = $wallet->amount - $request->total_order;
@@ -238,6 +245,14 @@ class MyOrderController extends Controller
 
             $data->status = $request->status;
             $data->save();
+
+            \App\HistoryOrder::create(
+              [
+                'order_id' => $data->id,
+                'user_id'  => $data->user_id,
+                'status'   => $request->status
+              ]
+            );
 
             $this->sendNotification($user->email, $request->status);
             $this->sendNotification($supplier->email, $request->status);

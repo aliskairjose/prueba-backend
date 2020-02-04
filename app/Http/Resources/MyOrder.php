@@ -48,7 +48,7 @@ class MyOrder extends JsonResource
           'zip_code'          => $this->zip_code,
           'created_at'        => $this->created_at,
           'updated_at'        => $this->updated_at,
-          //   'history'           => $this->records
+          'history'           => $this->history
         ];
     }
 }
