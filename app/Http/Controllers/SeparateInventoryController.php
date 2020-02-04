@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProductCollection;
 use App\Http\Resources\SeparateInventory as SeparateInventoryResource;
 use App\Http\Resources\SeparateInventoryCollection;
 use App\Product;
@@ -11,6 +12,7 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -44,13 +46,22 @@ class SeparateInventoryController extends Controller
      */
     public function store(Request $request)
     {
+        /*$user = User::findOrFail($request->user_id);
+        $product = Product::findOrFail($request->product_id);
+        return response()->json([
+          '$user'    => $user,
+          '$wallet'  => $user->wallet,
+          '$product' => $product,
+          '$total'   => $request->quantity * $product->sale_price
+        ]);*/
         try {
 //            $user = $this->getAuthenticatedUser();
 
             $user = User::findOrFail($request->user_id);
             $wallet = $user->wallet;
+
             $product = Product::findOrFail($request->product_id);
-            $total = $request->quantity * $product->sale->price;
+            $total = $request->quantity * $product->sale_price;
 
             if ($total > $wallet->amount) {
                 return response()->json(
@@ -76,12 +87,12 @@ class SeparateInventoryController extends Controller
 //            $data = SeparateInventory::create($request->all());
             $data = SeparateInventory::create(
               [
-                'user_id'     => $user->id,
-                'suplier_id'  => $request->supplier_id,
-                'status'      => $request->status,
-                'quantity'    => $request->quantity,
-                'product_id'  => $request->product_id,
-                'varition_id' => $request->variation_id
+                'user_id'      => $user->id,
+                'suplier_id'   => $request->supplier_id,
+                'status'       => $request->status,
+                'quantity'     => $request->quantity,
+                'product_id'   => $request->product_id,
+                'variation_id' => $request->variation_id
               ]
             );
 
@@ -105,7 +116,7 @@ class SeparateInventoryController extends Controller
         $newStock = $product->stock - $request->quantity;
         $product->stock = $newStock;
         $product->save();
-        
+
         $user = User::findOrFail($request->get('user_id'));
         $notification = $this->sendNotification($user[ 'email' ]);
 
@@ -147,6 +158,40 @@ class SeparateInventoryController extends Controller
             'status'    => 200
           ]
         );
+    }
+
+    public function dropshipperProducts($id)
+    {
+        try {
+            $data = DB::table('separate_inventories')
+                      ->select('product_id')
+                      ->where('user_id', '=', $id)
+                      ->get();
+            $products_id = [];
+
+            foreach ($data as $d) {
+                array_push($products_id, $d->product_id);
+            }
+
+            $products = new ProductCollection(Product::whereIn('id', $products_id)->get());
+
+        } catch (Exception $e) {
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => $e,
+              ]
+            );
+        }
+        return response()->json(
+          [
+            'isSuccess' => true,
+            'status'    => 200,
+            'objects'   => $products
+          ]
+        );
+
     }
 
     /**

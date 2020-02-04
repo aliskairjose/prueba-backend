@@ -86,6 +86,7 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     // SeparateInventory Routes
     Route::get('separateinventories', 'SeparateInventoryController@index');
     Route::get('separateinventories/{id}', 'SeparateInventoryController@show');
+    Route::get('separateinventories/products/{id}', 'SeparateInventoryController@dropshipperProducts');
     Route::post('separateinventories', 'SeparateInventoryController@store');
     Route::put('separateinventories/{id}', 'SeparateInventoryController@update');
     Route::delete('separateinventories/{id}', 'SeparateInventoryController@delete');
