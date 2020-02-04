@@ -62,7 +62,7 @@ class MyOrderController extends Controller
             $product = Product::findOrFail($request->product_id);
 
             // Valida que el saldo en la wallet sea mayor al total de la orden
-            if ($request->total_order > $wallet->amount ) {
+            if ($request->total_order > $wallet->amount) {
                 return response()->json(
                   [
                     'isSuccess' => false,
@@ -95,9 +95,7 @@ class MyOrderController extends Controller
             $product->stock = $newStock;
             $product->save();
 
-        }
-        catch (ModelNotFoundException $e)
-        {
+        } catch (ModelNotFoundException $e) {
             return response()->json(
               [
                 'isSuccess' => false,
@@ -106,8 +104,7 @@ class MyOrderController extends Controller
                 'error'     => $e
               ]
             );
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
               [
                 'isSuccess' => false,
@@ -119,7 +116,8 @@ class MyOrderController extends Controller
         }
 
         $user = User::findOrFail($request->get('suplier_id'));
-        $notification = $this->sendNotification($user[ 'email' ]);
+        $status = '';
+        $notification = $this->sendNotification($user[ 'email' ], $status);
 
         return response()->json(
           [
@@ -224,9 +222,25 @@ class MyOrderController extends Controller
     public function update(Request $request, $id)
     {
         try {
+
             $data = MyOrder::findOrFail($id);
+            $user = User::findOrFail($data->user_id);
+            $supplier = User::findOrFail($data->suplier_id);
+
+
+            // Si es rechazado se repone el monto a la wallet
+            if ($request->status === 'RECHAZADO') {
+                $wallet = $user->wallet;
+                $newSaldo = $wallet->amount + $data->total_order;
+                $wallet->amount = $newSaldo;
+                $wallet->save();
+            }
+
             $data->status = $request->status;
             $data->save();
+
+            $this->sendNotification($user->email, $request->status);
+            $this->sendNotification($supplier->email, $request->status);
 
         } catch (ModelNotFoundException $e) {
             return response()->json(
@@ -246,6 +260,7 @@ class MyOrderController extends Controller
               ]
             );
         }
+
         return response()->json(
           [
             'isSuccess' => true,
@@ -266,12 +281,12 @@ class MyOrderController extends Controller
         //
     }
 
-    private function sendNotification($email)
+    private function sendNotification($email, $status)
     {
         try {
             // Usando queue en lugar de send, el correo se envia en segundo plano!
-            Mail::to($email)->queue(new MailMyOrder());
-        } catch (\Exception $e) {
+            Mail::to($email)->queue(new MailMyOrder($status));
+        } catch (Exception $e) {
             return 'Error al mandar la notificacion';
         }
 
