@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\WithdrawalRequest as WithdrawalRequestResource;
 use App\Http\Resources\WithdrawalRequestCollection;
 use App\WithdrawalRequest;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Exception;
 
 class WithdrawalRequestController extends Controller
 {
@@ -31,6 +32,35 @@ class WithdrawalRequestController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return JsonResponse
+     */
+    public function show($id)
+    {
+        try {
+            $data = new WithdrawalRequestResource(WithdrawalRequest::findOrFail($id));
+        } catch (Exception $e) {
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => $e,
+              ]
+            );
+        }
+
+        return response()->json(
+          [
+            'isSuccess' => true,
+            'status'    => 200,
+            'objects'   => $data
+          ]
+        );
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  Request  $request
@@ -39,9 +69,14 @@ class WithdrawalRequestController extends Controller
     public function store(Request $request)
     {
         try {
-            $data = WithdrawalRequest::create($request->all());
-        }
-        catch (Exception $e) {
+            $data = WithdrawalRequest::create(
+              [
+                'amount'  => $request->amount,
+                'user_id' => $request->user_id,
+                'status'  => "PENDIENTE"
+              ]
+            );
+        } catch (Exception $e) {
             return response()->json(
               [
                 'isSuccess' => false,
@@ -72,9 +107,9 @@ class WithdrawalRequestController extends Controller
     public function update(Request $request, $id)
     {
         try {
-           $data = WithdrawalRequest::findOrFail($id);
-           $data->status = $request->status;
-           $data->save();
+            $data = WithdrawalRequest::findOrFail($id);
+            $data->status = $request->status;
+            $data->save();
 
         } catch (Exception $e) {
             return response()->json(

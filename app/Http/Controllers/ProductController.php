@@ -173,8 +173,8 @@ class ProductController extends Controller
         return response()->json(
           [
             'isSuccess' => true,
+            'status'    => 200,
             'objects'   => $data,
-            'status'    => 200
           ]
         );
     }
