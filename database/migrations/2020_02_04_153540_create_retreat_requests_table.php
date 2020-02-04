@@ -13,7 +13,7 @@ class CreateRetreatRequestsTable extends Migration
      */
     public function up()
     {
-        Schema::create('retreat_requests', function (Blueprint $table) {
+        Schema::create('withdrawal_requests', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->decimal('amount',18,2)->nullable();
             $table->unsignedInteger('user_id')->nullable(false)->comment('Id del dropshipper que solicita');

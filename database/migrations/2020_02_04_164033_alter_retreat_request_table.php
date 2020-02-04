@@ -13,7 +13,7 @@ class AlterRetreatRequestTable extends Migration
      */
     public function up()
     {
-        Schema::rename('retreat_requests', 'withdrawal_request');
+        Schema::rename('withdrawal_request', 'withdrawal_requests');
     }
 
     /**
