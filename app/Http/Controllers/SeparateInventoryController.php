@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\HistoryWallet;
 use App\Http\Resources\ProductCollection;
 use App\Http\Resources\SeparateInventory as SeparateInventoryResource;
 use App\Http\Resources\SeparateInventoryCollection;
@@ -46,14 +47,6 @@ class SeparateInventoryController extends Controller
      */
     public function store(Request $request)
     {
-        /*$user = User::findOrFail($request->user_id);
-        $product = Product::findOrFail($request->product_id);
-        return response()->json([
-          '$user'    => $user,
-          '$wallet'  => $user->wallet,
-          '$product' => $product,
-          '$total'   => $request->quantity * $product->sale_price
-        ]);*/
         try {
 //            $user = $this->getAuthenticatedUser();
 
@@ -63,6 +56,7 @@ class SeparateInventoryController extends Controller
             $product = Product::findOrFail($request->product_id);
             $total = $request->quantity * $product->sale_price;
 
+            // Valida que el usuario tenga saldo suficiente en la wallet
             if ($total > $wallet->amount) {
                 return response()->json(
                   [
@@ -73,7 +67,7 @@ class SeparateInventoryController extends Controller
                 );
             }
 
-            // Valida que la colicitud de producto sea menor a la existencia en stock
+            // Valida que la solicitud de producto sea menor a la existencia en stock
             if ($request->quantity > $product->stock) {
                 return response()->json(
                   [
@@ -84,7 +78,6 @@ class SeparateInventoryController extends Controller
                 );
             }
 
-//            $data = SeparateInventory::create($request->all());
             $data = SeparateInventory::create(
               [
                 'user_id'      => $user->id,
@@ -116,6 +109,16 @@ class SeparateInventoryController extends Controller
         $newStock = $product->stock - $request->quantity;
         $product->stock = $newStock;
         $product->save();
+
+        // Crea registro en History Wallet
+        HistoryWallet::create(
+          [
+            'wallet_id' => $wallet->id,
+            'amount'    => $wallet->amount,
+            'status'    => 'PENDIENTE',
+            'type'      => 'Type'
+          ]
+        );
 
         $user = User::findOrFail($request->get('user_id'));
         $notification = $this->sendNotification($user[ 'email' ]);
