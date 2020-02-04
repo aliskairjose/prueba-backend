@@ -173,8 +173,8 @@ class ProductController extends Controller
         return response()->json(
           [
             'isSuccess' => true,
+            'status'    => 200,
             'objects'   => $data,
-            'status'    => 200
           ]
         );
     }
@@ -229,7 +229,7 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $data = Product::findOrFail($id)->update($request->all());
+            Product::findOrFail($id)->update($request->all());
         } catch (Exception $e) {
             return response()->json(
               [

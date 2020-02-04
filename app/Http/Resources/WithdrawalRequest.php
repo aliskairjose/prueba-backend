@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class RetreatRequest extends JsonResource
+class WithdrawalRequest extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,6 +14,10 @@ class RetreatRequest extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+          'amount'  => $this->amount,
+          'user_id' => $this->user_id,
+          'status'  => $this->status
+        ];
     }
 }
