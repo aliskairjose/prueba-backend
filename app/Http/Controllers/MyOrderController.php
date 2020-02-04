@@ -246,6 +246,14 @@ class MyOrderController extends Controller
             $data->status = $request->status;
             $data->save();
 
+            \App\HistoryOrder::create(
+              [
+                'order_id' => $data->id,
+                'user_id'  => $data->user_id,
+                'status'   => $request->status
+              ]
+            );
+
             $this->sendNotification($user->email, $request->status);
             $this->sendNotification($supplier->email, $request->status);
 

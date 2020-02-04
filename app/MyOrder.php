@@ -38,7 +38,7 @@ class MyOrder extends Model
      */
     public function history()
     {
-        return $this->hasMany(HistoryOrder::class);
+        return $this->hasMany(HistoryOrder::class, 'order_id');
     }
 
 }
