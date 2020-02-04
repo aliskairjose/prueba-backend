@@ -20,7 +20,6 @@ class MyOrderDetail extends JsonResource
             'product_id'        => $this->product_id,
             'variation_id'      => $this->variation_id,
             'quantity'          => $this->quantity,
-            'price'             => $this->price,
             'notes'             => $this->notes,
             'price'             => $this->price,
             'total_order'       => $this->total_order,
