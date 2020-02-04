@@ -78,16 +78,27 @@ class SeparateInventoryController extends Controller
                 );
             }
 
-            $data = SeparateInventory::create(
-              [
-                'user_id'      => $user->id,
-                'suplier_id'   => $request->supplier_id,
-                'status'       => $request->status,
-                'quantity'     => $request->quantity,
-                'product_id'   => $request->product_id,
-                'variation_id' => $request->variation_id
-              ]
-            );
+            $sepInv = SeparateInventory::where('user_id', $user->id)->where('product_id', $request->product_id)->get();
+            if($sepInv->count() === 0){
+                // Crea un nuevo registro
+                $data = SeparateInventory::create(
+                  [
+                    'user_id'      => $user->id,
+                    'suplier_id'   => $request->supplier_id,
+                    'status'       => $request->status,
+                    'quantity'     => $request->quantity,
+                    'product_id'   => $request->product_id,
+                    'variation_id' => $request->variation_id
+                  ]
+                );
+            }
+            else{
+//                return $sepInv;
+                $sepInv->quantity = $request->quantity + $sepInv->quantity;
+                $sepInv->save();
+                $data = $sepInv;
+            }
+
 
         } catch (Exception $e) {
             return response()->json(
