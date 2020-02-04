@@ -93,11 +93,9 @@ class SeparateInventoryController extends Controller
                 );
             }
             else{
-//                return $sepInv[0]->quantity;
                 $data = $data[0];
                 $data->quantity = $request->quantity + $data->quantity;
                 $data->save();
-//                $data = $sepInv;
             }
 
 
