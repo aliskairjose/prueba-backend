@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Swift_SwiftException;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -29,7 +30,8 @@ class UserController extends Controller
     public function index(Request $request)
     {
 
-        $data = new UserCollection((User::where('type_user', $request->type_user)->get()));
+
+        $data = new UserCollection((User::all()));
 
         return response()->json(
           [
