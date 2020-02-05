@@ -322,4 +322,41 @@ class UserController extends Controller
 
         return 'Notificacion enviada con exito';
     }
+
+    public function updaterole(Request $request, $id)
+    {
+        try {
+            $data = User::findOrFail($id);
+
+            $data->role_id = $request->role_id;
+            $data->save();
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'message'   => 'No se encontró registro a actualizar',
+                    'status'    => 400
+                ]
+            );
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'message'   => 'Ha ocurrido un error inesperado',
+                    'status'    => 400,
+                    'error'     => $e
+                ]
+            );
+        }
+
+        return response()->json(
+            [
+                'isSuccess' => true,
+                'message'   => 'El registro se actualizó con éxito',
+                'status'    => 200,
+                'objects'   => $data
+            ]
+        );
+    }
 }
