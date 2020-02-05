@@ -12,6 +12,9 @@ use App\Http\Resources\Wallet as WalletResource;
 use App\Wallet;
 use App\Currency;
 
+use App\Http\Resources\CurrencyCollection;
+use App\Http\Resources\Currency as CurrencyResource;
+
 class PayuController extends Controller
 {
 
@@ -227,7 +230,7 @@ class PayuController extends Controller
 
                 if ($response->transactionResponse->state == "APPROVED") {
 
-                    $currency = Currency::where('code',  \PayUParameters::CURRENCY)->get();
+                    $currency = new CurrencyResource(Currency::where('code',  \PayUParameters::CURRENCY)->get());
 
                   $cartera=  Wallet::firstOrNew(['user_id' => $user->id]);
 
