@@ -173,6 +173,21 @@ class PayuController extends Controller
                     $response->transactionResponse->extraParameters->BANK_URL;
                 }
                 $response->transactionResponse->responseCode;
+
+                if ($response->transactionResponse->state == "APPROVED") {
+
+                    $cartera=  Wallet::firstOrNew(['user_id' => $user->id]);
+                    var_dump($cartera);
+
+                    if($cartera->id){
+                        $cartera->amount=$cartera->amount+$oder['amount'];
+
+                    }else{
+                        $cartera->user_id=$user->id;
+                        $cartera->amount=$oder['amount'];
+                    }
+                    $cartera->save();
+                }
             }
 
 
@@ -193,7 +208,7 @@ class PayuController extends Controller
 
 
             $response = \PayUPayments::doAuthorizationAndCapture($parameters, 'es');
-            var_dump($response->transactionResponse->state);
+
             if($response){
                 $response->transactionResponse->orderId;
                 $response->transactionResponse->transactionId;
