@@ -178,6 +178,7 @@ class PayuController extends Controller
                 if ($response->transactionResponse->state == "APPROVED") {
 
                     $cartera=  Wallet::firstOrNew(['user_id' => $user->id,'currency_id'=>$currency->id]);
+                    var_dump($cartera);
                     if($cartera->id){
                         $cartera->amount=$cartera->amount+$oder['amount'];
                         var_dump($cartera->amount);
