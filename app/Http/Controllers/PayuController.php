@@ -7,6 +7,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use PrintuCo\LaravelPayU\LaravelPayU;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\Wallet as WalletResource;
+use App\Wallet;
 
 class PayuController extends Controller
 {
@@ -52,7 +54,7 @@ class PayuController extends Controller
 
     public function sendPayment(Request $request)
     {
-       
+        $user = $this->getAuthenticatedUser();
         LaravelPayU::setPayUEnvironment();
         LaravelPayU::setAccountOnTesting(true);
 
@@ -204,6 +206,20 @@ class PayuController extends Controller
                     $response->transactionResponse->extraParameters->BAR_CODE;
                 }
                 $response->transactionResponse->responseCode;
+
+                if ($response->transactionResponse->state == "APPROVED") {
+
+                  $cartera=  Wallet::firstOrNew(['user_id' => $user->id]);
+
+                  if($cartera->id){
+                      $cartera->amount=$cartera->amount+$oder['amount'];
+
+                  }else{
+                      $cartera->user_id=$user->id;
+                      $cartera->amount=$oder['amount'];
+                  }
+                    $cartera->save();
+                }
             }
 
         }
