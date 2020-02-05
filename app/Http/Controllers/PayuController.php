@@ -224,4 +224,19 @@ class PayuController extends Controller
             ['responseprueba' => $json]
         );
     }
+
+    public function getresponseprueba(Request $request)
+    {
+        $query = DB::table('responseprueba')
+            ->get();
+
+        return response()->json([
+            [
+                'isSuccess' => true,
+                //  'count' => $data->count(),
+                'status' => 200,
+                'objects' => $query
+            ]
+        ]);
+    }
 }
