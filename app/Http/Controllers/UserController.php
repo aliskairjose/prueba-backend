@@ -29,7 +29,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
 
-        $data = new UserCollection((User::where('type_user', $request->type_user)->get()));
+        $data = new UserCollection((User::all()));
 
         return response()->json(
           [
