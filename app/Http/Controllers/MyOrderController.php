@@ -63,7 +63,7 @@ class MyOrderController extends Controller
             $wallet = $user->wallet;
 
             // Valida que el dropshipper tenga saldo
-            if($request->total_order > $wallet->amount){
+            if ($request->total_order > $wallet->amount) {
                 return response()->json(
                   [
                     'isSuccess' => false,
@@ -90,7 +90,7 @@ class MyOrderController extends Controller
                 'wallet_id' => $wallet->id,
                 'amount'    => $wallet->amount,
                 'status'    => $request->status,
-                'type'      => 'Descuento'
+                'type'      => 'DESCUENTO'
               ]
             );
 
@@ -245,27 +245,57 @@ class MyOrderController extends Controller
             $data = MyOrder::findOrFail($id);
             $user = User::findOrFail($data->user_id);
             $supplier = User::findOrFail($data->suplier_id);
-            $wallet = $user->wallet;
+
+            $uWallet = $user->wallet; // User wallet
+            $sWallet = $supplier->wallet; // Supplier Wallet
 
             // Si es rechazado se repone el monto a la wallet
             if ($request->status === 'RECHAZADO') {
-                $newSaldo = $wallet->amount + $data->total_order;
-                $wallet->amount = $newSaldo;
-                $wallet->save();
+
+                $newSaldo = $uWallet->amount + $data->total_order;
+                $uWallet->amount = $newSaldo;
+                $uWallet->save();
 
                 // Crea registro en History Wallet
                 HistoryWallet::create(
                   [
-                    'wallet_id' => $wallet->id,
+                    'wallet_id' => $uWallet->id,
                     'amount'    => $data->total_order,
                     'status'    => $request->status,
-                    'type'      => 'Reintegro'
+                    'type'      => 'REINTEGRO'
                   ]
                 );
             }
 
-            $data->status = $request->status;
-            $data->save();
+            // Cuando se entrega, al supplier se le carga a la wallet el sale_price del producto
+            // y al dropshipper se le carga a la wallet el total_price de la orden menos el porcentaje
+            if ($request->status === 'ENTREGADO' && $data->type === 'FINAL_ORDER') {
+
+                $product = Product::findOrFail($data->product_id);
+
+                // Retorna el monto de la comision y el porcentaje
+                $resp = $this->calcularMonto($data->total_order);
+                $amount = $data->total_order - $resp[ 'comision' ];
+                $adminAmount = $resp[ 'comision' ];
+
+                // Actualizo la waller del Dropshipper
+                $uWallet->amount = $amount - $product->sale_price;
+                $uWallet->save();
+
+                // Actualizo la wallet del Supplier
+                $sWallet->amount = $product->sale_price;
+                $sWallet->save();
+
+                // Crea registro en History Wallet
+                HistoryWallet::create(
+                  [
+                    'wallet_id' => $uWallet->id,
+                    'amount'    => $data->total_order,
+                    'status'    => $request->status,
+                    'type'      => 'ABONO'
+                  ]
+                );
+            }
 
             \App\HistoryOrder::create(
               [
@@ -275,6 +305,11 @@ class MyOrderController extends Controller
               ]
             );
 
+            // Actualiza el status de la orden
+            $data->status = $request->status;
+            $data->save();
+
+            // Envios de correos
             $this->sendNotification($user->email, $request->status);
             $this->sendNotification($supplier->email, $request->status);
 
@@ -343,5 +378,41 @@ class MyOrderController extends Controller
             return response()->json(['token_absent']);
         }
         return $user;
+    }
+
+    /**
+     * Recibe el total de la orden y devuelve el porcentaje y el monto de la comision.
+     * @param $total_order
+     * @return array
+     */
+    private function calcularMonto($total_order)
+    {
+        if ($total_order <= 59000) {
+            $comision = $total_order / 10;
+            $porcentaje = 10;
+
+            return $res = array(
+              'comision'   => $comision,
+              'porcentaje' => $porcentaje
+            );
+        }
+        if ($total_order > 59000 && $total_order <= 99000) {
+            $comision = $total_order / 8;
+            $porcentaje = 8;
+
+            return $res = array(
+              'comision'   => $comision,
+              'porcentaje' => $porcentaje
+            );
+        }
+        if ($total_order > 99000) {
+            $comision = $total_order / 6;
+            $porcentaje = 6;
+
+            return $res = array(
+              'comision'   => $comision,
+              'porcentaje' => $porcentaje
+            );
+        }
     }
 }
