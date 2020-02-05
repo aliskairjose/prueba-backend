@@ -30,7 +30,7 @@ class UserController extends Controller
     {
 
         $role = new RoleCollection(Role::where('name', $request->type_user)->get());
-        $data = new UserCollection((User::where('role_id', $role[ 0 ]->id)->get()));
+        $data = new UserCollection(User::where('role_id', $role[ 0 ]->id)->get());
 
         return response()->json(
           [
