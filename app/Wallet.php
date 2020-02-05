@@ -9,7 +9,7 @@ class Wallet extends Model
 {
     use Notifiable;
 
-    protected $fillable = [ 'user_id', 'currency_id', 'amount' ];
+    protected $fillable = [ 'id','user_id', 'currency_id', 'amount' ];
 
 
 }
