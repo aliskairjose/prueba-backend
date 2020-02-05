@@ -71,12 +71,12 @@ class WithdrawalRequestController extends Controller
     {
         try {
 
-            $user =$this->getAuthenticatedUser();
+            $user = $this->getAuthenticatedUser();
 
-            $wallet = $this->$user->wallet;
+            $wallet = $user->wallet;
 
             // Valida que el usuario tenga saldo suficiente en la wallet
-            if ($request-amount > $wallet->amount) {
+            if ($request->amount > $wallet->amount) {
                 return response()->json(
                   [
                     'isSuccess' => false,
