@@ -9,5 +9,5 @@ class Currency extends Model
 {
     use Notifiable;
 
-    protected $fillable = [ 'name', 'code','country_id'];
+    protected $fillable = [ 'id','name', 'code','country_id'];
 }
