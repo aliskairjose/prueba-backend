@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use PrintuCo\LaravelPayU\LaravelPayU;
+use Illuminate\Support\Facades\DB;
 
 class PayuController extends Controller
 {
@@ -56,10 +57,11 @@ class PayuController extends Controller
         LaravelPayU::setAccountOnTesting(true);
     
         $data = $request->data;
+
         $reference = "DROPI_PAYMENT_" . date('Ymdhis_a');
-        $transaction = $data['transaction'];
-        $oder = $data['transaction']['order'];
-        $payer = $data['transaction']['payer'];
+        $transaction = $request->transaction;
+        $oder = $transaction['order'];
+        $payer = $transaction['payer'];
         $buyer = $oder['buyer'];
         $value = $oder['amount'];
 
@@ -67,7 +69,7 @@ class PayuController extends Controller
         $parameters = array(
             //Ingrese aquí el identificador de la cuenta.
             \PayUParameters::ACCOUNT_ID =>LaravelPayU::getAccountId(),
-           
+
             //Ingrese aquí el código de referencia.
             \PayUParameters::REFERENCE_CODE => $reference,
             //Ingrese aquí la descripción.
@@ -86,43 +88,29 @@ class PayuController extends Controller
             //Ingrese aquí la moneda.
             \PayUParameters::CURRENCY => "COP",
 
-            // -- Comprador
-            //Ingrese aquí el nombre del comprador.
-            \PayUParameters::BUYER_NAME => $buyer['fullName'],
-            //Ingrese aquí el email del comprador.
-            \PayUParameters::BUYER_EMAIL => $buyer['emailAddress'],
-            //Ingrese aquí el teléfono de contacto del comprador.
-            \PayUParameters::BUYER_CONTACT_PHONE => $buyer['contactPhone'],
-            //Ingrese aquí el documento de contacto del comprador.
-            \PayUParameters::BUYER_DNI => $buyer['dniNumber'],
-            //Ingrese aquí la dirección del comprador.
-            \PayUParameters::BUYER_STREET => $buyer['shippingAddress']['street1'],
-            \PayUParameters::BUYER_STREET_2 => $buyer['shippingAddress']['street2'],
-            \PayUParameters::BUYER_CITY => $buyer['shippingAddress']['city'],
-            \PayUParameters::BUYER_STATE => $buyer['shippingAddress']['state'],
-            \PayUParameters::BUYER_COUNTRY => $buyer['shippingAddress']['country'],
-            \PayUParameters::BUYER_POSTAL_CODE => $buyer['shippingAddress']['postalCode'],
-            \PayUParameters::BUYER_PHONE => $buyer['shippingAddress']['phone'],
+
+
 
             // -- pagador --
             //Ingrese aquí el nombre del pagador.
             \PayUParameters::PAYER_NAME => $payer['fullName'],
             //Ingrese aquí el email del pagador.
-            \PayUParameters::PAYER_EMAIL => $payer['emailAddress'],
-            //Ingrese aquí el teléfono de contacto del pagador.
-            \PayUParameters::PAYER_CONTACT_PHONE => $payer['contactPhone'],
-            //Ingrese aquí el documento de contacto del pagador.
-            //Ingrese aquí el documento de contacto del pagador.
-            \PayUParameters::PAYER_DNI => $payer['dniNumber'],
+            /*  \PayUParameters::PAYER_EMAIL => $payer['emailAddress'],
+             //Ingrese aquí el teléfono de contacto del pagador.
+             \PayUParameters::PAYER_CONTACT_PHONE => $payer['contactPhone'],
+             //Ingrese aquí el documento de contacto del pagador.
+             //Ingrese aquí el documento de contacto del pagador.
+             \PayUParameters::PAYER_DNI => $payer['dniNumber'],
 
-            //Ingrese aquí la dirección del pagador.
-            \PayUParameters::PAYER_STREET => $payer['billingAddress']['street1'],
-            \PayUParameters::PAYER_STREET_2 => $payer['billingAddress']['street2'],
-            \PayUParameters::PAYER_CITY => $payer['billingAddress']['city'],
-            \PayUParameters::PAYER_STATE => $payer['billingAddress']['state'],
-            \PayUParameters::PAYER_COUNTRY => $payer['billingAddress']['country'],
-            \PayUParameters::PAYER_POSTAL_CODE => $payer['billingAddress']['postalCode'],
-            \PayUParameters::PAYER_PHONE => $payer['billingAddress']['phone'],
+             //Ingrese aquí la dirección del pagador.
+             \PayUParameters::PAYER_STREET => $payer['billingAddress']['street1'],
+             \PayUParameters::PAYER_STREET_2 => $payer['billingAddress']['street2'],
+             \PayUParameters::PAYER_CITY => $payer['billingAddress']['city'],
+             \PayUParameters::PAYER_STATE => $payer['billingAddress']['state'],
+             \PayUParameters::PAYER_COUNTRY => $payer['billingAddress']['country'],
+             \PayUParameters::PAYER_POSTAL_CODE => $payer['billingAddress']['postalCode'],
+             \PayUParameters::PAYER_PHONE => $payer['billingAddress']['phone'],
+             */
 
 
             //Ingrese aquí el nombre de la tarjeta de crédito
@@ -136,14 +124,8 @@ class PayuController extends Controller
 
             //Session id del device.
             \PayUParameters::DEVICE_SESSION_ID => "vghs6tvkcle931686k1900o6e1",
-            //IP del pagadador
-            \PayUParameters::IP_ADDRESS => $transaction['ipAddress'],
-            //Cookie de la sesión actual.
-            \PayUParameters::PAYER_COOKIE => $transaction['cookie'],
-            //Cookie de la sesión actual.
-            \PayUParameters::USER_AGENT => $transaction['userAgent'],
         );
-        $parameters[\PayUParameters::NOTIFY_URL] = $$oder['notifyUrl'];
+        $parameters[\PayUParameters::NOTIFY_URL] = url('')."api/payu/notify_url";
 
         if ($transaction['paymentMethod'] != 'PSE') {
             // -- Datos de la tarjeta de crédito --
@@ -186,10 +168,10 @@ class PayuController extends Controller
 
             //Página de respuesta a la cual será redirigido el pagador.
             $parameters[\PayUParameters::RESPONSE_URL] = $pse['RESPONSE_URL'];
-           
+
 
             $response = \PayUPayments::doAuthorizationAndCapture($parameters, 'es');
-            
+
             if($response){
                 $response->transactionResponse->orderId;
                 $response->transactionResponse->transactionId;
@@ -204,10 +186,10 @@ class PayuController extends Controller
                 }
                 $response->transactionResponse->responseCode;
             }
-            
+
         }
 
-       
+
 
         
       
@@ -221,5 +203,12 @@ class PayuController extends Controller
                 'objects' => $response
             ]
         ]);
+    }
+
+    public function notifyurl(Request $request){
+        $json = json_encode($request);
+        DB::table('responseprueba')->insert(
+            ['responseprueba' => $json, 'fecha' => date('Y-m-d H:i:s')]
+        );
     }
 }
