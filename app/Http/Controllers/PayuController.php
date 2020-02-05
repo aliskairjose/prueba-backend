@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Resources\Wallet as WalletResource;
 use App\Wallet;
+use App\Currency;
 
 class PayuController extends Controller
 {
@@ -190,7 +191,7 @@ class PayuController extends Controller
                         $cartera->amount=$oder['amount'];
                         var_dump( $cartera->amount);
                     }
-
+                    $cartera->currency_id=1;
                     var_dump($cartera->save());
                 }
             }
@@ -230,8 +231,10 @@ class PayuController extends Controller
 
                 if ($response->transactionResponse->state == "APPROVED") {
 
+                    $currency = Currency::where('code',  \PayUParameters::CURRENCY)->get();
+
                   $cartera=  Wallet::firstOrNew(['user_id' => $user->id]);
-                  var_dump($cartera);
+
 
                   if($cartera->id){
                       $cartera->amount=$cartera->amount+$oder['amount'];
@@ -240,6 +243,7 @@ class PayuController extends Controller
                       $cartera->user_id=$user->id;
                       $cartera->amount=$oder['amount'];
                   }
+                  $cartera->currency_id=$currency->id;
                     $cartera->save();
                 }
             }
