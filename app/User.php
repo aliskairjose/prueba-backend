@@ -3,7 +3,8 @@
 namespace App;
 
 use App\Notifications\ResetPasswordNotification;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -18,8 +19,9 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'name', 'surname', 'email', 'birthday',  'status', 'password', 'register_approved', 'banned', 'approve_product',
-        'role_id', 'subscription_plan_id' ];
+      'name', 'surname', 'email', 'birthday', 'status', 'password', 'register_approved', 'banned', 'approve_product',
+      'role_id', 'subscription_plan_id'
+    ];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -27,7 +29,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'password',
+      'password',
     ];
 
     /**
@@ -35,9 +37,9 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array
      */
-   /*  protected $casts = [
-        'email_verified_at' => 'datetime',
-    ]; */
+    /*  protected $casts = [
+         'email_verified_at' => 'datetime',
+     ]; */
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
@@ -59,7 +61,7 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
-     /**
+    /**
      * Send the password reset notification.
      *
      * @param  string  $token
@@ -85,10 +87,19 @@ class User extends Authenticatable implements JWTSubject
 
     /**
      * Relacion uno a uno con wallet
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return HasOne
      */
     public function wallet()
     {
         return $this->hasOne(Wallet::class);
+    }
+
+    /**
+     * Relacion uno a uno con Planes
+     * @return BelongsTo
+     */
+    public function plan()
+    {
+        return $this->belongsTo(SubscriptionPlan::class, 'subscription_plan_id');
     }
 }
