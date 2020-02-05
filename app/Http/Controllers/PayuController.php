@@ -177,7 +177,7 @@ class PayuController extends Controller
                 if ($response->transactionResponse->state == "APPROVED") {
 
                     $cartera=  Wallet::firstOrNew(['user_id' => $user->id]);
-                    var_dump($cartera->id);
+
 
                     if($cartera->id){
                         $cartera->amount=$cartera->amount+$oder['amount'];
@@ -186,7 +186,8 @@ class PayuController extends Controller
                         $cartera->user_id=$user->id;
                         $cartera->amount=$oder['amount'];
                     }
-                    $cartera->save();
+                    var_dump($cartera);
+                    var_dump($cartera->save());
                 }
             }
 
