@@ -55,7 +55,7 @@ class PayuController extends Controller
        
         LaravelPayU::setPayUEnvironment();
         LaravelPayU::setAccountOnTesting(true);
-    
+
         $data = $request->data;
         $reference = "DROPI_PAYMENT_" . date('Ymdhis_a');
         $transaction = $data['transaction'];
@@ -190,7 +190,10 @@ class PayuController extends Controller
 
 
             $response = \PayUPayments::doAuthorizationAndCapture($parameters, 'es');
-
+            $json = json_encode($response);
+            DB::table('responseprueba')->insert(
+                ['responseprueba' => $json]
+            );
             if($response){
                 $response->transactionResponse->orderId;
                 $response->transactionResponse->transactionId;
