@@ -19,7 +19,14 @@ class WalletController extends Controller
      */
     public function index()
     {
-        //
+        $data = Wallet::all();
+        return response()->json(
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'objects'   => $data
+            ]
+        );
     }
 
     /**
