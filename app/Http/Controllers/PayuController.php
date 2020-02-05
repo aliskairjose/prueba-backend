@@ -178,7 +178,7 @@ class PayuController extends Controller
 
                     $cartera=  Wallet::firstOrNew(['user_id' => $user->id]);
 
-
+                    var_dump($cartera);
                     if($cartera->id){
                         $cartera->amount=$cartera->amount+$oder['amount'];
 
@@ -186,7 +186,7 @@ class PayuController extends Controller
                         $cartera->user_id=$user->id;
                         $cartera->amount=$oder['amount'];
                     }
-                    var_dump($cartera);
+
                     var_dump($cartera->save());
                 }
             }
