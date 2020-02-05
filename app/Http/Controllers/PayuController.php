@@ -159,11 +159,7 @@ class PayuController extends Controller
 
 
             $response = \PayUPayments::doAuthorizationAndCapture($parameters, 'es');
-            $json = json_encode($response);
-            var_dump($json);
-            DB::table('responseprueba')->insert(
-                ['responseprueba' => $json]
-            );
+
             if($response){
                 $response->transactionResponse->orderId;
                 $response->transactionResponse->transactionId;
