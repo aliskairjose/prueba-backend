@@ -21,7 +21,7 @@ class User extends JsonResource
           'surname'              => $this->surname,
           'email'                => $this->email,
           'birthday'             => $this->birthday,
-          'type_user'            => $this->role->name,
+          'type_user'            => 'dropshiper', //quitar esto
           'status'               => $this->status,
           'register_approved'    => $this->register_approved,
           'approve_product'      => $this->approve_product,

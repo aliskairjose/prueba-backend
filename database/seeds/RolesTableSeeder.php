@@ -17,8 +17,8 @@ class RolesTableSeeder extends Seeder
     {
         DB::table('roles')->updateOrInsert(
             [
-                'name' => 'SUPERADMIN',
-                'guard_name' => 'SUPERADMIN'
+                'name' => 'ADMIN',
+                'guard_name' => 'ADMIN'
             ]
         );
         DB::table('roles')->updateOrInsert(
@@ -29,8 +29,8 @@ class RolesTableSeeder extends Seeder
         );
         DB::table('roles')->updateOrInsert(
             [
-                'name' => 'SUPLIER',
-                'guard_name' => 'SUPLIER'
+                'name' => 'SUPPLIER',
+                'guard_name' => 'SUPPLIER'
             ]
         );
     }
