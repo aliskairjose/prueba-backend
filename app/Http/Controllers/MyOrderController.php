@@ -60,8 +60,20 @@ class MyOrderController extends Controller
 
             $user = User::findOrFail($request->user_id);
             $product = Product::findOrFail($request->product_id);
+            $wallet = $user->wallet;
 
-            // Valida que la colicitud de producto sea menor a la existencia en stock
+            // Valida que el dropshipper tenga saldo
+            if($request->total_order > $wallet->amount){
+                return response()->json(
+                  [
+                    'isSuccess' => false,
+                    'message'   => 'No posee saldo suficiente en la wallet',
+                    'status'    => 400,
+                  ]
+                );
+            }
+
+            // Valida que la solicitud de producto sea menor a la existencia en stock
             if ($request->quantity > $product->stock) {
                 return response()->json(
                   [
@@ -72,7 +84,18 @@ class MyOrderController extends Controller
                 );
             }
 
+            // Crea registro en History Wallet
+            HistoryWallet::create(
+              [
+                'wallet_id' => $wallet->id,
+                'amount'    => $wallet->amount,
+                'status'    => $request->status,
+                'type'      => 'Descuento'
+              ]
+            );
+
             $data = MyOrder::create($request->all());
+
             \App\HistoryOrder::create(
               [
                 'order_id' => $data->id,
@@ -85,6 +108,11 @@ class MyOrderController extends Controller
             $newStock = $product->stock - $request->quantity;
             $product->stock = $newStock;
             $product->save();
+
+            // Actualiza el saldo en la wallet
+            $newSaldo = $wallet->amount - $request->total_order;
+            $wallet->amount = $newSaldo;
+            $wallet->save();
 
         } catch (ModelNotFoundException $e) {
             return response()->json(
@@ -232,22 +260,6 @@ class MyOrderController extends Controller
                     'amount'    => $data->total_order,
                     'status'    => $request->status,
                     'type'      => 'Reintegro'
-                  ]
-                );
-            }
-
-            if( $request->status === 'APROBADO'){
-                $newSaldo = $wallet->amount - $data->total_order;
-                $wallet->amount = $newSaldo;
-                $wallet->save();
-
-                // Crea registro en History Wallet
-                HistoryWallet::create(
-                  [
-                    'wallet_id' => $wallet->id,
-                    'amount'    => $wallet->amount,
-                    'status'    => $request->status,
-                    'type'      => 'Descuento'
                   ]
                 );
             }
