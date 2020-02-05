@@ -176,7 +176,7 @@ class PayuController extends Controller
                 $response->transactionResponse->responseCode;
                 $currency = Currency::where('code',  \PayUParameters::CURRENCY)->get();
                 if ($response->transactionResponse->state == "APPROVED") {
-                   
+
                     $cartera=  Wallet::firstOrNew(['user_id' => $user->id,'currency_id'=>$currency->id]);
                     var_dump($cartera);
                     if($cartera->id){
