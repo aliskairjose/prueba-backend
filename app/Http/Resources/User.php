@@ -3,7 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\Wallet as WalletResource;
+
 class User extends JsonResource
 {
     /**
@@ -16,21 +16,22 @@ class User extends JsonResource
     {
 
         return [
-          'id'                => $this->id,
-          'name'              => $this->name,
-          'surname'           => $this->surname,
-          'email'             => $this->email,
-          'birthday'          => $this->birthday,
-          'type_user'         => $this->type_user,
-          'status'            => $this->status,
-          'register_approved' => $this->register_approved,
-          'approve_product'   => $this->approve_product,
-          'banned'            => $this->banned,
-          'role_id'           => $this->role_id,
-          'role'              => $this->role,
-          'products'          => new ProductCollection($this->products),
-            'wallet'            => isset($this->wallet->amount)?$this->wallet->amount:0.00,
-          'persistenceState'  => "Unchanged",
+          'id'                   => $this->id,
+          'name'                 => $this->name,
+          'surname'              => $this->surname,
+          'email'                => $this->email,
+          'birthday'             => $this->birthday,
+          'type_user'            => $this->role->name,
+          'status'               => $this->status,
+          'register_approved'    => $this->register_approved,
+          'approve_product'      => $this->approve_product,
+          'banned'               => $this->banned,
+          'role_id'              => $this->role_id,
+          'role'                 => $this->role,
+          'subscription_plan_id' => $this->subscription_plan_id,
+          'products'             => new ProductCollection($this->products),
+          'wallet'               => isset($this->wallet->amount) ? $this->wallet->amount : 0.00,
+          'persistenceState'     => "Unchanged",
         ];
     }
 }
