@@ -60,7 +60,6 @@ class UserController extends Controller
                     'surname'           => $request->surname,
                     'email'             => $request->email,
                     'birthday'          => $request->birthday,
-                    'type_user'         => 'supplier',
                     'status'            => $request->status,
                     'register_approved' => $request->register_approved,
                     'banned'            => $request->banned,
