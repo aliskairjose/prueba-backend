@@ -178,11 +178,13 @@ class PayuController extends Controller
 
                     $cartera=  Wallet::firstOrNew(['user_id' => $user->id]);
 
-                    var_dump($cartera);
+                    var_dump($cartera->id);
                     if($cartera->id){
+                        var_dump('encontro');
                         $cartera->amount=$cartera->amount+$oder['amount'];
 
                     }else{
+                        var_dump(' no encontro');
                         $cartera->user_id=$user->id;
                         $cartera->amount=$oder['amount'];
                     }
