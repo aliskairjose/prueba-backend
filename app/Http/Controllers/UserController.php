@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\RoleCollection;
 use App\Http\Resources\User as UserResource;
 use App\Http\Resources\UserCollection;
 use App\Mail\User as UserMail;
-use App\Role;
 use App\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -17,8 +15,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use Swift_SwiftException;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Swift_SwiftException;
 
 class UserController extends Controller
 {
@@ -284,7 +282,8 @@ class UserController extends Controller
         try {
             // Usando queue en lugar de send, el correo se envia en segundo plano!
             Mail::to($request->email)->queue(new UserMail($request->password));
-        } catch (Swift_SwiftException $e) {
+        }
+        catch ( Swift_SwiftException $e){
             return response()->json(
               [
                 'isSuccess' => false,
@@ -292,7 +291,8 @@ class UserController extends Controller
                 'message'   => 'Error al enviar el mail'
               ]
             );
-        } catch (Exception $e) {
+        }
+        catch (Exception $e) {
             return response()->json(
               [
                 'isSuccess' => false,
