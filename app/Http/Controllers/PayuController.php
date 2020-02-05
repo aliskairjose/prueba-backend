@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use PrintuCo\LaravelPayU\LaravelPayU;
+use Illuminate\Support\Facades\DB;
 
 class PayuController extends Controller
 {
@@ -67,7 +68,7 @@ class PayuController extends Controller
         $parameters = array(
             //Ingrese aquí el identificador de la cuenta.
             \PayUParameters::ACCOUNT_ID =>LaravelPayU::getAccountId(),
-           
+
             //Ingrese aquí el código de referencia.
             \PayUParameters::REFERENCE_CODE => $reference,
             //Ingrese aquí la descripción.
@@ -143,7 +144,7 @@ class PayuController extends Controller
             //Cookie de la sesión actual.
             \PayUParameters::USER_AGENT => $transaction['userAgent'],
         );
-        $parameters[\PayUParameters::NOTIFY_URL] = $$oder['notifyUrl'];
+        $parameters[\PayUParameters::NOTIFY_URL] = url('')."api/payu/notify_url";
 
         if ($transaction['paymentMethod'] != 'PSE') {
             // -- Datos de la tarjeta de crédito --
@@ -186,10 +187,10 @@ class PayuController extends Controller
 
             //Página de respuesta a la cual será redirigido el pagador.
             $parameters[\PayUParameters::RESPONSE_URL] = $pse['RESPONSE_URL'];
-           
+
 
             $response = \PayUPayments::doAuthorizationAndCapture($parameters, 'es');
-            
+
             if($response){
                 $response->transactionResponse->orderId;
                 $response->transactionResponse->transactionId;
@@ -204,14 +205,8 @@ class PayuController extends Controller
                 }
                 $response->transactionResponse->responseCode;
             }
-            
+
         }
-
-       
-
-        
-      
-   
 
         return response()->json([
             [
@@ -221,5 +216,12 @@ class PayuController extends Controller
                 'objects' => $response
             ]
         ]);
+    }
+
+    public function notifyurl(Request $request){
+        $json = json_encode($request);
+        DB::table('responseprueba')->insert(
+            ['responseprueba' => $json]
+        );
     }
 }
