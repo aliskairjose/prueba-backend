@@ -262,9 +262,9 @@ class PayuController extends Controller
 
     public function notifyurl(Request $request)
     {
-        //$json = json_encode($request);
+        $json = json_encode($request);
         DB::table('responseprueba')->insert(
-            ['responseprueba' => 1]
+            ['responseprueba' => $json]
         );
     }
 
