@@ -147,6 +147,10 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::get('payu/payment_methods', 'PayuController@getPaymentMethods');
     Route::get('payu/pse_banks', 'PayuController@getPseBanks');
     Route::post('payu/send_payment', 'PayuController@sendPayment');
+    Route::post('payu/notifyurl', 'PayuController@notifyurl');
+    Route::get('payu/getresponseprueba', 'PayuController@getresponseprueba');
+
+
 
     // LandingPage Page Routes
     Route::get('landing', 'LandingPageController@index');
@@ -166,4 +170,11 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::get('withdrawal/{id}', 'WithdrawalRequestController@show');
     Route::post('withdrawal', 'WithdrawalRequestController@store');
     Route::put('withdrawal/{id}', 'WithdrawalRequestController@update');
+
+    // Currency Routes
+    Route::get('currency', 'CurrencyController@index');
+    Route::get('currency/{id}', 'CurrencyController@show');
+    Route::post('currency', 'CurrencyController@store');
+    Route::delete('currency/{id}', 'CurrencyController@delete');
+    Route::put('currency/{id}', 'CurrencyController@update');
 });

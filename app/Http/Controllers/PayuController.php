@@ -6,6 +6,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use PrintuCo\LaravelPayU\LaravelPayU;
+use Illuminate\Support\Facades\DB;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Http\Resources\Wallet as WalletResource;
+use App\Wallet;
+use App\Currency;
+
+use App\Http\Resources\CurrencyCollection;
+use App\Http\Resources\Currency as CurrencyResource;
 
 class PayuController extends Controller
 {
@@ -51,10 +59,10 @@ class PayuController extends Controller
 
     public function sendPayment(Request $request)
     {
-       
+        $user = $this->getAuthenticatedUser();
         LaravelPayU::setPayUEnvironment();
         LaravelPayU::setAccountOnTesting(true);
-    
+
         $data = $request->data;
         $reference = "DROPI_PAYMENT_" . date('Ymdhis_a');
         $transaction = $data['transaction'];
@@ -66,8 +74,8 @@ class PayuController extends Controller
         //echo \Environment::getPaymentsUrl();
         $parameters = array(
             //Ingrese aquí el identificador de la cuenta.
-            \PayUParameters::ACCOUNT_ID =>LaravelPayU::getAccountId(),
-           
+            \PayUParameters::ACCOUNT_ID => LaravelPayU::getAccountId(),
+
             //Ingrese aquí el código de referencia.
             \PayUParameters::REFERENCE_CODE => $reference,
             //Ingrese aquí la descripción.
@@ -143,7 +151,8 @@ class PayuController extends Controller
             //Cookie de la sesión actual.
             \PayUParameters::USER_AGENT => $transaction['userAgent'],
         );
-        $parameters[\PayUParameters::NOTIFY_URL] = $$oder['notifyUrl'];
+        $parameters[\PayUParameters::NOTIFY_URL] = url('') . "/api/payu/notifyurl";
+
 
         if ($transaction['paymentMethod'] != 'PSE') {
             // -- Datos de la tarjeta de crédito --
@@ -159,16 +168,32 @@ class PayuController extends Controller
 
             $response = \PayUPayments::doAuthorizationAndCapture($parameters, 'es');
 
-            if($response){
+            if ($response) {
                 $response->transactionResponse->orderId;
                 $response->transactionResponse->transactionId;
                 $response->transactionResponse->state;
-                if($response->transactionResponse->state)
-                if($response->transactionResponse->state=="PENDING"){
-                    $response->transactionResponse->pendingReason;
-                    $response->transactionResponse->extraParameters->BANK_URL;
-                }
+                if ($response->transactionResponse->state)
+                    if ($response->transactionResponse->state == "PENDING") {
+                        $response->transactionResponse->pendingReason;
+                        $response->transactionResponse->extraParameters->BANK_URL;
+                    }
                 $response->transactionResponse->responseCode;
+                if ($response->transactionResponse->state == "APPROVED") {
+                    $currency = Currency::where('code', 'COP')->first();
+                    $cartera = Wallet::firstOrNew(['user_id' => $user->id, 'currency_id' => $currency->id]);
+
+                    if ($cartera->id) {
+                        $cartera->amount = $cartera->amount + $oder['amount'];
+                    } else {
+                        $cartera->user_id = $user->id;
+                        $cartera->amount = $oder['amount'];
+                    }
+                    $cartera->currency_id = $currency->id;
+                    $cartera->save();
+                }else if($response->transactionResponse->state == "PENDING"){
+
+                }
+
             }
 
 
@@ -186,15 +211,15 @@ class PayuController extends Controller
 
             //Página de respuesta a la cual será redirigido el pagador.
             $parameters[\PayUParameters::RESPONSE_URL] = $pse['RESPONSE_URL'];
-           
+
 
             $response = \PayUPayments::doAuthorizationAndCapture($parameters, 'es');
-            
-            if($response){
+
+            if ($response) {
                 $response->transactionResponse->orderId;
                 $response->transactionResponse->transactionId;
                 $response->transactionResponse->state;
-                if($response->transactionResponse->state=="PENDING"){
+                if ($response->transactionResponse->state == "PENDING") {
                     $response->transactionResponse->pendingReason;
                     $response->transactionResponse->trazabilityCode;
                     $response->transactionResponse->authorizationCode;
@@ -203,15 +228,27 @@ class PayuController extends Controller
                     $response->transactionResponse->extraParameters->BAR_CODE;
                 }
                 $response->transactionResponse->responseCode;
+
+                if ($response->transactionResponse->state == "APPROVED") {
+
+                    $currency = new CurrencyResource(Currency::where('code', \PayUParameters::CURRENCY)->get());
+
+                    $cartera = Wallet::firstOrNew(['user_id' => $user->id]);
+
+
+                    if ($cartera->id) {
+                        $cartera->amount = $cartera->amount + $oder['amount'];
+
+                    } else {
+                        $cartera->user_id = $user->id;
+                        $cartera->amount = $oder['amount'];
+                    }
+                    $cartera->currency_id = $currency->id;
+                    $cartera->save();
+                }
             }
-            
+
         }
-
-       
-
-        
-      
-   
 
         return response()->json([
             [
@@ -221,5 +258,45 @@ class PayuController extends Controller
                 'objects' => $response
             ]
         ]);
+    }
+
+    public function notifyurl(Request $request)
+    {
+        $json = json_encode($request);
+        DB::table('responseprueba')->insert(
+            ['responseprueba' => $json]
+        );
+    }
+
+    public function getresponseprueba(Request $request)
+    {
+
+        $query = DB::table('responseprueba')
+            ->get();
+
+        return response()->json([
+            [
+                'isSuccess' => true,
+                //  'count' => $data->count(),
+                'status' => 200,
+                'objects' => $query
+            ]
+        ]);
+    }
+
+    private function getAuthenticatedUser()
+    {
+        try {
+            if (!$user = JWTAuth::parseToken()->authenticate()) {
+                return response()->json(['user_not_found'], 404);
+            }
+        } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            return response()->json(['token_expired']);
+        } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+            return response()->json(['token_invalid']);
+        } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
+            return response()->json(['token_absent']);
+        }
+        return $user;
     }
 }

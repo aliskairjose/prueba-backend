@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
         // $this->call('AttributesVariationsSeeder');
         // $this->call('SeparateInventorySeeder');
          $this->call('RolesTableSeeder');
+        $this->call('CountriesTableSeeder');
+        $this->call('CurrenciesTableSeeder');
 
     }
 }
