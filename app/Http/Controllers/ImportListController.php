@@ -42,6 +42,7 @@ class ImportListController extends Controller
 
                 $product->gallery = new ProductPhotoCollection($prod_res->photos);
                 $product->categories = $prod_res->categories;
+                $product->imported_to_store = $d->imported_to_store;
                 array_push($il, $product);
                 // array_push($il, $prod_res);
             }

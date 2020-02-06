@@ -11,6 +11,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Resources\Wallet as WalletResource;
 use App\Wallet;
 use App\Currency;
+use App\PayuTransaction;
 
 use App\Http\Resources\CurrencyCollection;
 use App\Http\Resources\Currency as CurrencyResource;
@@ -60,8 +61,9 @@ class PayuController extends Controller
     public function sendPayment(Request $request)
     {
         $user = $this->getAuthenticatedUser();
-        LaravelPayU::setPayUEnvironment();
         LaravelPayU::setAccountOnTesting(true);
+        LaravelPayU::setPayUEnvironment();
+
 
         $data = $request->data;
         $reference = "DROPI_PAYMENT_" . date('Ymdhis_a');
@@ -153,6 +155,7 @@ class PayuController extends Controller
         );
         $parameters[\PayUParameters::NOTIFY_URL] = url('') . "/api/payu/notifyurl";
 
+        $currency = Currency::where('code', 'COP')->first();
 
         if ($transaction['paymentMethod'] != 'PSE') {
             // -- Datos de la tarjeta de crédito --
@@ -175,11 +178,11 @@ class PayuController extends Controller
                 if ($response->transactionResponse->state)
                     if ($response->transactionResponse->state == "PENDING") {
                         $response->transactionResponse->pendingReason;
-                        $response->transactionResponse->extraParameters->BANK_URL;
+                        //$response->transactionResponse->extraParameters->BANK_URL; //no existe en tarjetas de credito
                     }
                 $response->transactionResponse->responseCode;
                 if ($response->transactionResponse->state == "APPROVED") {
-                    $currency = Currency::where('code', 'COP')->first();
+
                     $cartera = Wallet::firstOrNew(['user_id' => $user->id, 'currency_id' => $currency->id]);
 
                     if ($cartera->id) {
@@ -190,9 +193,24 @@ class PayuController extends Controller
                     }
                     $cartera->currency_id = $currency->id;
                     $cartera->save();
+
                 }else if($response->transactionResponse->state == "PENDING"){
 
                 }
+
+                $saveTransac = PayuTransaction::updateOrCreate(
+                    [
+                        'user_id' => $user->id,
+                        'orderid' => $response->transactionResponse->orderId
+                    ],
+                    [
+                        'state' => $response->transactionResponse->state,
+                        'responsecode' => $response->transactionResponse->responseCode,
+                        'transactionid' => $response->transactionResponse->transactionId,
+                        'amount' => $oder['amount'],
+                        'currency_id'=> $currency->id
+                    ]
+                );
 
             }
 
@@ -231,14 +249,10 @@ class PayuController extends Controller
 
                 if ($response->transactionResponse->state == "APPROVED") {
 
-                    $currency = new CurrencyResource(Currency::where('code', \PayUParameters::CURRENCY)->get());
-
-                    $cartera = Wallet::firstOrNew(['user_id' => $user->id]);
-
+                    $cartera = Wallet::firstOrNew(['user_id' => $user->id, 'currency_id' => $currency->id]);
 
                     if ($cartera->id) {
                         $cartera->amount = $cartera->amount + $oder['amount'];
-
                     } else {
                         $cartera->user_id = $user->id;
                         $cartera->amount = $oder['amount'];
@@ -246,6 +260,21 @@ class PayuController extends Controller
                     $cartera->currency_id = $currency->id;
                     $cartera->save();
                 }
+
+                //guardo la transaccion
+                $saveTransac = PayuTransaction::updateOrCreate(
+                    [
+                        'user_id' => $user->id,
+                        'orderid' => $response->transactionResponse->orderId
+                    ],
+                    [
+                        'state' => $response->transactionResponse->state,
+                        'responsecode' => $response->transactionResponse->responseCode,
+                        'transactionid' => $response->transactionResponse->transactionId,
+                        'amount' => $oder['amount'],
+                        'currency_id'=> $currency->id
+                    ]
+                );
             }
 
         }
@@ -266,6 +295,39 @@ class PayuController extends Controller
         DB::table('responseprueba')->insert(
             ['responseprueba' => $json]
         );
+
+        $orden_id = $request->reference_pol;
+        $estatuspago = $request->response_message_pol;
+        $transaccion_id = $request->transaction_id;
+
+        if($orden_id!=''){
+            //actualizo el estatus en PayuTransaction
+            PayuTransaction::where('orderid', $orden_id)
+                ->update(['state' => $estatuspago]);
+
+            if ($estatuspago == "APPROVED") {
+                //si fue aprobado, busco los datos de la tabla PayuTransaction, con la orden que recibo
+                $payuTrans=PayuTransaction::where('orderid', $orden_id)->first();
+
+                if($payuTrans){
+                    //busco la cartera del usuario que hizo la tyransaccion de payu, con la moneda que está llegando
+                    $cartera = Wallet::firstOrNew(['user_id' => $payuTrans->user_id,
+                        'currency_id'=>$payuTrans->currency_id]);
+
+                    //si tiene cartera creada, le sumo al monto que tiene, lo que acabo de aprobar
+                    if ($cartera->id) {
+                        $cartera->amount = $cartera->amount +$payuTrans->amount;
+                    } else {
+                        // si no, le agrego el monto que acabo de aprobar
+                        $cartera->user_id =$payuTrans->user_id;
+                        $cartera->amount = $payuTrans->amount;
+                    }
+                    $cartera->currency_id = $payuTrans->currency_id;
+                    $cartera->save();
+                }
+            }
+        }
+
     }
 
     public function getresponseprueba(Request $request)
@@ -274,12 +336,16 @@ class PayuController extends Controller
         $query = DB::table('responseprueba')
             ->get();
 
+        $query2 = DB::table('payu_transactions')
+            ->get();
+
         return response()->json([
             [
                 'isSuccess' => true,
                 //  'count' => $data->count(),
                 'status' => 200,
-                'objects' => $query
+                'objects' => $query,
+                'payu_transaction'=>$query2
             ]
         ]);
     }
