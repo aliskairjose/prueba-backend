@@ -12,6 +12,7 @@ use App\Http\Resources\Wallet as WalletResource;
 use App\Wallet;
 use App\Currency;
 use App\PayuTransaction;
+use App\HistoryWallet;
 
 use App\Http\Resources\CurrencyCollection;
 use App\Http\Resources\Currency as CurrencyResource;
@@ -208,7 +209,8 @@ class PayuController extends Controller
                         'responsecode' => $response->transactionResponse->responseCode,
                         'transactionid' => $response->transactionResponse->transactionId,
                         'amount' => $oder['amount'],
-                        'currency_id'=> $currency->id
+                        'currency_id'=> $currency->id,
+                        'paymentmethod'=>$transaction['paymentMethod']
                     ]
                 );
 
@@ -259,6 +261,16 @@ class PayuController extends Controller
                     }
                     $cartera->currency_id = $currency->id;
                     $cartera->save();
+
+                    // Crea registro en History Wallet
+                    HistoryWallet::create(
+                        [
+                            'wallet_id' => $cartera->id,
+                            'amount'    => $oder['amount'],
+                            'status'    => $request->status,
+                            'type'      => 'ABONO'
+                        ]
+                    );
                 }
 
                 //guardo la transaccion
@@ -272,7 +284,8 @@ class PayuController extends Controller
                         'responsecode' => $response->transactionResponse->responseCode,
                         'transactionid' => $response->transactionResponse->transactionId,
                         'amount' => $oder['amount'],
-                        'currency_id'=> $currency->id
+                        'currency_id'=> $currency->id,
+                        'paymentmethod'=>$transaction['paymentMethod']
                     ]
                 );
             }
