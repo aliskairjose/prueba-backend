@@ -155,7 +155,7 @@ class PayuController extends Controller
         );
         $parameters[\PayUParameters::NOTIFY_URL] = url('') . "/api/payu/notifyurl";
 
-
+        $currency = Currency::where('code', 'COP')->first();
         if ($transaction['paymentMethod'] != 'PSE') {
             // -- Datos de la tarjeta de crédito --
 
@@ -181,7 +181,7 @@ class PayuController extends Controller
                     }
                 $response->transactionResponse->responseCode;
                 if ($response->transactionResponse->state == "APPROVED") {
-                    $currency = Currency::where('code', 'COP')->first();
+
                     $cartera = Wallet::firstOrNew(['user_id' => $user->id, 'currency_id' => $currency->id]);
 
                     if ($cartera->id) {
@@ -248,14 +248,10 @@ class PayuController extends Controller
 
                 if ($response->transactionResponse->state == "APPROVED") {
 
-                    $currency = new CurrencyResource(Currency::where('code', \PayUParameters::CURRENCY)->get());
-
-                    $cartera = Wallet::firstOrNew(['user_id' => $user->id]);
-
+                    $cartera = Wallet::firstOrNew(['user_id' => $user->id, 'currency_id' => $currency->id]);
 
                     if ($cartera->id) {
                         $cartera->amount = $cartera->amount + $oder['amount'];
-
                     } else {
                         $cartera->user_id = $user->id;
                         $cartera->amount = $oder['amount'];
