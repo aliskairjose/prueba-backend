@@ -177,7 +177,7 @@ class PayuController extends Controller
                     $response->transactionResponse->extraParameters->BANK_URL;
                 }
                 $response->transactionResponse->responseCode;
-                $currency = Currency::where('code',  \PayUParameters::CURRENCY)->get();
+                $currency = new CurrencyResource(Currency::where('code',  \PayUParameters::CURRENCY)->get());
 
 
                     $cartera=  Wallet::firstOrNew(['user_id' => $user->id,'currency_id'=>$currency->id]);
