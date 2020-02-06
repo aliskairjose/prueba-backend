@@ -60,8 +60,9 @@ class PayuController extends Controller
     public function sendPayment(Request $request)
     {
         $user = $this->getAuthenticatedUser();
-        LaravelPayU::setPayUEnvironment();
         LaravelPayU::setAccountOnTesting(true);
+        LaravelPayU::setPayUEnvironment();
+
 
         $data = $request->data;
         $reference = "DROPI_PAYMENT_" . date('Ymdhis_a');
