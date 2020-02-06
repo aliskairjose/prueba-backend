@@ -251,6 +251,8 @@ class PayuController extends Controller
 
         }
 
+        var_dump(\PayUPayments::getPaymentsUrl());
+
         return response()->json([
             [
                 'isSuccess' => true,
