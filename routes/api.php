@@ -170,4 +170,11 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::get('withdrawal/{id}', 'WithdrawalRequestController@show');
     Route::post('withdrawal', 'WithdrawalRequestController@store');
     Route::put('withdrawal/{id}', 'WithdrawalRequestController@update');
+
+    // Currency Routes
+    Route::get('currency', 'CurrencyController@index');
+    Route::get('currency/{id}', 'CurrencyController@show');
+    Route::post('currency', 'CurrencyController@store');
+    Route::delete('currency/{id}', 'CurrencyController@delete');
+    Route::put('currency/{id}', 'CurrencyController@update');
 });

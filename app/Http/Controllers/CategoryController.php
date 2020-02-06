@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Category;
 use App\Http\Resources\CategoryCollection;
+use App\Http\Resources\Currency;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -19,7 +20,7 @@ class CategoryController extends Controller
     public function index()
     {
 //        $data = Category::all();
-        $data = new CategoryCollection(Category::all());
+        $data = new CategoryCollection(Currency::all());
 
         return response()->json(
           [
@@ -41,7 +42,7 @@ class CategoryController extends Controller
     {
 
         try {
-            $data = Category::create($request->all());
+            $data = Currency::create($request->all());
 
         } catch (Exception $e) {
             return response()->json(
@@ -74,7 +75,7 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $data = Category::findOrFail($id)->update($request->all());
+            $data = Currency::findOrFail($id)->update($request->all());
         } catch (Exception $e) {
             return response()->json(
               [
@@ -104,7 +105,7 @@ class CategoryController extends Controller
     public function show($id)
     {
         try {
-            $data = Category::findOrFail($id);
+            $data = Currency::findOrFail($id);
             $data[ 'products' ] = $data->products;
         } catch (Exception $e) {
             return response()->json(
@@ -134,7 +135,7 @@ class CategoryController extends Controller
     public function delete($id)
     {
         try {
-            Category::findOrFail($id)->delete();
+            Currency::findOrFail($id)->delete();
         } catch (ModelNotFoundException $e) {
             return response()->json(
               [
