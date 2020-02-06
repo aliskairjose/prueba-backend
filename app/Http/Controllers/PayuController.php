@@ -180,7 +180,7 @@ class PayuController extends Controller
                 $currency = Currency::where('code',  \PayUParameters::CURRENCY)->first();
 
                 var_dump($currency);
-
+                var_dump($currency->id);
                     $cartera=  Wallet::firstOrNew(['user_id' => $user->id,'currency_id'=>$currency->id]);
                     var_dump($cartera);
                     if($cartera->id){
