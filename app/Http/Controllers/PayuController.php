@@ -11,6 +11,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Resources\Wallet as WalletResource;
 use App\Wallet;
 use App\Currency;
+use App\PayuTransaction;
 
 use App\Http\Resources\CurrencyCollection;
 use App\Http\Resources\Currency as CurrencyResource;
@@ -176,7 +177,7 @@ class PayuController extends Controller
                 if ($response->transactionResponse->state)
                     if ($response->transactionResponse->state == "PENDING") {
                         $response->transactionResponse->pendingReason;
-                        //$response->transactionResponse->extraParameters->BANK_URL;
+                        //$response->transactionResponse->extraParameters->BANK_URL; //no existe en tarjetas de credito
                     }
                 $response->transactionResponse->responseCode;
                 if ($response->transactionResponse->state == "APPROVED") {
@@ -191,9 +192,21 @@ class PayuController extends Controller
                     }
                     $cartera->currency_id = $currency->id;
                     $cartera->save();
+
                 }else if($response->transactionResponse->state == "PENDING"){
 
                 }
+
+                $saveTransac = PayuTransaction::updateOrCreate(
+                    [
+                        'user_id' => $user->id,
+                        'orderid' => $response->transactionResponse->orderId
+                    ],
+                    [
+                        'state' => $response->transactionResponse->state,
+                        'responsecode' => $response->transactionResponse->responseCode,
+                    ]
+                );
 
             }
 
@@ -247,6 +260,17 @@ class PayuController extends Controller
                     $cartera->currency_id = $currency->id;
                     $cartera->save();
                 }
+
+                $saveTransac = PayuTransaction::updateOrCreate(
+                    [
+                        'user_id' => $user->id,
+                        'orderid' => $response->transactionResponse->orderId
+                    ],
+                    [
+                        'state' => $response->transactionResponse->state,
+                        'responsecode' => $response->transactionResponse->responseCode,
+                    ]
+                );
             }
 
         }
