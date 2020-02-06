@@ -35,12 +35,12 @@ class UserController extends Controller
         $data = new UserCollection(User::where('role_id', $role[ 0 ]->id)->get());
 
         return response()->json(
-            [
-                'count'     => $data->count(),
-                'isSuccess' => true,
-                'objects'   => $data,
-                'status'    => 200
-            ]
+          [
+            'count'     => $data->count(),
+            'isSuccess' => true,
+            'objects'   => $data,
+            'status'    => 200
+          ]
         );
     }
 
@@ -55,39 +55,41 @@ class UserController extends Controller
         try {
             $password = Str::random(10);
             $data = User::create(
-                [
-                    'name'              => $request->name,
-                    'surname'           => $request->surname,
-                    'email'             => $request->email,
-                    'birthday'          => $request->birthday,
-                    'status'            => $request->status,
-                    'register_approved' => $request->register_approved,
-                    'banned'            => $request->banned,
-                    'approve_product'   => $request->approve_product,
-                    'password'          => Hash::make($password),
-                ]
+              [
+                'name'                 => $request->name,
+                'surname'              => $request->surname,
+                'email'                => $request->email,
+                'birthday'             => $request->birthday,
+                'status'               => $request->status,
+                'register_approved'    => $request->register_approved,
+                'banned'               => $request->banned,
+                'role_id'              => $request->role_id,
+                'subscription_plan_id' => $request->role_id === 1 ? 2 : 1,
+                'approve_product'      => $request->approve_product,
+                'password'             => Hash::make($password),
+              ]
             );
 
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'message'   => 'Ha ocurrido un error',
-                    'status'    => 400,
-                    'error'     => $e
-                ]
+              [
+                'isSuccess' => false,
+                'message'   => 'Ha ocurrido un error',
+                'status'    => 400,
+                'error'     => $e
+              ]
             );
         }
 
         $this->sendNotification($request->email, $password);
 
         return response()->json(
-            [
-                'isSuccess' => true,
-                'message'   => 'El supplier se ha sido creado con exito!.',
-                'status'    => 200,
-                'objects'   => $data
-            ]
+          [
+            'isSuccess' => true,
+            'message'   => 'El supplier se ha sido creado con exito!.',
+            'status'    => 200,
+            'objects'   => $data
+          ]
         );
     }
 
@@ -103,20 +105,20 @@ class UserController extends Controller
             $data = new UserResource((User::findOrFail($id)));
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => $e,
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => $e,
+              ]
             );
         }
 
         return response()->json(
-            [
-                'isSuccess' => true,
-                'objects'   => $data,
-                'status'    => 200
-            ]
+          [
+            'isSuccess' => true,
+            'objects'   => $data,
+            'status'    => 200
+          ]
         );
     }
 
@@ -144,30 +146,30 @@ class UserController extends Controller
 
         } catch (ModelNotFoundException $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'message'   => 'No se encontro registro a actualizar',
-                    'status'    => 400
-                ]
+              [
+                'isSuccess' => false,
+                'message'   => 'No se encontro registro a actualizar',
+                'status'    => 400
+              ]
             );
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'message'   => 'Ha ocurrido un error inesperado',
-                    'status'    => 400,
-                    'error'     => $e
-                ]
+              [
+                'isSuccess' => false,
+                'message'   => 'Ha ocurrido un error inesperado',
+                'status'    => 400,
+                'error'     => $e
+              ]
             );
         }
 
         return response()->json(
-            [
-                'isSuccess' => true,
-                'message'   => 'El registro se actualizo con exito',
-                'status'    => 200,
-                'objects'   => $data
-            ]
+          [
+            'isSuccess' => true,
+            'message'   => 'El registro se actualizo con exito',
+            'status'    => 200,
+            'objects'   => $data
+          ]
         );
     }
 
@@ -176,12 +178,12 @@ class UserController extends Controller
     {
         try {
             $validator = Validator::make(
-                $request->all(),
-                [
-                    'email'        => 'required|email',
-                    'new_password' => 'required',
-                    'c_password'   => 'required|same:new_password',
-                ]
+              $request->all(),
+              [
+                'email'        => 'required|email',
+                'new_password' => 'required',
+                'c_password'   => 'required|same:new_password',
+              ]
             );
             if ($validator->fails()) {
                 return response()->json(['error' => $validator->errors()], 401);
@@ -195,19 +197,19 @@ class UserController extends Controller
             $error = $e->getMessage();
 
             return response()->json([
-                'isSuccess' => false,
-                'messagge'  => 'Error',
-                'status'    => 409,
-                'error'     => $error
+              'isSuccess' => false,
+              'messagge'  => 'Error',
+              'status'    => 409,
+              'error'     => $error
             ]);
         }
 
         return response()->json(
-            [
-                'isSuccess' => true,
-                'status'    => 200,
-                'message'   => 'Contraseña actualizada',
-            ]
+          [
+            'isSuccess' => true,
+            'status'    => 200,
+            'message'   => 'Contraseña actualizada',
+          ]
         );
     }
 
@@ -238,11 +240,11 @@ class UserController extends Controller
     {
         try {
             $rules = [
-                'user_id' => 'required',
-                'banea'   => 'required'
+              'user_id' => 'required',
+              'banea'   => 'required'
             ];
             $customMessages = [
-                'required' => 'The :attribute field is required.',
+              'required' => 'The :attribute field is required.',
             ];
             $this->validate($request, $rules, $customMessages);
 
@@ -252,28 +254,28 @@ class UserController extends Controller
 
         } catch (ModelNotFoundException $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => 'No se encontro el usuario',
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => 'No se encontro el usuario',
+              ]
             );
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => $e,
-                ]
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => $e,
+              ]
             );
         }
 
         return response()->json(
-            [
-                'isSuccess' => true,
-                'status'    => 200,
-                'message'   => 'EL usuario se ha actualizado con exito!.',
-            ]
+          [
+            'isSuccess' => true,
+            'status'    => 200,
+            'message'   => 'EL usuario se ha actualizado con exito!.',
+          ]
         );
     }
 
@@ -285,19 +287,19 @@ class UserController extends Controller
             Mail::to($request->email)->queue(new UserMail($request->password));
         } catch (Swift_SwiftException $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'error'     => $e,
-                    'message'   => 'Error al enviar el mail'
-                ]
+              [
+                'isSuccess' => false,
+                'error'     => $e,
+                'message'   => 'Error al enviar el mail'
+              ]
             );
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'error'     => $e,
-                    'message'   => 'Error al mandar la notificacion'
-                ]
+              [
+                'isSuccess' => false,
+                'error'     => $e,
+                'message'   => 'Error al mandar la notificacion'
+              ]
             );
         }
 
@@ -311,11 +313,11 @@ class UserController extends Controller
             Mail::to($email)->queue(new UserMail($password));
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'error'     => $e,
-                    'message'   => 'Error al mandar la notificacion'
-                ]
+              [
+                'isSuccess' => false,
+                'error'     => $e,
+                'message'   => 'Error al mandar la notificacion'
+              ]
             );
         }
 
@@ -332,30 +334,30 @@ class UserController extends Controller
 
         } catch (ModelNotFoundException $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'message'   => 'No se encontró registro a actualizar',
-                    'status'    => 400
-                ]
+              [
+                'isSuccess' => false,
+                'message'   => 'No se encontró registro a actualizar',
+                'status'    => 400
+              ]
             );
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'message'   => 'Ha ocurrido un error inesperado',
-                    'status'    => 400,
-                    'error'     => $e
-                ]
+              [
+                'isSuccess' => false,
+                'message'   => 'Ha ocurrido un error inesperado',
+                'status'    => 400,
+                'error'     => $e
+              ]
             );
         }
 
         return response()->json(
-            [
-                'isSuccess' => true,
-                'message'   => 'El registro se actualizó con éxito',
-                'status'    => 200,
-                'objects'   => $data
-            ]
+          [
+            'isSuccess' => true,
+            'message'   => 'El registro se actualizó con éxito',
+            'status'    => 200,
+            'objects'   => $data
+          ]
         );
     }
 }
