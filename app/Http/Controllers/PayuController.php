@@ -176,7 +176,7 @@ class PayuController extends Controller
                 if ($response->transactionResponse->state)
                     if ($response->transactionResponse->state == "PENDING") {
                         $response->transactionResponse->pendingReason;
-                        $response->transactionResponse->extraParameters->BANK_URL;
+                        //$response->transactionResponse->extraParameters->BANK_URL;
                     }
                 $response->transactionResponse->responseCode;
                 if ($response->transactionResponse->state == "APPROVED") {
