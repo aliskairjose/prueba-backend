@@ -177,7 +177,7 @@ class PayuController extends Controller
                     $response->transactionResponse->extraParameters->BANK_URL;
                 }
                 $response->transactionResponse->responseCode;
-                $currency = new CurrencyResource(Currency::where('code',  \PayUParameters::CURRENCY)->get());
+                $currency = Currency::where('code',  \PayUParameters::CURRENCY)->first();
 
                 var_dump($currency);
 
