@@ -190,6 +190,8 @@ class PayuController extends Controller
                     }
                     $cartera->currency_id = $currency->id;
                     $cartera->save();
+                }else if($response->transactionResponse->state == "PENDING"){
+
                 }
 
             }
@@ -260,9 +262,9 @@ class PayuController extends Controller
 
     public function notifyurl(Request $request)
     {
-        $json = json_encode($request);
+        //$json = json_encode($request);
         DB::table('responseprueba')->insert(
-            ['responseprueba' => $json]
+            ['responseprueba' => 1]
         );
     }
 
