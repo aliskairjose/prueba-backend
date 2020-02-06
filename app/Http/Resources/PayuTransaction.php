@@ -22,7 +22,9 @@ class PayuTransaction extends JsonResource
             'orderid'   => $this->orderid,
             'transactionid'        => $this->transactionid,
             'state'        => $this->state,
-            'responsecode'        => $this->responsecode
+            'responsecode'        => $this->responsecode,
+            'amount'        => $this->amount,
+            'currency_id'        => $this->currency_id,
         ];
     }
 }
