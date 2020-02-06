@@ -156,6 +156,7 @@ class PayuController extends Controller
         $parameters[\PayUParameters::NOTIFY_URL] = url('') . "/api/payu/notifyurl";
 
         $currency = Currency::where('code', 'COP')->first();
+
         if ($transaction['paymentMethod'] != 'PSE') {
             // -- Datos de la tarjeta de crédito --
 
@@ -260,6 +261,7 @@ class PayuController extends Controller
                     $cartera->save();
                 }
 
+                //guardo la transaccion
                 $saveTransac = PayuTransaction::updateOrCreate(
                     [
                         'user_id' => $user->id,
