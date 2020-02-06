@@ -69,15 +69,32 @@ class MyOrderController extends Controller
 
             // Si hay en inventario descontarlo de aqui y no descontar de la wallet
             if ($separateInventoy->count() > 0) {
+
                 // Valida la cantidad en stock
                 if ($request->quantity > $separateInventoy->quantity) {
-                    return response()->json(
-                      [
-                        'isSuccess' => false,
-                        'message'   => 'No posee producto suficiente en Inventario',
-                        'status'    => 400,
-                      ]
-                    );
+                    $newQuantity = $request->quantity -  $separateInventoy->quantity;
+
+                    // Actualiza el stock de producto
+                    $separateInventoy->quantity = 0;
+                    $separateInventoy->save();
+
+                    // Valida que haya productos en stock
+                    if($newQuantity > $product->stock){
+
+                        $product->stock = $product->stock + $newQuantity;
+                        $product->save();
+                        return response()->json(
+                          [
+                            'isSuccess' => false,
+                            'message'   => 'No posee producto suficiente en stock',
+                            'status'    => 400,
+                          ]
+                        );
+                    }
+                    else{
+                        $product->stock = $product->stock - $newQuantity;
+                        $product->save();
+                    }
                 }
                 else {
                     // Actualiza el stock de producto
@@ -97,6 +114,7 @@ class MyOrderController extends Controller
                       ]
                     );
                 }
+
                 // Valida que el dropshipper tenga saldo
                 if ($request->total_order > $wallet->amount) {
                     return response()->json(
