@@ -299,12 +299,16 @@ class PayuController extends Controller
         $query = DB::table('responseprueba')
             ->get();
 
+        $query2 = DB::table('payu_transaction')
+            ->get();
+
         return response()->json([
             [
                 'isSuccess' => true,
                 //  'count' => $data->count(),
                 'status' => 200,
-                'objects' => $query
+                'objects' => $query,
+                'payu_transaction'=>$query2
             ]
         ]);
     }
