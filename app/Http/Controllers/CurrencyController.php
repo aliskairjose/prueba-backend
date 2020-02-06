@@ -19,7 +19,7 @@ class CurrencyController extends Controller
     public function index()
     {
 //        $data = Category::all();
-        $data = new CurrencyCollection(Category::all());
+        $data = new CurrencyCollection(Currency::all());
 
         return response()->json(
             [
@@ -41,7 +41,7 @@ class CurrencyController extends Controller
     {
 
         try {
-            $data = Category::create($request->all());
+            $data = Currency::create($request->all());
 
         } catch (Exception $e) {
             return response()->json(
@@ -74,7 +74,7 @@ class CurrencyController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $data = Category::findOrFail($id)->update($request->all());
+            $data = Currency::findOrFail($id)->update($request->all());
         } catch (Exception $e) {
             return response()->json(
                 [
@@ -104,7 +104,7 @@ class CurrencyController extends Controller
     public function show($id)
     {
         try {
-            $data = Category::findOrFail($id);
+            $data = Currency::findOrFail($id);
             $data[ 'products' ] = $data->products;
         } catch (Exception $e) {
             return response()->json(
@@ -134,7 +134,7 @@ class CurrencyController extends Controller
     public function delete($id)
     {
         try {
-            Category::findOrFail($id)->delete();
+            Currency::findOrFail($id)->delete();
         } catch (ModelNotFoundException $e) {
             return response()->json(
                 [
