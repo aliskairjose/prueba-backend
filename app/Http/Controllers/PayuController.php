@@ -151,7 +151,7 @@ class PayuController extends Controller
             //Cookie de la sesión actual.
             \PayUParameters::USER_AGENT => $transaction['userAgent'],
         );
-        $parameters[\PayUParameters::NOTIFY_URL] = url('') . "api/payu/notifyurl";
+        $parameters[\PayUParameters::NOTIFY_URL] = url('') . "/api/payu/notifyurl";
 
 
         if ($transaction['paymentMethod'] != 'PSE') {
@@ -268,7 +268,7 @@ class PayuController extends Controller
 
     public function getresponseprueba(Request $request)
     {
-        var_dump(url('') . "/api/payu/notifyurl");
+
         $query = DB::table('responseprueba')
             ->get();
 
