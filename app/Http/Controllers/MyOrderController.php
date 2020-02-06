@@ -64,12 +64,13 @@ class MyOrderController extends Controller
             $separateInventoy = SeparateInventory::where('product_id', $request->product_id)
                                                  ->where('user_id', $request->user_id)
                                                  ->get();
+            $separateInventoy = $separateInventoy[0];
             $wallet = $user->wallet;
 
             // Si hay en inventario descontarlo de aqui y no descontar de la wallet
             if ($separateInventoy->count() > 0) {
                 // Valida la cantidad en stock
-                if ($request->quantity > $separateInventoy[0]['quantity']) {
+                if ($request->quantity > $separateInventoy->quantity) {
                     return response()->json(
                       [
                         'isSuccess' => false,
@@ -80,14 +81,14 @@ class MyOrderController extends Controller
                 }
                 else {
                     // Actualiza el stock de producto
-                    $newStock = $product->stock - $request->quantity;
-                    $product->stock = $newStock;
-                    $product->save();
+                    $newStock = $separateInventoy->quantity - $request->quantity;
+                    $separateInventoy->quantity = $newStock;
+                    $separateInventoy->save();
                 }
             }
             else {
                 // Valida la cantidad en stock
-                if ($request->quantoty > $separateInventoy->quantity) {
+                if ($request->quantity > $product->quantity) {
                     return response()->json(
                       [
                         'isSuccess' => false,
