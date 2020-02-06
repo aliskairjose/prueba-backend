@@ -151,7 +151,7 @@ class PayuController extends Controller
             //Cookie de la sesión actual.
             \PayUParameters::USER_AGENT => $transaction['userAgent'],
         );
-        $parameters[\PayUParameters::NOTIFY_URL] = url('') . "api/payu/notify_url";
+        $parameters[\PayUParameters::NOTIFY_URL] = url('') . "api/payu/notifyurl";
 
         if ($transaction['paymentMethod'] != 'PSE') {
             // -- Datos de la tarjeta de crédito --
@@ -270,7 +270,14 @@ class PayuController extends Controller
         $query = DB::table('responseprueba')
             ->get();
 
-        
+        return response()->json([
+            [
+                'isSuccess' => true,
+                //  'count' => $data->count(),
+                'status' => 200,
+                'objects' => $query
+            ]
+        ]);
     }
 
     private function getAuthenticatedUser()
