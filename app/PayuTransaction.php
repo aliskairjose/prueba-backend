@@ -21,6 +21,9 @@ class PayuTransaction extends Model
         'transactionid',
         'state',
         'responsecode',
+        'amount',
+        'currency_id',
+
     ];
 
 

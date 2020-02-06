@@ -205,6 +205,7 @@ class PayuController extends Controller
                     [
                         'state' => $response->transactionResponse->state,
                         'responsecode' => $response->transactionResponse->responseCode,
+                        'transactionid' => $response->transactionResponse->transactionId
                     ]
                 );
 
@@ -269,6 +270,9 @@ class PayuController extends Controller
                     [
                         'state' => $response->transactionResponse->state,
                         'responsecode' => $response->transactionResponse->responseCode,
+                        'transactionid' => $response->transactionResponse->transactionId,
+                        'amount' => $oder['amount'],
+                        'currency_id'=> $currency->id
                     ]
                 );
             }
@@ -291,6 +295,33 @@ class PayuController extends Controller
         DB::table('responseprueba')->insert(
             ['responseprueba' => $json]
         );
+
+        $orden_id = $request->reference_pol;
+        $estatuspago = $request->response_message_pol;
+        $transaccion_id = $request->transaction_id;
+
+        if($orden_id!=''){
+            PayuTransaction::where('orderid', $orden_id)
+                ->update(['state' => $estatuspago]);
+
+            if ($estatuspago == "APPROVED") {
+
+                $payuTrans=PayuTransaction::where('orderid', $orden_id)->first();
+
+                if($payuTrans){
+                    $cartera = Wallet::firstOrNew(['user_id' => $payuTrans->user_id]);
+                    if ($cartera->id) {
+                        $cartera->amount = $cartera->amount +$payuTrans->amount;
+                    } else {
+                        $cartera->user_id =$payuTrans->user_id;
+                        $cartera->amount = $payuTrans->amount;
+                    }
+                    $cartera->currency_id = $payuTrans->currency_id;
+                    $cartera->save();
+                }
+            }
+        }
+
     }
 
     public function getresponseprueba(Request $request)
