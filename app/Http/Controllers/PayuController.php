@@ -251,7 +251,7 @@ class PayuController extends Controller
 
         }
 
-        var_dump(\PayUPayments::getPaymentsUrl());
+        var_dump(\Environment::getPaymentsUrl());
 
         return response()->json([
             [
