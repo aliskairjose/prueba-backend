@@ -67,7 +67,12 @@ class ProductController extends Controller
                 'suggested_price'  => $request->suggested_price,
                 'user_id'          => $user->id,
                 'privated_product' => $request->privated_product,
-                'active'           => $user->approve_product
+                'active'           => $user->approve_product,
+                'sku'              => 'SP'.$user->id.'-SKU',
+                'weight'           => $request->weight,
+                'length'           => $request->length,
+                'width'            => $request->width,
+                'height'           => $request->height
               ]
             );
 
