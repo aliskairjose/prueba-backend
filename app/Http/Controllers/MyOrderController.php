@@ -7,6 +7,7 @@ use App\Http\Resources\MyOrderCollection;
 use App\Mail\MyOrder as MailMyOrder;
 use App\MyOrder;
 use App\Product;
+use App\SeparateInventory;
 use App\User;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -60,29 +61,70 @@ class MyOrderController extends Controller
 
             $user = User::findOrFail($request->user_id);
             $product = Product::findOrFail($request->product_id);
+            $separateInventoy = SeparateInventory::where('product_id', $request->product_id)
+                                                 ->where('user_id', $request->user_id)
+                                                 ->get();
             $wallet = $user->wallet;
 
-            // Valida que el dropshipper tenga saldo
-            if ($request->total_order > $wallet->amount) {
-                return response()->json(
-                  [
-                    'isSuccess' => false,
-                    'message'   => 'No posee saldo suficiente en la wallet',
-                    'status'    => 400,
-                  ]
-                );
+            // Si hay en inventario descontarlo de aqui y no descontar de la wallet
+            if ($separateInventoy->count() > 0) {
+                // Valida la cantidad en stock
+                if ($request->quantity > $separateInventoy[0]['quantity']) {
+                    return response()->json(
+                      [
+                        'isSuccess' => false,
+                        'message'   => 'No posee producto suficiente en Inventario',
+                        'status'    => 400,
+                      ]
+                    );
+                }
+                else {
+                    // Actualiza el stock de producto
+                    $newStock = $product->stock - $request->quantity;
+                    $product->stock = $newStock;
+                    $product->save();
+                }
+            }
+            else {
+                // Valida la cantidad en stock
+                if ($request->quantoty > $separateInventoy->quantity) {
+                    return response()->json(
+                      [
+                        'isSuccess' => false,
+                        'message'   => 'No posee producto suficiente en stock',
+                        'status'    => 400,
+                      ]
+                    );
+                }
+                // Valida que el dropshipper tenga saldo
+                if ($request->total_order > $wallet->amount) {
+                    return response()->json(
+                      [
+                        'isSuccess' => false,
+                        'message'   => 'No posee saldo suficiente en la wallet',
+                        'status'    => 400,
+                      ]
+                    );
+                }
+
+                // Valida que la solicitud de producto sea menor a la existencia en stock
+                if ($request->quantity > $product->stock) {
+                    return response()->json(
+                      [
+                        'isSuccess' => false,
+                        'message'   => 'No posee producto suficiente en stock',
+                        'status'    => 400,
+                      ]
+                    );
+                }
+
+                // Actualiza el saldo en la wallet
+                $newSaldo = $wallet->amount - $request->total_order;
+                $wallet->amount = $newSaldo;
+                $wallet->save();
+
             }
 
-            // Valida que la solicitud de producto sea menor a la existencia en stock
-            if ($request->quantity > $product->stock) {
-                return response()->json(
-                  [
-                    'isSuccess' => false,
-                    'message'   => 'No posee producto suficiente en stock',
-                    'status'    => 400,
-                  ]
-                );
-            }
 
             // Crea registro en History Wallet
             HistoryWallet::create(
@@ -103,16 +145,6 @@ class MyOrderController extends Controller
                 'status'   => $data->status
               ]
             );
-
-            // Actualiza el stock de producto
-            $newStock = $product->stock - $request->quantity;
-            $product->stock = $newStock;
-            $product->save();
-
-            // Actualiza el saldo en la wallet
-            $newSaldo = $wallet->amount - $request->total_order;
-            $wallet->amount = $newSaldo;
-            $wallet->save();
 
         } catch (ModelNotFoundException $e) {
             return response()->json(
