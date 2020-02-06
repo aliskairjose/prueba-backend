@@ -156,6 +156,7 @@ class PayuController extends Controller
         $parameters[\PayUParameters::NOTIFY_URL] = url('') . "/api/payu/notifyurl";
 
         $currency = Currency::where('code', 'COP')->first();
+
         if ($transaction['paymentMethod'] != 'PSE') {
             // -- Datos de la tarjeta de crédito --
 
@@ -260,6 +261,7 @@ class PayuController extends Controller
                     $cartera->save();
                 }
 
+                //guardo la transaccion
                 $saveTransac = PayuTransaction::updateOrCreate(
                     [
                         'user_id' => $user->id,
@@ -299,18 +301,24 @@ class PayuController extends Controller
         $transaccion_id = $request->transaction_id;
 
         if($orden_id!=''){
+            //actualizo el estatus en PayuTransaction
             PayuTransaction::where('orderid', $orden_id)
                 ->update(['state' => $estatuspago]);
 
             if ($estatuspago == "APPROVED") {
-
+                //si fue aprobado, busco los datos de la tabla PayuTransaction, con la orden que recibo
                 $payuTrans=PayuTransaction::where('orderid', $orden_id)->first();
 
                 if($payuTrans){
-                    $cartera = Wallet::firstOrNew(['user_id' => $payuTrans->user_id]);
+                    //busco la cartera del usuario que hizo la tyransaccion de payu, con la moneda que está llegando
+                    $cartera = Wallet::firstOrNew(['user_id' => $payuTrans->user_id,
+                        'currency_id'=>$payuTrans->currency_id]);
+
+                    //si tiene cartera creada, le sumo al monto que tiene, lo que acabo de aprobar
                     if ($cartera->id) {
                         $cartera->amount = $cartera->amount +$payuTrans->amount;
                     } else {
+                        // si no, le agrego el monto que acabo de aprobar
                         $cartera->user_id =$payuTrans->user_id;
                         $cartera->amount = $payuTrans->amount;
                     }
