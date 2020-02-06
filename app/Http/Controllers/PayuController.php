@@ -151,7 +151,7 @@ class PayuController extends Controller
             //Cookie de la sesión actual.
             \PayUParameters::USER_AGENT => $transaction['userAgent'],
         );
-        $parameters[\PayUParameters::NOTIFY_URL] = url('') . "api/payu/notify_url";
+        $parameters[\PayUParameters::NOTIFY_URL] = url('') . "api/payu/notifyurl";
 
         if ($transaction['paymentMethod'] != 'PSE') {
             // -- Datos de la tarjeta de crédito --
@@ -177,18 +177,19 @@ class PayuController extends Controller
                         $response->transactionResponse->extraParameters->BANK_URL;
                     }
                 $response->transactionResponse->responseCode;
+                if ($response->transactionResponse->state == "APPROVED") {
+                    $currency = Currency::where('code', 'COP')->first();
+                    $cartera = Wallet::firstOrNew(['user_id' => $user->id, 'currency_id' => $currency->id]);
 
-                $currency = Currency::where('code', 'COP')->first();
-                $cartera = Wallet::firstOrNew(['user_id' => $user->id, 'currency_id' => $currency->id]);
-
-                if ($cartera->id) {
-                    $cartera->amount = $cartera->amount + $oder['amount'];
-                } else {
-                    $cartera->user_id = $user->id;
-                    $cartera->amount = $oder['amount'];
+                    if ($cartera->id) {
+                        $cartera->amount = $cartera->amount + $oder['amount'];
+                    } else {
+                        $cartera->user_id = $user->id;
+                        $cartera->amount = $oder['amount'];
+                    }
+                    $cartera->currency_id = $currency->id;
+                    $cartera->save();
                 }
-                $cartera->currency_id = $currency->id;
-                $cartera->save();
 
             }
 
