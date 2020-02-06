@@ -205,7 +205,9 @@ class PayuController extends Controller
                     [
                         'state' => $response->transactionResponse->state,
                         'responsecode' => $response->transactionResponse->responseCode,
-                        'transactionid' => $response->transactionResponse->transactionId
+                        'transactionid' => $response->transactionResponse->transactionId,
+                        'amount' => $oder['amount'],
+                        'currency_id'=> $currency->id
                     ]
                 );
 
