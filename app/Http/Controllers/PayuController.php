@@ -74,7 +74,7 @@ class PayuController extends Controller
         //echo \Environment::getPaymentsUrl();
         $parameters = array(
             //Ingrese aquí el identificador de la cuenta.
-            \PayUParameters::ACCOUNT_ID =>LaravelPayU::getAccountId(),
+            \PayUParameters::ACCOUNT_ID => LaravelPayU::getAccountId(),
 
             //Ingrese aquí el código de referencia.
             \PayUParameters::REFERENCE_CODE => $reference,
@@ -151,7 +151,7 @@ class PayuController extends Controller
             //Cookie de la sesión actual.
             \PayUParameters::USER_AGENT => $transaction['userAgent'],
         );
-        $parameters[\PayUParameters::NOTIFY_URL] = url('')."api/payu/notify_url";
+        $parameters[\PayUParameters::NOTIFY_URL] = url('') . "api/payu/notify_url";
 
         if ($transaction['paymentMethod'] != 'PSE') {
             // -- Datos de la tarjeta de crédito --
@@ -167,33 +167,28 @@ class PayuController extends Controller
 
             $response = \PayUPayments::doAuthorizationAndCapture($parameters, 'es');
 
-            if($response){
+            if ($response) {
                 $response->transactionResponse->orderId;
                 $response->transactionResponse->transactionId;
                 $response->transactionResponse->state;
-                if($response->transactionResponse->state)
-                if($response->transactionResponse->state=="PENDING"){
-                    $response->transactionResponse->pendingReason;
-                    $response->transactionResponse->extraParameters->BANK_URL;
-                }
-                $response->transactionResponse->responseCode;
-                var_dump(\PayUParameters::CURRENCY);
-                $currency = Currency::where('id',  1)->first();
-
-                var_dump($currency);
-                var_dump($currency->id);
-                    $cartera=  Wallet::firstOrNew(['user_id' => $user->id,'currency_id'=>$currency->id]);
-                    var_dump($cartera);
-                    if($cartera->id){
-                        $cartera->amount=$cartera->amount+$oder['amount'];
-                        var_dump($cartera->amount);
-
-                    }else{
-                        $cartera->user_id=$user->id;
-                        $cartera->amount=$oder['amount'];
+                if ($response->transactionResponse->state)
+                    if ($response->transactionResponse->state == "PENDING") {
+                        $response->transactionResponse->pendingReason;
+                        $response->transactionResponse->extraParameters->BANK_URL;
                     }
-                    $cartera->currency_id=$currency->id;
-                    $cartera->save();
+                $response->transactionResponse->responseCode;
+
+                $currency = Currency::where('code', 'COP')->first();
+                $cartera = Wallet::firstOrNew(['user_id' => $user->id, 'currency_id' => $currency->id]);
+
+                if ($cartera->id) {
+                    $cartera->amount = $cartera->amount + $oder['amount'];
+                } else {
+                    $cartera->user_id = $user->id;
+                    $cartera->amount = $oder['amount'];
+                }
+                $cartera->currency_id = $currency->id;
+                $cartera->save();
 
             }
 
@@ -216,11 +211,11 @@ class PayuController extends Controller
 
             $response = \PayUPayments::doAuthorizationAndCapture($parameters, 'es');
 
-            if($response){
+            if ($response) {
                 $response->transactionResponse->orderId;
                 $response->transactionResponse->transactionId;
                 $response->transactionResponse->state;
-                if($response->transactionResponse->state=="PENDING"){
+                if ($response->transactionResponse->state == "PENDING") {
                     $response->transactionResponse->pendingReason;
                     $response->transactionResponse->trazabilityCode;
                     $response->transactionResponse->authorizationCode;
@@ -232,19 +227,19 @@ class PayuController extends Controller
 
                 if ($response->transactionResponse->state == "APPROVED") {
 
-                    $currency = new CurrencyResource(Currency::where('code',  \PayUParameters::CURRENCY)->get());
+                    $currency = new CurrencyResource(Currency::where('code', \PayUParameters::CURRENCY)->get());
 
-                  $cartera=  Wallet::firstOrNew(['user_id' => $user->id]);
+                    $cartera = Wallet::firstOrNew(['user_id' => $user->id]);
 
 
-                  if($cartera->id){
-                      $cartera->amount=$cartera->amount+$oder['amount'];
+                    if ($cartera->id) {
+                        $cartera->amount = $cartera->amount + $oder['amount'];
 
-                  }else{
-                      $cartera->user_id=$user->id;
-                      $cartera->amount=$oder['amount'];
-                  }
-                  $cartera->currency_id=$currency->id;
+                    } else {
+                        $cartera->user_id = $user->id;
+                        $cartera->amount = $oder['amount'];
+                    }
+                    $cartera->currency_id = $currency->id;
                     $cartera->save();
                 }
             }
@@ -261,7 +256,8 @@ class PayuController extends Controller
         ]);
     }
 
-    public function notifyurl(Request $request){
+    public function notifyurl(Request $request)
+    {
         $json = json_encode($request);
         DB::table('responseprueba')->insert(
             ['responseprueba' => $json]
