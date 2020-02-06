@@ -10,4 +10,12 @@ class WithdrawalRequest extends Model
     use Notifiable;
 
     protected $fillable = [ 'amount', 'user_id', 'status' ];
+
+    /**
+     * Relacion uno a uno con user
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
