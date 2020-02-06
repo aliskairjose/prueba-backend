@@ -148,7 +148,7 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::get('payu/pse_banks', 'PayuController@getPseBanks');
     Route::post('payu/send_payment', 'PayuController@sendPayment');
     Route::post('payu/notify_url', 'PayuController@notifyurl');
-    Route::get('payu/getresponseprueba', 'PayuController@getresponseprueba');
+    Route::post('payu/getresponseprueba', 'PayuController@getresponseprueba');
 
 
 
