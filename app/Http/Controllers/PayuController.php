@@ -153,6 +153,7 @@ class PayuController extends Controller
         );
         $parameters[\PayUParameters::NOTIFY_URL] = url('') . "api/payu/notifyurl";
 
+
         if ($transaction['paymentMethod'] != 'PSE') {
             // -- Datos de la tarjeta de crédito --
 
@@ -267,6 +268,7 @@ class PayuController extends Controller
 
     public function getresponseprueba(Request $request)
     {
+        var_dump(url('') . "/api/payu/notifyurl");
         $query = DB::table('responseprueba')
             ->get();
 
