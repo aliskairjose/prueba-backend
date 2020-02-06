@@ -176,7 +176,7 @@ class PayuController extends Controller
                 if ($response->transactionResponse->state)
                     if ($response->transactionResponse->state == "PENDING") {
                         $response->transactionResponse->pendingReason;
-                        $response->transactionResponse->extraParameters->BANK_URL;
+                        //$response->transactionResponse->extraParameters->BANK_URL;
                     }
                 $response->transactionResponse->responseCode;
                 if ($response->transactionResponse->state == "APPROVED") {
@@ -250,11 +250,6 @@ class PayuController extends Controller
             }
 
         }
-
-        var_dump(\PayU::$apiKey);
-        var_dump(\PayU::$apiLogin);
-        var_dump(\PayU::$merchantId);
-        var_dump(\PayU::$isTest);
 
         return response()->json([
             [
