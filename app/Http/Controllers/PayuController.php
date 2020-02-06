@@ -251,7 +251,10 @@ class PayuController extends Controller
 
         }
 
-        var_dump(\Environment::getPaymentsUrl());
+        var_dump(\PayU::$apiKey);
+        var_dump(\PayU::$apiLogin);
+        var_dump(\PayU::$merchantId);
+        var_dump(\PayU::$isTest);
 
         return response()->json([
             [
