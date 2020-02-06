@@ -168,6 +168,7 @@ class PayuController extends Controller
 
             $response = \PayUPayments::doAuthorizationAndCapture($parameters, 'es');
 
+            var_dump($response);
             if ($response) {
                 $response->transactionResponse->orderId;
                 $response->transactionResponse->transactionId;
