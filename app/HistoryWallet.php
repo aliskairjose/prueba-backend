@@ -9,6 +9,6 @@ class HistoryWallet extends Model
 {
     use Notifiable;
 
-    protected $fillable = [ 'wallet_id', 'amount', 'status', 'type' ];
+    protected $fillable = [ 'wallet_id', 'amount', 'status', 'type','payu_orderid' ];
 
 }
