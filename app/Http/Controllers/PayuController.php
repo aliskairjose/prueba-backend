@@ -356,11 +356,10 @@ class PayuController extends Controller
             ->get();
 
 
-        $data = Product::all();
-
+        $data = new ProductCollection(Product::where('sku', NULL)->get());
+        var_dump($data);
         foreach ($data as $row){
-
-            var_dump($row->sku);
+            Product::findOrFail($row->id)->update(array('sku'=>rand(1000,10000)));
         }
 
         return response()->json([
