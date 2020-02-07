@@ -358,7 +358,7 @@ class PayuController extends Controller
 
         $data = Product::all();
         var_dump($data);
-        
+
 
         return response()->json([
             [
