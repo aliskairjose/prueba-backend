@@ -198,6 +198,16 @@ class PayuController extends Controller
                     $cartera->currency_id = $currency->id;
                     $cartera->save();
 
+                    // Crea registro en History Wallet
+                    HistoryWallet::create(
+                        [
+                            'wallet_id' => $cartera->id,
+                            'amount'    => $oder['amount'],
+                            'status'    => "APPROVED",
+                            'type'      => 'ABONO PAYU'
+                        ]
+                    );
+
                 }else if($response->transactionResponse->state == "PENDING"){
 
                 }
@@ -270,10 +280,11 @@ class PayuController extends Controller
                         [
                             'wallet_id' => $cartera->id,
                             'amount'    => $oder['amount'],
-                            'status'    => $request->status,
-                            'type'      => 'ABONO'
+                            'status'    => "APPROVED",
+                            'type'      => 'ABONO PAYU'
                         ]
                     );
+
                 }
 
                 //guardo la transaccion
@@ -340,6 +351,16 @@ class PayuController extends Controller
                     }
                     $cartera->currency_id = $payuTrans->currency_id;
                     $cartera->save();
+
+                    // Crea registro en History Wallet
+                    HistoryWallet::create(
+                        [
+                            'wallet_id' => $cartera->id,
+                            'amount'    => $payuTrans->amount,
+                            'status'    => "APPROVED",
+                            'type'      => 'ABONO PAYU'
+                        ]
+                    );
                 }
             }
         }
