@@ -357,6 +357,7 @@ class PayuController extends Controller
 
 
         $data = new ProductCollection(Product::where('sku', null)->get());
+        var_dump($data);
         foreach ($data as $row){
             Product::findOrFail($row->id)->update(array('sku'=>rand(1000,10000)));
         }
