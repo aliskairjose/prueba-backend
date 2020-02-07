@@ -24,7 +24,11 @@ class Product extends Model
       'user_id',
       'privated_product',
       'active',
-        'sku'
+      'sku',
+      'weight',
+      'length',
+      'width',
+      'height'
     ];
 
     /**
