@@ -23,7 +23,8 @@ class Product extends Model
       'suggested_price',
       'user_id',
       'privated_product',
-      'active'
+      'active',
+        'sku'
     ];
 
     /**
