@@ -173,7 +173,6 @@ class UserController extends Controller
         );
     }
 
-
     public function changePassword(Request $request)
     {
         try {

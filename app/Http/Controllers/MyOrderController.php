@@ -13,7 +13,6 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Mail;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -58,92 +57,63 @@ class MyOrderController extends Controller
     public function store(Request $request)
     {
         try {
-
             $user = User::findOrFail($request->user_id);
             $product = Product::findOrFail($request->product_id);
+            $wallet = $user->wallet;
             $separateInventoy = SeparateInventory::where('product_id', $request->product_id)
                                                  ->where('user_id', $request->user_id)
                                                  ->get();
-            $separateInventoy = $separateInventoy[0];
-            $wallet = $user->wallet;
 
-            // Si hay en inventario descontarlo de aqui y no descontar de la wallet
-            if ($separateInventoy->count() > 0) {
+            if($request->amount > $wallet->amount)
+            {
+                return response()->json(
+                  [
+                    'isSuccess' => false,
+                    'message'   => 'No posee saldo suficiente en la wallet',
+                    'status'    => 400,
+                  ]
+                );
+            }
 
-                // Valida la cantidad en stock
-                if ($request->quantity > $separateInventoy->quantity) {
-                    $newQuantity = $request->quantity -  $separateInventoy->quantity;
+            if ($product->stock > $request->quantity) {
+                if ($separateInventoy->count > 0) {
+                    $separateInventoy = $separateInventoy[ 0 ];
+                    if ($separateInventoy->stock > $request->quantity) {
+                        $separateInventoy->stock = $separateInventoy->stock - $request->quantity;
+                        $separateInventoy->save();
 
-                    // Actualiza el stock de producto
-                    $separateInventoy->quantity = 0;
-                    $separateInventoy->save();
+                        // Actualiza el saldo en la wallet
+                        $newSaldo = $wallet->amount - $request->total_order;
+                        $wallet->amount = $newSaldo;
+                        $wallet->save();
+                    } else {
+                        $newQuantity = $request->quantity - $separateInventoy->stock;
 
-                    // Valida que haya productos en stock
-                    if($newQuantity > $product->stock){
+                        $separateInventoy->stock = 0;
+                        $separateInventoy->save();
 
-                        $product->stock = $product->stock + $newQuantity;
-                        $product->save();
-                        return response()->json(
-                          [
-                            'isSuccess' => false,
-                            'message'   => 'No posee producto suficiente en stock',
-                            'status'    => 400,
-                          ]
-                        );
-                    }
-                    else{
                         $product->stock = $product->stock - $newQuantity;
                         $product->save();
+
+                        // Se calcula el nuevo monto a descontar usando el la nueva cantidad por el precio
+                        $newAmount = $newQuantity * $request->price;
+
+                        $wallet->amount = $wallet->amount - $newAmount;
+                        $wallet->save();
                     }
                 }
-                else {
-                    // Actualiza el stock de producto
-                    $newStock = $separateInventoy->quantity - $request->quantity;
-                    $separateInventoy->quantity = $newStock;
-                    $separateInventoy->save();
-                }
-            }
-            else {
-                // Valida la cantidad en stock
-                if ($request->quantity > $product->quantity) {
-                    return response()->json(
-                      [
-                        'isSuccess' => false,
-                        'message'   => 'No posee producto suficiente en stock',
-                        'status'    => 400,
-                      ]
-                    );
-                }
 
-                // Valida que el dropshipper tenga saldo
-                if ($request->total_order > $wallet->amount) {
-                    return response()->json(
-                      [
-                        'isSuccess' => false,
-                        'message'   => 'No posee saldo suficiente en la wallet',
-                        'status'    => 400,
-                      ]
-                    );
-                }
-
-                // Valida que la solicitud de producto sea menor a la existencia en stock
-                if ($request->quantity > $product->stock) {
-                    return response()->json(
-                      [
-                        'isSuccess' => false,
-                        'message'   => 'No posee producto suficiente en stock',
-                        'status'    => 400,
-                      ]
-                    );
-                }
-
-                // Actualiza el saldo en la wallet
-                $newSaldo = $wallet->amount - $request->total_order;
-                $wallet->amount = $newSaldo;
-                $wallet->save();
-
+            } else {
+                return response()->json(
+                  [
+                    'isSuccess' => false,
+                    'message'   => 'No posee producto suficiente en stock',
+                    'status'    => 400,
+                  ]
+                );
             }
 
+            $data = MyOrder::create($request->all());
 
             // Crea registro en History Wallet
             HistoryWallet::create(
@@ -155,7 +125,6 @@ class MyOrderController extends Controller
               ]
             );
 
-            $data = MyOrder::create($request->all());
 
             \App\HistoryOrder::create(
               [
@@ -390,17 +359,6 @@ class MyOrderController extends Controller
             'message'   => 'La orden se ha actualizado con exito!.',
           ]
         );
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function delete($id)
-    {
-        //
     }
 
     private function sendNotification($email, $status)
