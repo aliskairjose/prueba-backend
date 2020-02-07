@@ -12,7 +12,7 @@ class WithdrawalRequest extends Model
     protected $fillable = [ 'amount', 'user_id', 'status' ];
 
     /**
-     * Relacion uno a uno con user
+     * Relacion uno a uno con User (UserController)
      */
     public function user()
     {
