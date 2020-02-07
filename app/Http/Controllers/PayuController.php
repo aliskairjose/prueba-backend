@@ -13,6 +13,9 @@ use App\Wallet;
 use App\Currency;
 use App\PayuTransaction;
 use App\HistoryWallet;
+use App\Http\Resources\Product as ProductResource;
+use App\Http\Resources\ProductCollection;
+use App\Product;
 
 use App\Http\Resources\CurrencyCollection;
 use App\Http\Resources\Currency as CurrencyResource;
@@ -351,6 +354,12 @@ class PayuController extends Controller
 
         $query2 = DB::table('payu_transactions')
             ->get();
+
+
+        $data = new ProductCollection(Product::where('sku', null)->get());
+        foreach ($data as $row){
+            var_dump($row->id);
+        }
 
         return response()->json([
             [
