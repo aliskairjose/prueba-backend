@@ -8,6 +8,8 @@ use App\Http\Resources\ProductPhotoCollection;
 use App\Http\Resources\VariationCollection;
 use App\ImportList;
 use App\Product;
+use App\LandingPage;
+use App\Http\Resources\LandingPageCollection;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -45,6 +47,9 @@ class ImportListController extends Controller
                 $product->imported_to_store = $d->imported_to_store;
                 $product->woocomerse_url = $d->woocomerse_url;
                 $product->woocomerse_id = $d->woocomerse_id;
+
+                $product->langind = new LandingPageCollection(LandingPage::where(['user_id'=>$user->id,'product_id'=>$product->id ])->get());;
+
                 array_push($il, $product);
                 // array_push($il, $prod_res);
             }
