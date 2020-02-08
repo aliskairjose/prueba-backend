@@ -21,7 +21,7 @@ class LandingPage extends JsonResource
           'user_id'    => $this->user_id,
           'product_id' => $this->product_id,
           'url'        => $this->url,
-          'product'    => new ProductCollection($this->product)
+          'product'    => $this->product
         ];
     }
 }
