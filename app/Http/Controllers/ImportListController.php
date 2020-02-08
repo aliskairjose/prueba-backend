@@ -43,6 +43,8 @@ class ImportListController extends Controller
                 $product->gallery = new ProductPhotoCollection($prod_res->photos);
                 $product->categories = $prod_res->categories;
                 $product->imported_to_store = $d->imported_to_store;
+                $product->woocomerse_url = $d->woocomerse_url;
+                $product->woocomerse_id = $d->woocomerse_id;
                 array_push($il, $product);
                 // array_push($il, $prod_res);
             }
