@@ -23,6 +23,8 @@ class ImportList extends JsonResource
           'imported_to_store'   => $this->importe_to_store,
           'date_imported_store' => $this->date_importe_store,
           'product_name'        => $this->product_name,
+            'woocomerse_url'        => $this->woocomerse_url,
+            'woocomerse_id'        => $this->woocomerse_id,
           'products'            => new ProductCollection($this->products)
         ];
     }
