@@ -195,12 +195,12 @@ class MyOrderController extends Controller
             );
         } catch (Exception $e) {
             return response()->json(
-                [
-                    'isSuccess' => false,
-                    'message'   => 'Ha ocurrido un error',
-                    'status'    => 400,
-                    'error'     => $e
-                ]
+              [
+                'isSuccess' => false,
+                'message'   => $e->getMessage(),
+                'status'    => 400,
+                'error'     => $e
+              ]
             );
         }
 
