@@ -14,13 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
-Route::post('/landing/url', 'LandingPageController@getByUrl');
-
-
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
 
 Route::post('login', 'Api\AuthController@login');
 Route::post('register', 'Api\RegisterController@register');
@@ -160,7 +157,7 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     // LandingPage Page Routes
     Route::get('landing', 'LandingPageController@index');
     Route::post('landing', 'LandingPageController@store');
- 
+    Route::post('landing/url', 'LandingPageController@getByUrl');
     Route::put('landing/{id}', 'LandingPageController@update');
     Route::delete('landing/{id}', 'LandingPageController@delete');
 
