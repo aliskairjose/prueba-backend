@@ -15,8 +15,8 @@ class CreateTrajectoriesTable extends Migration
     {
         Schema::create('trajectories', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->decimal('from',18,2)->nullable()->comment('peso en kmilogramos');
-            $table->decimal('until',18,2)->nullable()->comment('peso en kmilogramos');
+            $table->decimal('from',18,2)->nullable()->comment('peso en kilogramos');
+            $table->decimal('until',18,2)->nullable()->comment('peso en kilogramos');
             $table->decimal('price',18,2)->nullable();
             $table->text('rate_type')->nullable(true)->comment('tipo de tarifa, puede almacenar
              2 valores, si es CON RECAUDO o SIN RECAUDO');

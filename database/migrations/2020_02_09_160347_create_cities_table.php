@@ -20,6 +20,7 @@ class CreateCitiesTable extends Migration
 
             $table->text('rate_type')->nullable(true)->comment('tipo de tarifa, puede almacenar
              2 valores, si es CON RECAUDO o SIN RECAUDO o ambas. sera un string json');
+
             $table->string('trajectory_type', 100)->nullable(true)
                 ->comment('NACIONAL,ZONAL,URBANO,TRAYECTO ESPECIAL');
 
