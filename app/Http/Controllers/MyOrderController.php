@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\HistoryWallet;
 use App\Http\Resources\MyOrderCollection;
+use App\Imports\MyOrderImport;
 use App\Mail\MyOrder as MailMyOrder;
 use App\MyOrder;
 use App\Product;
@@ -14,11 +15,63 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Maatwebsite\Excel\Facades\Excel;
 use Tymon\JWTAuth\Facades\JWTAuth;
-
 
 class MyOrderController extends Controller
 {
+    public function import(Request $request)
+    {
+
+        Excel::import(new MyOrderImport, request()->file('file'));
+    }
+
+    public function import2(Request $request)
+    {
+        try {
+            if ($request->hasFile('file')) {
+
+                Excel::import(new MyOrderImport, request()->file('file'));
+            } else {
+                return response()->json(
+                    [
+                        'isSuccess' => false,
+                        'message'   => 'Debe cargar un archivo',
+                        'status'    => 400,
+                    ]
+                );
+            }
+        } catch (ModelNotFoundException $e) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'message'   => 'ModelNotFoundException',
+                    'status'    => 400,
+                    'error'     => $e
+                ]
+            );
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'message'   => 'Exception',
+                    'status'    => 400,
+                    'error'     => $e
+                ]
+            );
+        }
+
+        return response()->json(
+            [
+                'isSuccess' => true,
+                'message'   => 'Carga exitosa',
+                'status'    => 200,
+                'path'      => public_path()
+
+            ]
+        );
+    }
+
     /**
      * Display a listing of the resource.
      * Lista todas las ordenes
@@ -31,20 +84,20 @@ class MyOrderController extends Controller
             $data = new MyOrderCollection(MyOrder::all());
         } catch (Exception $e) {
             return response()->json(
-              [
-                'isSUccess' => false,
-                'status'    => 400,
-                'error'     => $e
-              ]
+                [
+                    'isSUccess' => false,
+                    'status'    => 400,
+                    'error'     => $e
+                ]
             );
         }
         return response()->json(
-          [
-            'isSucess' => true,
-            'status'   => 200,
-            'count'    => $data->count(),
-            'objects'  => $data
-          ]
+            [
+                'isSucess' => true,
+                'status'   => 200,
+                'count'    => $data->count(),
+                'objects'  => $data
+            ]
         );
     }
 
@@ -61,25 +114,24 @@ class MyOrderController extends Controller
             $product = Product::findOrFail($request->product_id);
             $wallet = $user->wallet;
             $separateInventoy = SeparateInventory::where('product_id', $request->product_id)
-                                                 ->where('user_id', $request->user_id)
-                                                 ->get();
+                ->where('user_id', $request->user_id)
+                ->get();
 
-            if($request->amount > $wallet->amount)
-            {
+            if ($request->amount > $wallet->amount) {
                 return response()->json(
-                  [
-                    'isSuccess' => false,
-                    'message'   => 'No posee saldo suficiente en la wallet',
-                    'status'    => 400,
-                  ]
+                    [
+                        'isSuccess' => false,
+                        'message'   => 'No posee saldo suficiente en la wallet',
+                        'status'    => 400,
+                    ]
                 );
             }
 
             if ($product->stock > $request->quantity) {
-                if ($separateInventoy->count > 0) {
-                    $separateInventoy = $separateInventoy[ 0 ];
-                    if ($separateInventoy->stock > $request->quantity) {
-                        $separateInventoy->stock = $separateInventoy->stock - $request->quantity;
+                if ($separateInventoy->count() > 0) {
+                    $separateInventoy = $separateInventoy[0];
+                    if ($separateInventoy->quantity > $request->quantity) {
+                        $separateInventoy->quantity = $separateInventoy->quantity - $request->quantity;
                         $separateInventoy->save();
 
                         // Actualiza el saldo en la wallet
@@ -87,9 +139,9 @@ class MyOrderController extends Controller
                         $wallet->amount = $newSaldo;
                         $wallet->save();
                     } else {
-                        $newQuantity = $request->quantity - $separateInventoy->stock;
+                        $newQuantity = $request->quantity - $separateInventoy->quantity;
 
-                        $separateInventoy->stock = 0;
+                        $separateInventoy->quantity = 0;
                         $separateInventoy->save();
 
                         $product->stock = $product->stock - $newQuantity;
@@ -102,14 +154,13 @@ class MyOrderController extends Controller
                         $wallet->save();
                     }
                 }
-
             } else {
                 return response()->json(
-                  [
-                    'isSuccess' => false,
-                    'message'   => 'No posee producto suficiente en stock',
-                    'status'    => 400,
-                  ]
+                    [
+                        'isSuccess' => false,
+                        'message'   => 'No posee producto suficiente en stock',
+                        'status'    => 400,
+                    ]
                 );
             }
 
@@ -117,55 +168,54 @@ class MyOrderController extends Controller
 
             // Crea registro en History Wallet
             HistoryWallet::create(
-              [
-                'wallet_id' => $wallet->id,
-                'amount'    => $wallet->amount,
-                'status'    => $request->status,
-                'type'      => 'DESCUENTO'
-              ]
+                [
+                    'wallet_id' => $wallet->id,
+                    'amount'    => $wallet->amount,
+                    'status'    => $request->status,
+                    'type'      => 'DESCUENTO'
+                ]
             );
 
-
             \App\HistoryOrder::create(
-              [
-                'order_id' => $data->id,
-                'user_id'  => $data->user_id,
-                'status'   => $data->status
-              ]
+                [
+                    'order_id' => $data->id,
+                    'user_id'  => $data->user_id,
+                    'status'   => $data->status
+                ]
             );
 
         } catch (ModelNotFoundException $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'message'   => 'No se encontro registro',
-                'status'    => 400,
-                'error'     => $e
-              ]
+                [
+                    'isSuccess' => false,
+                    'message'   => 'No se encontro registro',
+                    'status'    => 400,
+                    'error'     => $e
+                ]
             );
         } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'message'   => 'Ha ocurrido un error',
-                'status'    => 400,
-                'error'     => $e
-              ]
+                [
+                    'isSuccess' => false,
+                    'message'   => 'Ha ocurrido un error',
+                    'status'    => 400,
+                    'error'     => $e
+                ]
             );
         }
 
         $user = User::findOrFail($request->get('suplier_id'));
         $status = '';
-        $notification = $this->sendNotification($user[ 'email' ], $status);
+        $notification = $this->sendNotification($user['email'], $status);
 
         return response()->json(
-          [
-            'isSuccess'    => true,
-            'message'      => 'El registro ha sido creado con exito!.',
-            'status'       => 200,
-            'Notification' => $notification,
-            'objects'      => $data,
-          ]
+            [
+                'isSuccess'    => true,
+                'message'      => 'El registro ha sido creado con exito!.',
+                'status'       => 200,
+                'Notification' => $notification,
+                'objects'      => $data,
+            ]
         );
     }
 
@@ -181,32 +231,31 @@ class MyOrderController extends Controller
         try {
 
             $data = new MyOrderCollection(MyOrder::where('suplier_id', $id)->get());
-
         } catch (ModelNotFoundException $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'error'     => $e,
-              ]
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'error'     => $e,
+                ]
             );
         } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'error'     => $e,
-              ]
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'error'     => $e,
+                ]
             );
         }
 
         return response()->json(
-          [
-            'isSuccess' => true,
-            'count'     => $data->count(),
-            'status'    => 200,
-            'objects'   => $data,
-          ]
+            [
+                'isSuccess' => true,
+                'count'     => $data->count(),
+                'status'    => 200,
+                'objects'   => $data,
+            ]
         );
     }
 
@@ -222,32 +271,31 @@ class MyOrderController extends Controller
         try {
 
             $data = new MyOrderCollection(MyOrder::where('user_id', $id)->get());
-
         } catch (ModelNotFoundException $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'error'     => $e,
-              ]
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'error'     => $e,
+                ]
             );
         } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'error'     => $e,
-              ]
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'error'     => $e,
+                ]
             );
         }
 
         return response()->json(
-          [
-            'isSuccess' => true,
-            'count'     => $data->count(),
-            'status'    => 200,
-            'objects'   => $data,
-          ]
+            [
+                'isSuccess' => true,
+                'count'     => $data->count(),
+                'status'    => 200,
+                'objects'   => $data,
+            ]
         );
     }
 
@@ -278,12 +326,12 @@ class MyOrderController extends Controller
 
                 // Crea registro en History Wallet
                 HistoryWallet::create(
-                  [
-                    'wallet_id' => $uWallet->id,
-                    'amount'    => $data->total_order,
-                    'status'    => $request->status,
-                    'type'      => 'REINTEGRO'
-                  ]
+                    [
+                        'wallet_id' => $uWallet->id,
+                        'amount'    => $data->total_order,
+                        'status'    => $request->status,
+                        'type'      => 'REINTEGRO'
+                    ]
                 );
             }
 
@@ -295,69 +343,79 @@ class MyOrderController extends Controller
 
                 // Retorna el monto de la comision y el porcentaje
                 $resp = $this->calcularMonto($data->total_order);
-                $amount = $data->total_order - $resp[ 'comision' ];
-                $adminAmount = $resp[ 'comision' ];
+
+                $amount = $data->total_order - $resp['comision'];
+                $adminAmount = $resp['comision'];
+
+                // El monto del supplier
+                $supplier_amount = $product->sale_price * $data->quantity;
+
+                // El monto del dropshipper
+                $dropshipper_amount = $amount - $supplier_amount;
 
                 // Actualizo la waller del Dropshipper
                 $uWallet->amount = $amount - $product->sale_price;
                 $uWallet->save();
 
                 // Actualizo la wallet del Supplier
-                $sWallet->amount = $product->sale_price;
+                $sWallet->amount = $product->sale_price * $data->quantity;
                 $sWallet->save();
+
+                // Actualiza el status de la orden
+                $data->status = $request->status;
+                $data->comission_percent = $resp['porcentaje'];
+                $data->comission_amount = $resp['comision'];
+                $data->dropshipper_amount = $dropshipper_amount;
+                $data->supplier_amount = $supplier_amount;
+                $data->save();
 
                 // Crea registro en History Wallet
                 HistoryWallet::create(
-                  [
-                    'wallet_id' => $uWallet->id,
-                    'amount'    => $data->total_order,
-                    'status'    => $request->status,
-                    'type'      => 'ABONO'
-                  ]
+                    [
+                        'wallet_id' => $uWallet->id,
+                        'amount'    => $data->total_order,
+                        'status'    => $request->status,
+                        'type'      => 'ABONO'
+                    ]
                 );
             }
 
             \App\HistoryOrder::create(
-              [
-                'order_id' => $data->id,
-                'user_id'  => $data->user_id,
-                'status'   => $request->status
-              ]
+                [
+                    'order_id' => $data->id,
+                    'user_id'  => $data->user_id,
+                    'status'   => $request->status
+                ]
             );
-
-            // Actualiza el status de la orden
-            $data->status = $request->status;
-            $data->save();
 
             // Envios de correos
             $this->sendNotification($user->email, $request->status);
             $this->sendNotification($supplier->email, $request->status);
-
         } catch (ModelNotFoundException $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'message'   => 'No se encontro registro',
-                '$error'    => $e
-              ]
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => 'No se encontro registro',
+                    '$error'    => $e
+                ]
             );
         } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'message'   => $e,
-              ]
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => $e,
+                ]
             );
         }
 
         return response()->json(
-          [
-            'isSuccess' => true,
-            'status'    => 200,
-            'message'   => 'La orden se ha actualizado con exito!.',
-          ]
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'message'   => 'La orden se ha actualizado con exito!.',
+            ]
         );
     }
 
@@ -401,8 +459,8 @@ class MyOrderController extends Controller
             $porcentaje = 10;
 
             return $res = array(
-              'comision'   => $comision,
-              'porcentaje' => $porcentaje
+                'comision'   => $comision,
+                'porcentaje' => $porcentaje
             );
         }
         if ($total_order > 59000 && $total_order <= 99000) {
@@ -410,8 +468,8 @@ class MyOrderController extends Controller
             $porcentaje = 8;
 
             return $res = array(
-              'comision'   => $comision,
-              'porcentaje' => $porcentaje
+                'comision'   => $comision,
+                'porcentaje' => $porcentaje
             );
         }
         if ($total_order > 99000) {
@@ -419,8 +477,8 @@ class MyOrderController extends Controller
             $porcentaje = 6;
 
             return $res = array(
-              'comision'   => $comision,
-              'porcentaje' => $porcentaje
+                'comision'   => $comision,
+                'porcentaje' => $porcentaje
             );
         }
     }

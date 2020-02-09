@@ -8,13 +8,26 @@ use App\Product;
 use App\ProductPhoto;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Foundation\Bus\PendingDispatch;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
-
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\ProductImport;
 
 class ProductController extends Controller
 {
+
+    /**
+     * Importacion de data con excel
+     * @return PendingDispatch|Excel|\Maatwebsite\Excel\Reader
+     */
+    public function import()
+    {
+        Excel::import(new ProductImport, request()->file('file'));
+
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -25,12 +38,12 @@ class ProductController extends Controller
         $data = new ProductCollection(Product::all());
 
         return response()->json(
-          [
-            'isSuccess' => true,
-            'count'     => $data->count(),
-            'status'    => 200,
-            'objects'   => $data,
-          ]
+            [
+                'isSuccess' => true,
+                'count'     => $data->count(),
+                'status'    => 200,
+                'objects'   => $data,
+            ]
         );
     }
 
@@ -49,44 +62,44 @@ class ProductController extends Controller
 
             if ($request->type !== 'SIMPLE' && $request->type !== 'VARIABLE') {
                 return response()->json(
-                  [
-                    'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => 'El tipo de producto, debe ser VARIABLE o SIMPLE',
-                  ]
+                    [
+                        'isSuccess' => false,
+                        'status'    => 400,
+                        'message'   => 'El tipo de producto, debe ser VARIABLE o SIMPLE',
+                    ]
                 );
             }
 
             $product = Product::create(
-              [
-                'name'             => $request->name,
-                'description'      => $request->description,
-                'type'             => $request->type,
-                'stock'            => $request->stock,
-                'sale_price'       => $request->sale_price,
-                'suggested_price'  => $request->suggested_price,
-                'user_id'          => $user->id,
-                'privated_product' => $request->privated_product,
-                'active'           => $user->approve_product,
-                'sku'              => 'SP'.$user->id.'-SKU',
-                'weight'           => $request->weight,
-                'length'           => $request->length,
-                'width'            => $request->width,
-                'height'           => $request->height
-              ]
+                [
+                    'name'             => $request->name,
+                    'description'      => $request->description,
+                    'type'             => $request->type,
+                    'stock'            => $request->stock,
+                    'sale_price'       => $request->sale_price,
+                    'suggested_price'  => $request->suggested_price,
+                    'user_id'          => $user->id,
+                    'privated_product' => $request->privated_product,
+                    'active'           => $user->approve_product,
+                    'sku'              => 'SP' . $user->id . '-SKU',
+                    'weight'           => $request->weight,
+                    'length'           => $request->length,
+                    'width'            => $request->width,
+                    'height'           => $request->height
+                ]
             );
 
             foreach ($request->categories as $c) {
-                $product->categories()->attach($c[ 'id' ]);
+                $product->categories()->attach($c['id']);
             }
 
             if ($request->type === 'VARIABLE') {
                 $variations = [];
                 foreach ($request->variations as $d) {
                     $newVariation = $product->variations()->create([
-                      'suggested_price' => $d[ 'suggested_price' ],
-                      'sale_price'      => $d[ 'sale_price' ],
-                      'stock'           => $d[ 'stock' ],
+                        'suggested_price' => $d['suggested_price'],
+                        'sale_price'      => $d['sale_price'],
+                        'stock'           => $d['stock'],
                     ]);
                     array_push($variations, $newVariation);
                 }
@@ -98,13 +111,13 @@ class ProductController extends Controller
                 $galleries = [];
 
                 foreach ($request->gallery as $p) {
-                    $path = $p->photo->store('public/images/products/'.$p->product_id);
+                    $path = $p->photo->store('public/images/products/' . $p->product_id);
                     $newPhoto = ProductPhoto::create(
-                      [
-                        'url'        => $path,
-                        'main'       => $p->main,
-                        'product_id' => $p->product_id
-                      ]
+                        [
+                            'url'        => $path,
+                            'main'       => $p->main,
+                            'product_id' => $p->product_id
+                        ]
                     );
                     array_push($galleries, $newPhoto);
                 }
@@ -118,14 +131,14 @@ class ProductController extends Controller
                 foreach ($request->attribute as $a) {
 
                     $newAttribute = $product->attributes()->create([
-                      'description' => $a[ 'description' ]
+                        'description' => $a['description']
                     ]);
 
                     array_push($attributes, $newAttribute);
 
-                    foreach ($a[ 'values' ] as $value) {
+                    foreach ($a['values'] as $value) {
                         $newValue = $newAttribute->attributeValues()->create([
-                          'value' => $value[ 'value' ]
+                            'value' => $value['value']
                         ]);
                         array_push($values, $newValue);
                     }
@@ -136,22 +149,22 @@ class ProductController extends Controller
             }
         } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'message'   => 'Ha ocurrido un error',
-                'status'    => 400,
-                'error'     => $e
-              ]
+                [
+                    'isSuccess' => false,
+                    'message'   => 'Ha ocurrido un error',
+                    'status'    => 400,
+                    'error'     => $e
+                ]
             );
         }
 
         return response()->json(
-          [
-            'isSuccess' => true,
-            'message'   => 'El item ha sido creado con exito!.',
-            'status'    => 200,
-            'objects'   => $product
-          ]
+            [
+                'isSuccess' => true,
+                'message'   => 'El item ha sido creado con exito!.',
+                'status'    => 200,
+                'objects'   => $product
+            ]
         );
     }
 
@@ -167,20 +180,20 @@ class ProductController extends Controller
             $data = new ProductResource((Product::findOrFail($id)));
         } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'message'   => $e,
-              ]
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => $e,
+                ]
             );
         }
 
         return response()->json(
-          [
-            'isSuccess' => true,
-            'status'    => 200,
-            'objects'   => $data,
-          ]
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'objects'   => $data,
+            ]
         );
     }
 
@@ -196,31 +209,31 @@ class ProductController extends Controller
             $data = new ProductCollection(Product::where('user_id', $id)->get());
             if (count($data) === 0) {
                 return response()->json(
-                  [
-                    'isSuccess' => true,
-                    'message'   => 'No existen producto asignados al usuario',
-                    'status'    => 200,
-                    'objects'   => $data
-                  ]
+                    [
+                        'isSuccess' => true,
+                        'message'   => 'No existen producto asignados al usuario',
+                        'status'    => 200,
+                        'objects'   => $data
+                    ]
                 );
             }
         } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'message'   => $e
-              ]
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => $e
+                ]
             );
         }
 
         return response()->json(
-          [
-            'isSuccess' => true,
-            'status'    => 200,
-            'count'     => count($data),
-            'objects'   => $data
-          ]
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'count'     => count($data),
+                'objects'   => $data
+            ]
         );
     }
 
@@ -237,19 +250,19 @@ class ProductController extends Controller
             Product::findOrFail($id)->update($request->all());
         } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'message'   => $e,
-              ]
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => $e,
+                ]
             );
         }
         return response()->json(
-          [
-            'isSuccess' => true,
-            'status'    => 200,
-            'message'   => 'EL producto se ha actualizado con exito!.',
-          ]
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'message'   => 'EL producto se ha actualizado con exito!.',
+            ]
         );
     }
 
@@ -266,28 +279,28 @@ class ProductController extends Controller
             Product::findOrFail($id)->delete();
         } catch (ModelNotFoundException $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'message'   => 'No se encontro producto para eliminar',
-              ]
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => 'No se encontro producto para eliminar',
+                ]
             );
         } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'message'   => $e,
-              ]
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => $e,
+                ]
             );
         }
 
         return response()->json(
-          [
-            'isSuccess' => true,
-            'message'   => 'El producto ha sido eliminado!.',
-            'status'    => 200,
-          ]
+            [
+                'isSuccess' => true,
+                'message'   => 'El producto ha sido eliminado!.',
+                'status'    => 200,
+            ]
         );
     }
 
