@@ -13,17 +13,10 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Maatwebsite\Excel\Excel;
-use App\Imports\Product as ProductImport;
-
+use App\Imports\ProductImport;
 
 class ProductController extends Controller
 {
-    private $excel;
-
-    public function __construct(Excel $excel)
-    {
-        $this->excel = $excel;
-    }
 
     /**
      * Importacion de data con excel
@@ -31,7 +24,7 @@ class ProductController extends Controller
      */
     public function import()
     {
-        return $this->excel->import(new ProductImport(), 'productos.xlsx');
+        return $this->excel->import(new ProductImport, 'product.xlsx');
     }
 
     /**

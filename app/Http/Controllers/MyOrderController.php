@@ -22,19 +22,7 @@ class MyOrderController extends Controller
 {
     public function import(Request $request)
     {
-       /* try {
-            Excel::import(new MyOrderImport, request()->file('file'));
 
-        } catch (Exception $e) {
-            return response()->json(
-              [
-                'isSuccess' => false,
-                'message'   => 'Error',
-                'status'    => 400,
-                'error'     => $e
-              ]
-            );
-        }*/
         Excel::import(new MyOrderImport, request()->file('file'));
 
     }

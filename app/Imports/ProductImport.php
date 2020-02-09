@@ -2,21 +2,22 @@
 
 namespace App\Imports;
 
-use App\MyOrder;
-use Illuminate\Support\Collection;
+use App\Product;
 use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class MyOrderImport implements ToCollection, WithHeadingRow
+class ProductImport implements ToCollection, WithHeadingRow
 {
     /**
-     * @param  Collection  $rows
-     * @return void
-     */
-    public function collection(Collection $rows)
+    * @param array $row
+    *
+    * @return \Illuminate\Database\Eloquent\Model|null
+    */
+    public function collection(array $row)
     {
         foreach ($rows as $row) {
-            MyOrder::create([
+            Product::create([
               'user_id'           => $row[ 'user_id' ],
               'suplier_id'        => $row[ 'suplier_id' ],
               'payment_method_id' => $row[ 'payment_method_id' ],
@@ -39,5 +40,6 @@ class MyOrderImport implements ToCollection, WithHeadingRow
               'zip_code'          => $row[ 'zip_code' ],
             ]);
         }
+    }
     }
 }
