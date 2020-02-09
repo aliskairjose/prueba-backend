@@ -133,7 +133,7 @@ class SeparateInventoryController extends Controller
 
         $user = User::findOrFail($request->get('user_id'));
         $notification = $this->sendNotification($user[ 'email' ]);
-
+        
         return response()->json(
           [
             'isSuccess'    => true,

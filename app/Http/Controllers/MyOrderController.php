@@ -425,7 +425,7 @@ class MyOrderController extends Controller
             // Usando queue en lugar de send, el correo se envia en segundo plano!
             Mail::to($email)->queue(new MailMyOrder($status));
         } catch (Exception $e) {
-            return 'Error al mandar la notificacion';
+            return $e->getMessage();
         }
 
         return 'Notificacion enviada con exito';

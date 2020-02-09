@@ -24,8 +24,23 @@ class ProductController extends Controller
      */
     public function import()
     {
-        Excel::import(new ProductImport, request()->file('file'));
-
+        try {
+            Excel::import(new ProductImport, request()->file('file'));
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => $e,
+                ]
+            );
+        }
+        return response()->json(
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+            ]
+        );
     }
 
     /**
@@ -81,7 +96,7 @@ class ProductController extends Controller
                     'user_id'          => $user->id,
                     'privated_product' => $request->privated_product,
                     'active'           => $user->approve_product,
-                    'sku'              => 'SP' . $user->id . '-SKU',
+                    'sku'              => 'SP' . $user->id . $request->sku,
                     'weight'           => $request->weight,
                     'length'           => $request->length,
                     'width'            => $request->width,
