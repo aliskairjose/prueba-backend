@@ -46,6 +46,7 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::get('products/{id}', 'ProductController@show');
     Route::get('products/user/{id}', 'ProductController@myProducts');
     Route::post('products', 'ProductController@store');
+    Route::post('products/import', 'ProductController@import');
     Route::put('products/{id}', 'ProductController@update');
     Route::delete('products/{id}', 'ProductController@delete');
 
@@ -113,6 +114,7 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::get('orders/myorders/supplier/{id}', 'MyOrderController@supplier');
     Route::get('orders/myorders/dropshipper/{id}', 'MyOrderController@dropshipper');
     Route::post('orders/myorders', 'MyOrderController@store');
+    Route::post('orders/myorders/import', 'MyOrderController@import');
     Route::put('orders/myorders/{id}', 'MyOrderController@update');
     Route::get('orders/myorders/{id}', 'MyOrderController@show');
 
