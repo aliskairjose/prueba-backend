@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\HistoryWallet;
 use App\Http\Resources\MyOrderCollection;
+use App\Imports\MyOrderImport;
 use App\Mail\MyOrder as MailMyOrder;
 use App\MyOrder;
 use App\Product;
@@ -15,10 +16,74 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Tymon\JWTAuth\Facades\JWTAuth;
-
+use Maatwebsite\Excel\Facades\Excel;
+use Whoops\Exception\ErrorException;
 
 class MyOrderController extends Controller
 {
+    public function import(Request $request)
+    {
+//        Excel::import(new MyOrderImport, request()->file('file'));
+
+        $file = $request->file('file');
+        $fileName = $file->getClientOriginalName();
+        $savePath = public_path('/order/');
+        $file->move($savePath, $fileName);
+         return response()->json(
+           [
+             'isSuccess' => true
+           ]
+         );
+    }
+
+    public function import2(Request $request)
+    {
+        try {
+            if ($request->hasFile('file')) {
+
+                Excel::import(new MyOrderImport, request()->file('file'));
+
+            } else {
+                return response()->json(
+                  [
+                    'isSuccess' => false,
+                    'message'   => 'Debe cargar un archivo',
+                    'status'    => 400,
+                  ]
+                );
+            }
+        } catch (ModelNotFoundException $e) {
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'message'   => 'ModelNotFoundException',
+                'status'    => 400,
+                'error'     => $e
+              ]
+            );
+        }
+        catch (Exception $e) {
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'message'   => 'Exception',
+                'status'    => 400,
+                'error'     => $e
+              ]
+            );
+        }
+
+        return response()->json(
+          [
+            'isSuccess' => true,
+            'message'   => 'Carga exitosa',
+            'status'    => 200,
+            'path'      => public_path()
+
+          ]
+        );
+    }
+
     /**
      * Display a listing of the resource.
      * Lista todas las ordenes
@@ -64,8 +129,7 @@ class MyOrderController extends Controller
                                                  ->where('user_id', $request->user_id)
                                                  ->get();
 
-            if($request->amount > $wallet->amount)
-            {
+            if ($request->amount > $wallet->amount) {
                 return response()->json(
                   [
                     'isSuccess' => false,
@@ -114,6 +178,34 @@ class MyOrderController extends Controller
             }
 
             $data = MyOrder::create($request->all());
+
+            /*$data = MyOrder::create(
+              [
+                'user_id'           => $request->user_id,
+                'suplier_id'        => $request->suplier_id,
+                'payment_method_id' => $request->,
+                'status'            => $request->,
+                'dir'               => $request->,
+                'phone'             => $request->,
+                'type'              => $request->,
+                'quantity'          => $request->,
+                'product_id'        => $request->,
+                'variation_id'      => $request->,
+                'price'             => $request->,
+                'total_order'       => $request->,
+                'notes'             => $request->,
+                'name'              => $request->,
+                'surname'           => $request->,
+                'street_address'    => $request->,
+                'country'           => $request->,
+                'state'             => $request->,
+                'city'              => $request->,
+                'zip_code'          => $request->,
+//                'comission_percent'  => ,
+//                'comission_amount'   => ,
+//                'dropshipper_amount' => ,
+              ]
+            );*/
 
             // Crea registro en History Wallet
             HistoryWallet::create(
@@ -295,16 +387,31 @@ class MyOrderController extends Controller
 
                 // Retorna el monto de la comision y el porcentaje
                 $resp = $this->calcularMonto($data->total_order);
+
                 $amount = $data->total_order - $resp[ 'comision' ];
                 $adminAmount = $resp[ 'comision' ];
+
+                // El monto del supplier
+                $supplier_amount = $product->sale_price * $data->quantity;
+
+                // El monto del dropshipper
+                $dropshipper_amount = $amount - $supplier_amount;
 
                 // Actualizo la waller del Dropshipper
                 $uWallet->amount = $amount - $product->sale_price;
                 $uWallet->save();
 
                 // Actualizo la wallet del Supplier
-                $sWallet->amount = $product->sale_price;
+                $sWallet->amount = $product->sale_price * $data->quantity;
                 $sWallet->save();
+
+                // Actualiza el status de la orden
+                $data->status = $request->status;
+                $data->comission_percent = $resp[ 'porcentaje' ];
+                $data->comission_amount = $resp[ 'comision' ];
+                $data->dropshipper_amount = $dropshipper_amount;
+                $data->supplier_amount = $supplier_amount;
+                $data->save();
 
                 // Crea registro en History Wallet
                 HistoryWallet::create(
@@ -324,10 +431,6 @@ class MyOrderController extends Controller
                 'status'   => $request->status
               ]
             );
-
-            // Actualiza el status de la orden
-            $data->status = $request->status;
-            $data->save();
 
             // Envios de correos
             $this->sendNotification($user->email, $request->status);

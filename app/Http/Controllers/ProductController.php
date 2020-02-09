@@ -8,13 +8,32 @@ use App\Product;
 use App\ProductPhoto;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Foundation\Bus\PendingDispatch;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Maatwebsite\Excel\Excel;
+use App\Imports\Product as ProductImport;
 
 
 class ProductController extends Controller
 {
+    private $excel;
+
+    public function __construct(Excel $excel)
+    {
+        $this->excel = $excel;
+    }
+
+    /**
+     * Importacion de data con excel
+     * @return PendingDispatch|Excel|\Maatwebsite\Excel\Reader
+     */
+    public function import()
+    {
+        return $this->excel->import(new ProductImport(), 'productos.xlsx');
+    }
+
     /**
      * Display a listing of the resource.
      *
