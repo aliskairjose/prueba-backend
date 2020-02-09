@@ -2,42 +2,50 @@
 
 namespace App\Imports;
 
+use App\Country;
+use App\Http\Resources\Country as ResourcesCountry;
+use App\Http\Resources\PaymentMethod as ResourcesPaymentMethod;
+use App\Http\Resources\Product as ResourcesProduct;
 use App\MyOrder;
-use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\ToCollection;
+use App\PaymentMethod;
+use App\Product;
+use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 
-class MyOrderImport implements ToCollection, WithHeadingRow
+class MyOrderImport implements ToModel, WithHeadingRow
 {
-    /**
-     * @param  Collection  $rows
-     * @return void
+     /**
+     * @param array $row
+     *
+     * @return \Illuminate\Database\Eloquent\Model|null
      */
-    public function collection(Collection $rows)
+    public function model(array $row)
     {
-        foreach ($rows as $row) {
-            MyOrder::create([
-              'user_id'           => $row[ 'user_id' ],
-              'suplier_id'        => $row[ 'suplier_id' ],
-              'payment_method_id' => $row[ 'payment_method_id' ],
-              'status'            => $row[ 'status' ],
-              'dir'               => $row[ 'dir' ],
-              'phone'             => $row[ 'phone' ],
-              'type'              => $row[ 'type' ],
-              'quantity'          => $row[ 'quantity' ],
-              'product_id'        => $row[ 'product_id' ],
-              'variation_id'      => $row[ 'variation_id' ],
-              'price'             => $row[ 'price' ],
-              'total_order'       => $row[ 'total_order' ],
-              'notes'             => $row[ 'notes' ],
-              'name'              => $row[ 'name' ],
-              'surname'           => $row[ 'surname' ],
-              'street_address'    => $row[ 'street_address' ],
-              'country'           => $row[ 'country' ],
-              'state'             => $row[ 'state' ],
-              'city'              => $row[ 'city' ],
-              'zip_code'          => $row[ 'zip_code' ],
-            ]);
-        }
+
+        $user = MyOrder::getAuthenticatedUser();
+        $paymentMethod =  new ResourcesPaymentMethod(PaymentMethod::where('name', $row['Payment Method Title'])->get());
+        $country =  new ResourcesCountry(Country::where('code', $row['Country Code (Shipping)'])->get());
+        $product = new ResourcesProduct(Product::where('sku', $row['SKU'])->get());
+
+        return new MyOrder(
+            [
+                'user_id'           => $user->id,
+                'suplier_id'        => $product->user_id,
+                'payment_method_id' => $paymentMethod->id,
+                'name'              => $row['First Name (Shipping)'],
+                'surname'           => $row['Last Name (Shipping)'],
+                'street_address'    => $row['Address 1&2 (Shipping)'],
+                'city'              => $row['City (Shipping)'],
+                'total_order'       => $row['Order Total Amount'],
+                'total_order'       => $row['Order Total Amount'],
+                'zip_code'          => $row['Postcode (Shipping)'],
+                'country'           => $country->name,
+                'quantity'          => $row['Quantity'],
+                'price'             => $row['Item Cost'],
+                'type'              => 'FINAL_ORDER',
+
+            ]
+        );
     }
 }
