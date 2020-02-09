@@ -18,17 +18,11 @@ use App\Imports\ProductImport;
 class ProductController extends Controller
 {
 
-    public function import()
-    {
-        Excel::import(new ProductImport, request()->file('file'));
-
-    }
-
     /**
      * Importacion de data con excel
      * @return PendingDispatch|Excel|\Maatwebsite\Excel\Reader
      */
-    public function import2()
+    public function import()
     {
         try {
             Excel::import(new ProductImport, request()->file('file'));
