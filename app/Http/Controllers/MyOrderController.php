@@ -147,7 +147,7 @@ class MyOrderController extends Controller
             return response()->json(
               [
                 'isSuccess' => false,
-                'message'   => 'Ha ocurrido un error',
+                'message'   => $e->getMessage(),
                 'status'    => 400,
                 'error'     => $e
               ]
