@@ -57,7 +57,7 @@ class SeparateInventoryController extends Controller
             $total = $request->quantity * $product->sale_price;
 
             // Valida que el usuario tenga saldo suficiente en la wallet
-            if ($total > $wallet->amount) {
+            if ($wallet==NULL || $total > $wallet->amount) {
                 return response()->json(
                   [
                     'isSuccess' => false,
@@ -66,6 +66,7 @@ class SeparateInventoryController extends Controller
                   ]
                 );
             }
+
 
             // Valida que la solicitud de producto sea menor a la existencia en stock
             if ($request->quantity > $product->stock) {
