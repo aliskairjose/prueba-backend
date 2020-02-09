@@ -23,17 +23,7 @@ class MyOrderController extends Controller
 {
     public function import(Request $request)
     {
-//        Excel::import(new MyOrderImport, request()->file('file'));
-
-        $file = $request->file('file');
-        $fileName = $file->getClientOriginalName();
-        $savePath = public_path('/order/');
-        $file->move($savePath, $fileName);
-         return response()->json(
-           [
-             'isSuccess' => true
-           ]
-         );
+        Excel::import(new MyOrderImport, request()->file('file'));
     }
 
     public function import2(Request $request)
