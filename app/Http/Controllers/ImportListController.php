@@ -48,7 +48,7 @@ class ImportListController extends Controller
                 $product->woocomerse_url = $d->woocomerse_url;
                 $product->woocomerse_id = $d->woocomerse_id;
 
-                $product->langind = new LandingPageCollection(LandingPage::where(['user_id'=>$user->id,'product_id'=>$product->product_id])->get());;
+                $product->landing = new LandingPageCollection(LandingPage::where(['user_id'=>$user->id,'product_id'=>$product->product_id])->get());;
 
                 array_push($il, $product);
                 // array_push($il, $prod_res);
