@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class MyOrderImport implements ToCollection, WithHeadingRow
+class MyOrderImport implements ToCollection
 {
     /**
      * @param  Collection  $rows
@@ -17,26 +17,26 @@ class MyOrderImport implements ToCollection, WithHeadingRow
     {
         foreach ($rows as $row) {
             MyOrder::create([
-              'user_id'           => $row[ 0 ],
-              'suplier_id'        => $row[ 1 ],
-              'payment_method_id' => $row[ 2 ],
-              'status'            => $row[ 3 ],
-              'dir'               => $row[ 4 ],
-              'phone'             => $row[ 5 ],
-              'type'              => $row[ 6 ],
-              'quantity'          => $row[ 7 ],
-              'product_id'        => $row[ 8 ],
-              'variation_id'      => $row[ 9 ],
-              'price'             => $row[ 10 ],
-              'total_order'       => $row[ 11 ],
-              'notes'             => $row[ 12 ],
-              'name'              => $row[ 13 ],
-              'surname'           => $row[ 14 ],
-              'street_address'    => $row[ 15 ],
-              'country'           => $row[ 16 ],
-              'state'             => $row[ 17 ],
-              'city'              => $row[ 18 ],
-              'zip_code'          => $row[ 19 ],
+              'user_id'           => $row[ 'user_id' ],
+              'suplier_id'        => $row[ 'suplier_id' ],
+              'payment_method_id' => $row[ 'payment_method_id' ],
+              'status'            => $row[ 'status' ],
+              'dir'               => $row[ 'dir' ],
+              'phone'             => $row[ 'phone' ],
+              'type'              => $row[ 'type' ],
+              'quantity'          => $row[ 'quantity' ],
+              'product_id'        => $row[ 'product_id' ],
+              'variation_id'      => $row[ 'variation_id' ],
+              'price'             => $row[ 'price' ],
+              'total_order'       => $row[ 'total_order' ],
+              'notes'             => $row[ 'notes' ],
+              'name'              => $row[ 'name' ],
+              'surname'           => $row[ 'surname' ],
+              'street_address'    => $row[ 'street_address' ],
+              'country'           => $row[ 'country' ],
+              'state'             => $row[ 'state' ],
+              'city'              => $row[ 'city' ],
+              'zip_code'          => $row[ 'zip_code' ],
             ]);
         }
     }

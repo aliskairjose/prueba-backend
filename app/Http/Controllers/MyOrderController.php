@@ -15,15 +15,28 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use Tymon\JWTAuth\Facades\JWTAuth;
 use Maatwebsite\Excel\Facades\Excel;
-use Whoops\Exception\ErrorException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class MyOrderController extends Controller
 {
     public function import(Request $request)
     {
+       /* try {
+            Excel::import(new MyOrderImport, request()->file('file'));
+
+        } catch (Exception $e) {
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'message'   => 'Error',
+                'status'    => 400,
+                'error'     => $e
+              ]
+            );
+        }*/
         Excel::import(new MyOrderImport, request()->file('file'));
+
     }
 
     public function import2(Request $request)
@@ -51,8 +64,7 @@ class MyOrderController extends Controller
                 'error'     => $e
               ]
             );
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
               [
                 'isSuccess' => false,
