@@ -11,11 +11,10 @@ use App\Http\Resources\City as CityResource;
 use App\Http\Resources\CityCollection;
 
 use App\Http\Resources\TrajectoryCollection;
-use App\Http\Resources\Trajectory as TrajectoryResource;
 
 use Maatwebsite\Excel\HeadingRowImport;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\TrajectoriesImport;
+use App\Imports\TrajectoryImport;
 
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -45,7 +44,7 @@ class TrajectoryController extends Controller
 
         try {
 
-            Excel::import(new TrajectoriesImport('SIN RECAUDO'),  request()->file('file'));
+            Excel::import(new TrajectoryImport('SIN RECAUDO'),  request()->file('file'));
         } catch (Exception $e) {
             return response()->json(
                 [
@@ -62,7 +61,7 @@ class TrajectoryController extends Controller
     {
         try {
 
-            Excel::import(new TrajectoriesImport('CON RECAUDO'), request()->file('file'));
+            Excel::import(new TrajectoryImport('CON RECAUDO'), request()->file('file'));
         } catch (Exception $e) {
             return response()->json(
                 [

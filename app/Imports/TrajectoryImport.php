@@ -5,7 +5,7 @@ namespace App\Imports;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 
-class TrajectoriesImport implements ToCollection
+class TrajectoryImport implements ToCollection
 {
     protected $rate_type;
 
@@ -31,12 +31,12 @@ class TrajectoriesImport implements ToCollection
                 if (count($implodeDep) == 2) {
 
                     $trajectory_1a3 = Trajectory::firstOrCreate(
-                            [
-                                'name' => trim(strtoupper($row[12])),
-                                'rate_type' => $this->rate_type,
-                                'from'=>'1.00',
-                                'until'=>'3.00',
-                            ]
+                        [
+                            'name' => trim(strtoupper($row[12])),
+                            'rate_type' => $this->rate_type,
+                            'from'=>'1.00',
+                            'until'=>'3.00',
+                        ]
                     );
 
                     $trajectory_1a3->price=trim(strtoupper($row[18]));
