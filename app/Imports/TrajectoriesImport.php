@@ -8,12 +8,13 @@ use App\Department;
 use App\City;
 use App\Trajectory;
 
-class TrajectoriesImporttt implements ToCollection
+class TrajectoriesImport implements ToCollection
 {
     protected $rate_type;
 
     public function __construct($rate_type)
     {
+        var_dump($rate_type);
         $this->rate_type = $rate_type; //tipo de tarifa
     }
 
