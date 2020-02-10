@@ -198,5 +198,6 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::post('loadsinrecaudo', 'TrajectoryController@loadsinrecaudo');
     Route::post('loadconrecaudo', 'TrajectoryController@loadconrecaudo');
     Route::get('deletedatatra', 'TrajectoryController@deletedatatra');
+    Route::post('trajectory/bycity', 'TrajectoryController@bycity');
 
 });

@@ -39,7 +39,8 @@ class TrajectoryController extends Controller
         );
     }
 
-    public function deletedatatra(){
+    public function deletedatatra()
+    {
         Trajectory::where('id', '>', 0)->delete();
         City::where('id', '>', 0)->delete();
         Department::where('id', '>', 0)->delete();
@@ -87,5 +88,43 @@ class TrajectoryController extends Controller
                 ]
             );
         }
+    }
+
+    public function bycity(Request $request)
+    {
+
+        $data = new CityCollection(City::where('rate_type', 'LIKE', "%".$request->rate_type."%")->get());
+
+        // ImportList Array
+        $il = [];
+
+        foreach ($data as $row) {
+            $city = City::findOrFail($row->id);
+            $city->precios = new TrajectoryCollection(Trajectory::where(['rate_type'=>$request->rate_type,'name'=>$row->trajectory_type])->get());
+
+            array_push($il, $city);
+            // array_push($il, $prod_res);
+        }
+
+        if ($data->isEmpty()) {
+            return response()->json(
+                [
+                    'isSuccess' => true,
+                    'status' => 200,
+                    'message' => 'No se encontró data',
+                    'objects' => $data
+                ]
+            );
+        }
+
+        $object = ['cities' => $il];
+
+        return response()->json(
+            [
+                'isSuccess' => true,
+                'status' => 200,
+                'objects' => $object,
+            ]
+        );
     }
 }
