@@ -12,7 +12,7 @@ class UsersImport implements ToCollection
     {
         foreach ($rows as $row)
         {
-            
+
         }
     }
 }
