@@ -193,7 +193,9 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::post('city', 'CityController@store');
     Route::delete('city/{id}', 'CityController@delete');
     Route::put('city/{id}', 'CityController@update');
-    Route::get('loadsinrecaudo', 'CityController@loadsinrecaudo');
-    Route::get('loadconrecaudo', 'CityController@loadconrecaudo');
-    Route::get('loadtrajectories', 'CityController@loadtrajectories');
+
+    // Trajectory Routes
+    Route::get('trajectory', 'TrajectoryController@index');
+    Route::get('loadsinrecaudo', 'TrajectoryController@loadsinrecaudo');
+    Route::get('loadconrecaudo', 'TrajectoryController@loadconrecaudo');
 });
