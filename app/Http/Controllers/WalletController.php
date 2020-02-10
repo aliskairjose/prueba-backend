@@ -108,6 +108,28 @@ class WalletController extends Controller
     public function update(Request $request, $id)
     {
         try {
+            Wallet::findOrFail($id)->update($request->all());
+        } catch (Exception $e) {
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => $e,
+              ]
+            );
+        }
+        return response()->json(
+          [
+            'isSuccess' => true,
+            'status'    => 200,
+            'message'   => 'EL registro se ha actualizado con exito!.',
+          ]
+        );
+    }
+
+    public function addBalance(Request $request, $id)
+    {
+        try {
             $wallet = Wallet::findOrFail($id);
             $wallet->amount = $request->amount + $wallet->amount;
             $wallet->save();
