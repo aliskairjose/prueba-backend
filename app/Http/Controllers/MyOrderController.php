@@ -20,27 +20,18 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class MyOrderController extends Controller
 {
-    public function import(Request $request)
+    public function import()
     {
 
-        Excel::import(new MyOrderImport, request()->file('file'));
+        $data = Excel::import(new MyOrderImport, request()->file('file'));
+
     }
 
-    public function import2(Request $request)
+    public function import2()
     {
         try {
-            if ($request->hasFile('file')) {
+            Excel::import(new MyOrderImport, request()->file('file'));
 
-                Excel::import(new MyOrderImport, request()->file('file'));
-            } else {
-                return response()->json(
-                    [
-                        'isSuccess' => false,
-                        'message'   => 'Debe cargar un archivo',
-                        'status'    => 400,
-                    ]
-                );
-            }
         } catch (ModelNotFoundException $e) {
             return response()->json(
                 [
@@ -72,12 +63,6 @@ class MyOrderController extends Controller
         );
     }
 
-    /**
-     * Display a listing of the resource.
-     * Lista todas las ordenes
-     *
-     * @return JsonResponse
-     */
     public function index()
     {
         try {
@@ -101,12 +86,6 @@ class MyOrderController extends Controller
         );
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  Request  $request
-     * @return JsonResponse
-     */
     public function store(Request $request)
     {
         try {
@@ -219,13 +198,6 @@ class MyOrderController extends Controller
         );
     }
 
-    /**
-     * Display the specified resource.
-     * Recide el id del usuario supplier y lista todas las ordenes de ese usuario Supplier
-     *
-     * @param  int  $id
-     * @return JsonResponse
-     */
     public function supplier($id)
     {
         try {
@@ -259,13 +231,6 @@ class MyOrderController extends Controller
         );
     }
 
-    /**
-     * Display the specified resource.
-     * Recide el id del usuario dropshipper y lista todas las ordenes de ese usuario Supplier
-     *
-     * @param  int  $id
-     * @return JsonResponse
-     */
     public function dropshipper($id)
     {
         try {
@@ -299,13 +264,6 @@ class MyOrderController extends Controller
         );
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  Request  $request
-     * @param  int  $id
-     * @return JsonResponse
-     */
     public function update(Request $request, $id)
     {
         try {
@@ -419,6 +377,10 @@ class MyOrderController extends Controller
         );
     }
 
+    public function updateList(Request $request){
+
+    }
+
     private function sendNotification($email, $status)
     {
         try {
@@ -447,11 +409,6 @@ class MyOrderController extends Controller
         return $user;
     }
 
-    /**
-     * Recibe el total de la orden y devuelve el porcentaje y el monto de la comision.
-     * @param $total_order
-     * @return array
-     */
     private function calcularMonto($total_order)
     {
         if ($total_order <= 59000) {

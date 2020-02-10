@@ -3,9 +3,6 @@
 namespace App\Imports;
 
 use App\Country;
-use App\Http\Resources\Country as ResourcesCountry;
-use App\Http\Resources\PaymentMethod as ResourcesPaymentMethod;
-use App\Http\Resources\Product as ResourcesProduct;
 use App\MyOrder;
 use App\PaymentMethod;
 use App\Product;
@@ -13,6 +10,7 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 
+HeadingRowFormatter::default('none');
 class MyOrderImport implements ToModel, WithHeadingRow
 {
      /**
@@ -24,15 +22,19 @@ class MyOrderImport implements ToModel, WithHeadingRow
     {
 
         $user = MyOrder::getAuthenticatedUser();
-        $paymentMethod =  new ResourcesPaymentMethod(PaymentMethod::where('name', $row['Payment Method Title'])->get());
-        $country =  new ResourcesCountry(Country::where('code', $row['Country Code (Shipping)'])->get());
-        $product = new ResourcesProduct(Product::where('sku', $row['SKU'])->get());
+        $product = Product::where('sku', $row['SKU'])->get();
+        $product = $product[0];
+        $paymentMethod =  PaymentMethod::where('name', $row['Payment Method Title'])->get();
+        $paymentMethod = $paymentMethod[0];
+        $country =  Country::where('code', $row['Country Code (Shipping)'])->get();
+        $country = $country[0];
 
         return new MyOrder(
             [
                 'user_id'           => $user->id,
                 'suplier_id'        => $product->user_id,
                 'payment_method_id' => $paymentMethod->id,
+                'product_id'        => $product->id,
                 'name'              => $row['First Name (Shipping)'],
                 'surname'           => $row['Last Name (Shipping)'],
                 'street_address'    => $row['Address 1&2 (Shipping)'],
@@ -44,8 +46,10 @@ class MyOrderImport implements ToModel, WithHeadingRow
                 'quantity'          => $row['Quantity'],
                 'price'             => $row['Item Cost'],
                 'type'              => 'FINAL_ORDER',
-
+                'status'            => $row['Order Status'],
+                'phone'             => $row['Phone (Billing)'],
             ]
         );
+
     }
 }

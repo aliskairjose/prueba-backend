@@ -33,7 +33,6 @@ class ProductImport implements ToModel, WithHeadingRow
                 'lenght'        => $row['LENGTH'],
                 'height'        => $row['HEIGHT'],
                 'user_id'       => $user->id
-
             ]
         );
     }

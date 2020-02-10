@@ -212,6 +212,11 @@ class ProductController extends Controller
         );
     }
 
+    public function filters($value)
+    {
+
+    }
+
     /**
      * Display the specified resource.
      *
