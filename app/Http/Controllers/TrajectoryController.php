@@ -25,49 +25,50 @@ use Illuminate\Http\JsonResponse;
 class TrajectoryController extends Controller
 {
 
-    public function index(){
+    public function index()
+    {
 
         $data = new TrajectoryCollection(Trajectory::all());
 
         return response()->json(
             [
                 'isSuccess' => true,
-                'count'     => $data->count(),
-                'status'    => 200,
-                'objects'   => $data,
+                'count' => $data->count(),
+                'status' => 200,
+                'objects' => $data,
             ]
         );
     }
 
-    public function loadsinrecaudo(){
+    public function loadsinrecaudo()
+    {
 
         try {
-            var_dump('asas');
-        Excel::import(new TrajectoriesImport('SIN RECAUDO'), 'SIN_RECAUDO.xlsx');
+            Excel::import(new TrajectoriesImport('SIN RECAUDO'), 'SIN_RECAUDO.xlsx');
         } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
-                    'message'   => 'Ha ocurrido un error',
-                    'status'    => 400,
-                    'error'     => $e
+                    'message' => 'Ha ocurrido un error',
+                    'status' => 400,
+                    'error' => $e
                 ]
             );
         }
     }
 
-    public function loadconrecaudo(){
+    public function loadconrecaudo()
+    {
         try {
 
-            var_dump(file_exists('CON_RECAUDO.xlsx'));
-        Excel::import(new TrajectoriesImport('CON RECAUDO'), 'CON_RECAUDO.xlsx');
+            Excel::import(new TrajectoriesImport('CON RECAUDO'), 'CON_RECAUDO.xlsx');
         } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
-                    'message'   => 'Ha ocurrido un error',
-                    'status'    => 400,
-                    'error'     => $e
+                    'message' => 'Ha ocurrido un error',
+                    'status' => 400,
+                    'error' => $e
                 ]
             );
         }

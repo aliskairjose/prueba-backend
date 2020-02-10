@@ -23,7 +23,6 @@ class TrajectoriesImport implements ToCollection
     public function collection(Collection $collection)
     {
         $cont = 0;
-        var_dump('asas');
         foreach ($collection as $row) {
             if ($cont > 0) {
 
@@ -86,7 +85,6 @@ class TrajectoriesImport implements ToCollection
                             $encontro_tipo = $this->existeString($this->rate_type, $opcion);
                             if ($encontro_tipo == true) {
                                 break;
-                            } else {
                             }
                         }
 
