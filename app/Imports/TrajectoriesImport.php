@@ -4,9 +4,13 @@ namespace App\Imports;
 
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use App\Department;
-use App\City;
-use App\Trajectory;
+
+
+
+use App\Product;
+use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 
 class TrajectoriesImport implements ToCollection
 {
