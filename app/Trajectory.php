@@ -10,5 +10,5 @@ class Trajectory extends Model
 {
     use Notifiable;
 
-    protected $fillable = [ 'id','from','until','price','rate_type'];
+    protected $fillable = [ 'id','name','from','until','price','rate_type'];
 }

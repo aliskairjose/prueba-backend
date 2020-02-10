@@ -177,36 +177,8 @@ class CityController extends Controller
     }
 
     public function loadconrecaudo(){
-        Excel::import(new TrajectoriesImport('SIN RECAUDO'), 'SIN_RECAUDO.xlsx');
+        Excel::import(new TrajectoriesImport('CON RECAUDO'), 'CON_RECAUDO.xlsx');
     }
 
-    public  function loadtrajectories(Request $request){
-        try {
-
-        $departamento = Trajectory::firstOrCreate(
-            ['name' => $name_dep],
-            ['country_id' => 1]
-        );
-
-        } catch (Exception $e) {
-            return response()->json(
-                [
-                    'isSuccess' => false,
-                    'message'   => 'Ha ocurrido un error',
-                    'status'    => 400,
-                    'error'     => $e
-                ]
-            );
-        }
-
-        return response()->json(
-            [
-                'isSuccess' => true,
-                'message'   => 'El item ha sido creado con exito!.',
-                'status'    => 200,
-                'objects'   => $product
-            ]
-        );
-    }
 
 }

@@ -16,6 +16,7 @@ class Trajectory extends JsonResource
     {
         return [
             'id' => $this->id,
+            'name' => $this->name,
             'from' => $this->from,
             'until' => $this->until,
             'price' => $this->price,

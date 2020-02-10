@@ -10,11 +10,11 @@ use App\Trajectory;
 
 class TrajectoriesImport implements ToCollection
 {
-    protected $tipo_tarifa;
+    protected $rate_type;
 
-    public function  __construct($tipo_tarifa)
+    public function __construct($rate_type)
     {
-        $this->tipo_tarifa = $tipo_tarifa;
+        $this->rate_type = $rate_type; //tipo de tarifa
     }
 
     /**
@@ -26,9 +26,33 @@ class TrajectoriesImport implements ToCollection
         foreach ($collection as $row) {
             if ($cont > 0) {
 
-                $implodeDep = explode('-', $row[8]);
+                $implodeDep = explode('-', $row[8]); //ciudad y departamento destino
 
                 if (count($implodeDep) == 2) {
+
+                    $trajectory_1a3 = Trajectory::firstOrCreate(
+                            [
+                                'name' => trim(strtoupper($row[12])),
+                                'rate_type' => $this->rate_type,
+                                'from'=>'1.00',
+                                'until'=>'3.00',
+                            ]
+                    );
+
+                    $trajectory_1a3->price=trim(strtoupper($row[18]));
+                    $trajectory_1a3->save();
+
+                    $trajectory_4a12 = Trajectory::firstOrCreate(
+                        [
+                            'name' => trim(strtoupper($row[12])),
+                            'rate_type' => $this->rate_type,
+                            'from'=>'4.00',
+                            'until'=>'12.00',
+                        ]
+                    );
+
+                    $trajectory_4a12->price=trim(strtoupper($row[19]));
+                    $trajectory_4a12->save();
 
                     $name_dep = trim(strtoupper($implodeDep[1]));
                     //si el encoding no es utf8 entonces lo codifico
@@ -52,23 +76,23 @@ class TrajectoriesImport implements ToCollection
                     );
 
                     if ($ciudad->rate_type == null || $ciudad->rate_type == '') {
-                        $ciudad->rate_type = '{"0":"'.$this->tipo_tarifa.'"}';
+                        $ciudad->rate_type = '["' . $this->rate_type . '"]';
                     } else {
 
-                        $jsondecode = json_decode($ciudad->rate_type);
-                        $encontro_sin_recaudo = false;
+                        $jsondecode = json_decode($ciudad->rate_type,true);
+                        $encontro_tipo = false;
                         foreach ($jsondecode as $opcion) {
-                            $encontro_sin_recaudo = $this->existeString($this->tipo_tarifa, $opcion);
-                            if ($encontro_sin_recaudo == true) {
+                            $encontro_tipo = $this->existeString($this->rate_type, $opcion);
+                            if ($encontro_tipo == true) {
                                 break;
                             } else {
                             }
                         }
 
-                        if ($encontro_sin_recaudo == false) {
-                            //si el registro que existia, estaba solo en "CON RECAUDO"
+                        if ($encontro_tipo == false) {
+                            //si el registro que existia, estaba solo en el tipo que le pasé por correo
                             $jsondecode[1] = '';
-                            $jsondecode[1] = $this->tipo_tarifa;
+                            $jsondecode[1] = $this->rate_type;
                         }
 
                         $ciudad->rate_type = json_encode($jsondecode);
