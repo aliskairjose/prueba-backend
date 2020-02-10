@@ -112,15 +112,8 @@ class UserController extends Controller
                 $path = $request->photo->store('public/images/profile/' . $data->id);
                 $data->url = $path;
             }
-
-            if ($request->notes !== null) {
-                $data->notes = $request->notes;
-            }
-
-            if ($request->phone !== null) {
-                $data->phone = $request->phone;
-            }
-
+            $data->notes = $request->notes;
+            $data->phone = $request->phone;
             $data->save();
 
         } catch (ModelNotFoundException $e) {
