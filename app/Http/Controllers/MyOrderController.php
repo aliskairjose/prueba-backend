@@ -14,6 +14,7 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -25,7 +26,6 @@ class MyOrderController extends Controller
     {
         try {
             Excel::import(new MyOrderImport, request()->file('file'));
-
         } catch (ModelNotFoundException $e) {
             return response()->json(
                 [
@@ -156,7 +156,6 @@ class MyOrderController extends Controller
                     'status'   => $data->status
                 ]
             );
-
         } catch (ModelNotFoundException $e) {
             return response()->json(
                 [
@@ -168,12 +167,12 @@ class MyOrderController extends Controller
             );
         } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'message'   => $e->getMessage(),
-                'status'    => 400,
-                'error'     => $e
-              ]
+                [
+                    'isSuccess' => false,
+                    'message'   => $e->getMessage(),
+                    'status'    => 400,
+                    'error'     => $e
+                ]
             );
         }
 
@@ -377,25 +376,24 @@ class MyOrderController extends Controller
         );
     }
 
-    public function updateStatusList(Request $request){
+    public function updateStatusList(Request $request)
+    {
 
         $orders = $request->all();
 
-        try{
+        try {
             $nuevo = [];
             foreach ($orders as $o) {
                 $this->update($o, $o['id']);
             }
-        }
-        catch( Exception $e)
-        {
+        } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => true,
                     'message' => 'Ha ocurrido un error',
                     'status' => 400,
                 ]
-                );
+            );
         }
 
         return response()->json(
@@ -405,8 +403,7 @@ class MyOrderController extends Controller
                 'status' => 200,
                 'objects' => $nuevo,
             ]
-            );
-
+        );
     }
 
     private function sendNotification($email, $status)
@@ -435,6 +432,41 @@ class MyOrderController extends Controller
             return response()->json(['token_absent']);
         }
         return $user;
+    }
+
+    public function filter(Request $request)
+    {
+        $keyword = $request->keyword;
+
+        try {
+            $data = DB::table('my_orders')->where('status', 'like', '%' . $keyword . '%')->get();
+        } catch (ModelNotFoundException $e) {
+            return response()->json(
+                [
+                    'isSuccess' => true,
+                    'status'    => 200,
+                    'message'   => 'No se econtro registros',
+                    'error'     => $e
+                ]
+            );
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'isSuccess' => true,
+                    'status'    => 400,
+                    'message'   => 'Ha ocurrido un error',
+                    'error'     => $e
+                ]
+            );
+        }
+
+        return response()->json(
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'objects'   => $data
+            ]
+        );
     }
 
     private function calcularMonto($total_order)

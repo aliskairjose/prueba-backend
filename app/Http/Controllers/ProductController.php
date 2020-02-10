@@ -212,11 +212,6 @@ class ProductController extends Controller
         );
     }
 
-    public function filters($value)
-    {
-
-    }
-
     /**
      * Display the specified resource.
      *
@@ -322,6 +317,11 @@ class ProductController extends Controller
                 'status'    => 200,
             ]
         );
+    }
+
+    public function filters(Request $request)
+    {
+
     }
 
     private function getAuthenticatedUser()

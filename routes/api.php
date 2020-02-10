@@ -38,6 +38,7 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::post('users/changepassword', 'UserController@changePassword');
     Route::post('users/banuser', 'UserController@banUser');
     Route::put('users/updaterole/{id}', 'UserController@updaterole');
+    Route::post('users/update/bill/{id}', 'UserController@updateBillData');
 
     // Product Routes
     Route::get('products', 'ProductController@index');
@@ -115,6 +116,7 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::post('orders/myorders/import', 'MyOrderController@import');
     Route::put('orders/myorders/{id}', 'MyOrderController@update');
     Route::post('orders/myorder/masive', 'MyOrderController@updateStatusList');
+    Route::post('orders/myorders/filter', 'MyOrderController@filter');
     Route::get('orders/myorders/{id}', 'MyOrderController@show');
 
     // Order History Routes
