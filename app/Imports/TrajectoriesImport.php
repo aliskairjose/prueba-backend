@@ -21,11 +21,11 @@ class TrajectoriesImport implements ToCollection
     /**
      * @param Collection $collection
      */
-    public function collection(Collection $collection)
+    public function collection(Collection $rows)
     {
 
         $cont = 0;
-        var_dump($cont);
+        var_dump($rows);
         foreach ($collection as $row) {
             if ($cont > 0) {
 
