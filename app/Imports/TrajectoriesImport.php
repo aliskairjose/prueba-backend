@@ -6,7 +6,7 @@ use App\User;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 
-class UsersImport implements ToCollection
+class TrajectoriesImport implements ToCollection
 {
     public function collection(Collection $rows)
     {
