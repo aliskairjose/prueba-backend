@@ -38,7 +38,7 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::post('users/changepassword', 'UserController@changePassword');
     Route::post('users/banuser', 'UserController@banUser');
     Route::put('users/updaterole/{id}', 'UserController@updaterole');
-    Route::put('users/update/photo/{id}', 'UserController@updatePhoto');
+    Route::post('users/update/bill/{id}', 'UserController@updateBillData');
 
     // Product Routes
     Route::get('products', 'ProductController@index');

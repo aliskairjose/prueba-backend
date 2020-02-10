@@ -102,22 +102,27 @@ class UserController extends Controller
         );
     }
 
-    public function updatePhoto(Request $request, $id)
+    public function updateBillData(Request $request, $id)
     {
+
         try {
+            $data = User::findOrFail($id);
+
             if ($request->hasFile('photo')) {
-                $data = User::findOrFail($id);
-                $data->url = $request->url;
-                $data->save();
-            } else {
-                return response()->json(
-                    [
-                        'isSuccess' => false,
-                        'status'    => 400,
-                        'message'   => 'Debe cargar una imagen'
-                    ]
-                );
+                $path = $request->photo->store('public/images/profile/' . $data->id);
+                $data->url = $path;
             }
+
+            if ($request->notes !== null) {
+                $data->notes = $request->notes;
+            }
+
+            if ($request->phone !== null) {
+                $data->phone = $request->phone;
+            }
+
+            $data->save();
+
         } catch (ModelNotFoundException $e) {
             return response()->json(
                 [
@@ -147,12 +152,6 @@ class UserController extends Controller
         );
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return JsonResponse
-     */
     public function show($id)
     {
         try {
@@ -176,13 +175,6 @@ class UserController extends Controller
         );
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  Request  $request
-     * @param  int  $id
-     * @return JsonResponse
-     */
     public function update(Request $request, $id)
     {
         try {
