@@ -79,7 +79,7 @@ class TrajectoriesImport implements ToCollection
                     );
 
                     if ($ciudad->rate_type == null || $ciudad->rate_type == '') {
-                        $ciudad->rate_type = '["' . $this->rate_type . '"]';
+                        $ciudad->rate_type = "['" . $this->rate_type . "']";
                     } else {
 
                         $jsondecode = json_decode($ciudad->rate_type,true);
