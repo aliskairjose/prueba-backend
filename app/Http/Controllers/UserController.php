@@ -54,6 +54,7 @@ class UserController extends Controller
     {
         try {
             $password = Str::random(10);
+
             $data = User::create(
               [
                 'name'                 => $request->name,
@@ -67,8 +68,17 @@ class UserController extends Controller
                 'subscription_plan_id' => $request->role_id === 1 ? 2 : 1,
                 'approve_product'      => $request->approve_product,
                 'password'             => Hash::make($password),
+                'phone'                => $request->phone,
+                'notes'                => $request->phone,
+                'url'                  => $request->url
               ]
             );
+
+            if($request->hasFile('photo')){
+                $path = $request->photo->store('public/images/profile/' . $data->id);
+                $data->url = $path;
+                $data->save();
+            }
 
         } catch (Exception $e) {
             return response()->json(
@@ -142,6 +152,8 @@ class UserController extends Controller
             $data->register_approved = $request->register_approved;
             $data->banned = $request->banned;
             $data->approve_product = $request->approve_product;
+            $data->notes = $request->notes;
+            $data->phone = $request->phone;
             $data->save();
 
         } catch (ModelNotFoundException $e) {
