@@ -40,10 +40,35 @@ class TrajectoryController extends Controller
     }
 
     public function loadsinrecaudo(){
+
+        try {
+            var_dump('asas');
         Excel::import(new TrajectoriesImport('SIN RECAUDO'), 'SIN_RECAUDO.xlsx');
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'message'   => 'Ha ocurrido un error',
+                    'status'    => 400,
+                    'error'     => $e
+                ]
+            );
+        }
     }
 
     public function loadconrecaudo(){
+        try {
+            var_dump('asas');
         Excel::import(new TrajectoriesImport('CON RECAUDO'), 'CON_RECAUDO.xlsx');
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'message'   => 'Ha ocurrido un error',
+                    'status'    => 400,
+                    'error'     => $e
+                ]
+            );
+        }
     }
 }
