@@ -4,11 +4,8 @@ namespace App\Imports;
 
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use App\Department;
-use App\City;
-use App\Trajectory;
 
-class TrajectoriesImport implements ToCollection
+class TrajectoryImport implements ToCollection
 {
     protected $rate_type;
 
@@ -24,22 +21,22 @@ class TrajectoriesImport implements ToCollection
     {
 
         $cont = 0;
-
+        var_dump($cont);
         foreach ($collection as $row) {
-
-            if ($cont > 0 && count($row)>18) {
+            var_dump($row);
+            if ($cont > 0) {
 
                 $implodeDep = explode('-', $row[8]); //ciudad y departamento destino
 
                 if (count($implodeDep) == 2) {
 
                     $trajectory_1a3 = Trajectory::firstOrCreate(
-                            [
-                                'name' => trim(strtoupper($row[12])),
-                                'rate_type' => $this->rate_type,
-                                'from'=>'1.00',
-                                'until'=>'3.00',
-                            ]
+                        [
+                            'name' => trim(strtoupper($row[12])),
+                            'rate_type' => $this->rate_type,
+                            'from'=>'1.00',
+                            'until'=>'3.00',
+                        ]
                     );
 
                     $trajectory_1a3->price=trim(strtoupper($row[18]));

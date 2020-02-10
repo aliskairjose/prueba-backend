@@ -27,7 +27,22 @@ class TrajectoryController extends Controller
 
     public function index()
     {
+        $data = new TrajectoryCollection(Trajectory::all());
 
+        return response()->json(
+            [
+                'isSuccess' => true,
+                'count' => $data->count(),
+                'status' => 200,
+                'objects' => $data,
+            ]
+        );
+    }
+
+    public function deletedatatra(){
+        Trajectory::where('id', '>', 0)->delete();
+        City::where('id', '>', 0)->delete();
+        Department::where('id', '>', 0)->delete();
         $data = new TrajectoryCollection(Trajectory::all());
 
         return response()->json(
@@ -44,7 +59,7 @@ class TrajectoryController extends Controller
     {
 
         try {
-            Excel::import(new TrajectoriesImport('SIN RECAUDO'), 'SIN_RECAUDO.xlsx');
+            Excel::import(new TrajectoriesImport('SIN RECAUDO'), request()->file('file'));
         } catch (Exception $e) {
             return response()->json(
                 [
@@ -59,9 +74,9 @@ class TrajectoryController extends Controller
 
     public function loadconrecaudo()
     {
-        try {
 
-            Excel::import(new TrajectoriesImport('CON RECAUDO'), 'CON_RECAUDO.xlsx');
+        try {
+            Excel::import(new TrajectoriesImport('CON RECAUDO'), request()->file('file'));
         } catch (Exception $e) {
             return response()->json(
                 [
