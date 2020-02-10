@@ -52,7 +52,7 @@ class WalletController extends Controller
         return response()->json(
           [
             'isSuccess' => true,
-            'message'   => 'El producto ha sido creado con exito!.',
+            'message'   => 'El registro ha sido creado con exito!.',
             'status'    => 200,
             'objects'   => $data,
           ]
@@ -108,7 +108,9 @@ class WalletController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            Wallet::findOrFail($id)->update($request->all());
+            $wallet = Wallet::findOrFail($id);
+            $wallet->amount = $request->amount + $wallet->amount;
+            $wallet->save();
         } catch (Exception $e) {
             return response()->json(
               [
