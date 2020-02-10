@@ -17,12 +17,8 @@ class TrajectoriesImport implements ToCollection
      */
     public function collection(Collection $rows)
     {
-        foreach ($rows as $row)
-        {
-            User::create([
-                'name' => $row[0],
-            ]);
-        }
+        var_dump($rows);
+     
     }
 
     private function existeString($buscar, $opcion)
