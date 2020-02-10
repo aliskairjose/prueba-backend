@@ -340,6 +340,12 @@ class MyOrderController extends Controller
                 ]
             );
 
+            // Actualiza el status de la orden
+
+            $data = MyOrder::findOrFail($id);
+            $data->status = $request->status;
+            $data->save();
+
             // Envios de correos
             $this->sendNotification($user->email, $request->status);
             $this->sendNotification($supplier->email, $request->status);
@@ -371,7 +377,36 @@ class MyOrderController extends Controller
         );
     }
 
-    public function updateList(Request $request){
+    public function updateStatusList(Request $request){
+
+        // return $request;
+        $orders = $request->all();
+
+        try{
+            $nuevo = [];
+            foreach ($orders as $o) {
+                $this->update($o, $o['id']);
+            }
+        }
+        catch( Exception $e)
+        {
+            return response()->json(
+                [
+                    'isSuccess' => true,
+                    'message' => 'Ha ocurrido un error',
+                    'status' => 400,
+                ]
+                );
+        }
+
+        return response()->json(
+            [
+                'isSuccess' => true,
+                'message' => 'Actualizacion masiva lista',
+                'status' => 200,
+                'objects' => $nuevo,
+            ]
+            );
 
     }
 
