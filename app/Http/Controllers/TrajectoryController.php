@@ -93,7 +93,10 @@ class TrajectoryController extends Controller
     public function bycity(Request $request)
     {
 
-        $data = new CityCollection(City::where('rate_type', 'LIKE', "%".$request->rate_type."%")->get());
+        $data = new CityCollection(City::where(
+            ['rate_type', 'LIKE', "%".$request->rate_type."%"],
+            ['department_id',$request->departmennt_id]
+        )->get());
 
         // ImportList Array
         $il = [];
