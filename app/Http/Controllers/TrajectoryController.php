@@ -59,6 +59,7 @@ class TrajectoryController extends Controller
     public function loadconrecaudo(){
         try {
 
+            var_dump(file_exists('CON_RECAUDO.xlsx'));
         Excel::import(new TrajectoriesImport('CON RECAUDO'), 'CON_RECAUDO.xlsx');
         } catch (Exception $e) {
             return response()->json(
