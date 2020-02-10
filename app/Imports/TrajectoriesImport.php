@@ -7,6 +7,7 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use App\Department;
 use App\City;
 use App\Trajectory;
+use Exception;
 
 class TrajectoriesImport implements ToCollection
 {
@@ -22,6 +23,7 @@ class TrajectoriesImport implements ToCollection
      */
     public function collection(Collection $collection)
     {
+        try {
         $cont = 0;
         foreach ($collection as $row) {
             if ($cont > 0) {
@@ -104,6 +106,11 @@ class TrajectoriesImport implements ToCollection
 
             }
             $cont++;
+        }
+
+        } catch (Exception $e) {
+
+            var_dump($e);
         }
     }
 
