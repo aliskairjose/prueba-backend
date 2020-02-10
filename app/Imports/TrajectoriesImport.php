@@ -2,21 +2,17 @@
 
 namespace App\Imports;
 
+use App\User;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 
-class TrajectoriesImport implements ToCollection
+class UsersImport implements ToCollection
 {
-
-
     public function collection(Collection $rows)
     {
-        var_dump($rows);
-
-    }
-
-    private function existeString($buscar, $opcion)
-    {
-        return $opcion == $buscar ? true : false;
+        foreach ($rows as $row)
+        {
+            
+        }
     }
 }
