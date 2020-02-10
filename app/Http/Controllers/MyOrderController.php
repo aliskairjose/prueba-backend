@@ -20,14 +20,8 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class MyOrderController extends Controller
 {
+
     public function import()
-    {
-
-        $data = Excel::import(new MyOrderImport, request()->file('file'));
-
-    }
-
-    public function import2()
     {
         try {
             Excel::import(new MyOrderImport, request()->file('file'));
