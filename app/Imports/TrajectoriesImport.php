@@ -24,10 +24,10 @@ class TrajectoriesImport implements ToCollection
     {
 
         $cont = 0;
-        var_dump($cont);
+
         foreach ($collection as $row) {
-            var_dump($row);
-            if ($cont > 0) {
+
+            if ($cont > 0 && count($row)>18) {
 
                 $implodeDep = explode('-', $row[8]); //ciudad y departamento destino
 

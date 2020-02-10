@@ -60,18 +60,9 @@ class TrajectoryController extends Controller
 
     public function loadconrecaudo()
     {
-        try {
+
 
             Excel::import(new TrajectoriesImport('CON RECAUDO'), request()->file('file'));
-        } catch (Exception $e) {
-            return response()->json(
-                [
-                    'isSuccess' => false,
-                    'message' => 'Ha ocurrido un error',
-                    'status' => 400,
-                    'error' => $e
-                ]
-            );
-        }
+
     }
 }
