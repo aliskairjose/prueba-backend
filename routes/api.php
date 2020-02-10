@@ -177,4 +177,23 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::post('currency', 'CurrencyController@store');
     Route::delete('currency/{id}', 'CurrencyController@delete');
     Route::put('currency/{id}', 'CurrencyController@update');
+
+    // Department Routes
+    Route::get('department', 'DepartmentController@index');
+    Route::get('department/{id}', 'DepartmentController@show');
+    Route::post('department', 'DepartmentController@store');
+    Route::delete('department/{id}', 'DepartmentController@delete');
+    Route::put('department/{id}', 'DepartmentController@update');
+
+    // City Routes
+    Route::get('city', 'CityController@index');
+    Route::get('city/{id}', 'CityController@show');
+    Route::post('city', 'CityController@store');
+    Route::delete('city/{id}', 'CityController@delete');
+    Route::put('city/{id}', 'CityController@update');
+
+    // Trajectory Routes
+    Route::get('trajectory', 'TrajectoryController@index');
+    Route::get('loadsinrecaudo', 'TrajectoryController@loadsinrecaudo');
+    Route::get('loadconrecaudo', 'TrajectoryController@loadconrecaudo');
 });
