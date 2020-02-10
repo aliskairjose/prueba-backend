@@ -23,6 +23,7 @@ class TrajectoriesImport implements ToCollection
     public function collection(Collection $collection)
     {
         $cont = 0;
+        var_dump($cont);
         foreach ($collection as $row) {
             if ($cont > 0) {
 
