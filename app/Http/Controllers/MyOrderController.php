@@ -379,7 +379,6 @@ class MyOrderController extends Controller
 
     public function updateStatusList(Request $request){
 
-        // return $request;
         $orders = $request->all();
 
         try{
