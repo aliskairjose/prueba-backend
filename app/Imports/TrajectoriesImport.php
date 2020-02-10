@@ -4,23 +4,11 @@ namespace App\Imports;
 
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use App\Department;
-use App\City;
-use App\Trajectory;
-use Exception;
 
 class TrajectoriesImport implements ToCollection
 {
     protected $rate_type;
 
-    public function __construct($rate_type)
-    {
-        $this->rate_type = $rate_type; //tipo de tarifa
-    }
-
-    /**
-     * @param Collection $collection
-     */
     public function collection(Collection $collection)
     {
 
