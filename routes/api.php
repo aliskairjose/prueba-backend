@@ -39,8 +39,6 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::post('users/banuser', 'UserController@banUser');
     Route::put('users/updaterole/{id}', 'UserController@updaterole');
 
-
-
     // Product Routes
     Route::get('products', 'ProductController@index');
     Route::get('products/{id}', 'ProductController@show');
@@ -166,6 +164,7 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::get('wallet/{id}', 'WalletController@show');
     Route::post('wallet', 'WalletController@store');
     Route::put('wallet/{id}', 'WalletController@update');
+    Route::put('wallet/add/{id}', 'WalletController@addBalance');
 
     // WithdrawalRequest Routes
     Route::get('withdrawal', 'WithdrawalRequestController@index');
