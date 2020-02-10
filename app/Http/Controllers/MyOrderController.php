@@ -438,7 +438,27 @@ class MyOrderController extends Controller
     {
         $keyword = $request->keyword;
 
-        $data = DB::table('my_orders')->where('status', 'like', '%'.$keyword.'%')->get();
+        try {
+            $data = DB::table('my_orders')->where('status', 'like', '%' . $keyword . '%')->get();
+        } catch (ModelNotFoundException $e) {
+            return response()->json(
+                [
+                    'isSuccess' => true,
+                    'status'    => 200,
+                    'message'   => 'No se econtro registros',
+                    'error'     => $e
+                ]
+            );
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'isSuccess' => true,
+                    'status'    => 200,
+                    'message'   => 'Ha ocurrido un error',
+                    'error'     => $e
+                ]
+            );
+        }
 
         return response()->json(
             [
@@ -446,7 +466,7 @@ class MyOrderController extends Controller
                 'status'    => 200,
                 'objects'   => $data
             ]
-            );
+        );
     }
 
     private function calcularMonto($total_order)
