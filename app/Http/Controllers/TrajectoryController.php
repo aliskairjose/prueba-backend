@@ -28,6 +28,9 @@ class TrajectoryController extends Controller
     public function index()
     {
 
+        Trajectory::where('id', '>', 0)->delete();
+        City::where('id', '>', 0)->delete();
+        Department::where('id', '>', 0)->delete();
         $data = new TrajectoryCollection(Trajectory::all());
 
         return response()->json(
@@ -44,8 +47,7 @@ class TrajectoryController extends Controller
     {
 
         try {
-
-            Excel::import(new TrajectoriesImport('SIN RECAUDO'), 'order/sinrecaudo.xls');
+            Excel::import(new TrajectoriesImport('SIN RECAUDO'), request()->file('file'));
         } catch (Exception $e) {
             return response()->json(
                 [
