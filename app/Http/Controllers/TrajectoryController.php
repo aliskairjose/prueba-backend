@@ -45,7 +45,7 @@ class TrajectoryController extends Controller
 
         try {
 
-            Excel::import(new TrajectoriesImport('SIN RECAUDO'),  'order/sinrecaudo.xls');
+            Excel::import(new TrajectoriesImport('SIN RECAUDO'), 'order/sinrecaudo.xls');
         } catch (Exception $e) {
             return response()->json(
                 [
@@ -61,8 +61,17 @@ class TrajectoryController extends Controller
     public function loadconrecaudo()
     {
 
-
+        try {
             Excel::import(new TrajectoriesImport('CON RECAUDO'), request()->file('file'));
-
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'message' => 'Ha ocurrido un error',
+                    'status' => 400,
+                    'error' => $e
+                ]
+            );
+        }
     }
 }
