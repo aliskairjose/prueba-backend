@@ -25,17 +25,21 @@ class CityController extends Controller
      *
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-//        $data = Category::all();
-        $data = new CityCollection(City::all());
+        if (isset($request->department_id)) {
+            $data = new CityCollection(City::where('department_id',$request->department_id)->get());
+        }else{
+            $data = new CityCollection(City::all());
+        }
+
 
         return response()->json(
             [
                 'isSuccess' => true,
-                'count'     => $data->count(),
-                'status'    => 200,
-                'objects'   => $data,
+                'count' => $data->count(),
+                'status' => 200,
+                'objects' => $data,
             ]
         );
     }
@@ -43,7 +47,7 @@ class CityController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  Request  $request
+     * @param  Request $request
      * @return JsonResponse
      */
     public function store(Request $request)
@@ -56,9 +60,9 @@ class CityController extends Controller
             return response()->json(
                 [
                     'isSuccess' => false,
-                    'message'   => 'Ha ocurrido un error',
-                    'status'    => 400,
-                    'error'     => $e
+                    'message' => 'Ha ocurrido un error',
+                    'status' => 400,
+                    'error' => $e
                 ]
             );
         }
@@ -66,9 +70,9 @@ class CityController extends Controller
         return response()->json(
             [
                 'isSuccess' => true,
-                'message'   => 'El item ha sido creado con exito!.',
-                'status'    => 200,
-                'objects'   => $data,
+                'message' => 'El item ha sido creado con exito!.',
+                'status' => 200,
+                'objects' => $data,
             ]
         );
     }
@@ -76,8 +80,8 @@ class CityController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  Request  $request
-     * @param  int  $id
+     * @param  Request $request
+     * @param  int $id
      * @return JsonResponse
      */
     public function update(Request $request, $id)
@@ -88,17 +92,17 @@ class CityController extends Controller
             return response()->json(
                 [
                     'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => $e,
+                    'status' => 400,
+                    'message' => $e,
                 ]
             );
         }
         return response()->json(
             [
                 'isSuccess' => true,
-                'status'    => 200,
-                'message'   => 'EL atributo se ha actualizado con exito!.',
-                'objects'   => $data
+                'status' => 200,
+                'message' => 'EL atributo se ha actualizado con exito!.',
+                'objects' => $data
 
             ]
         );
@@ -107,20 +111,20 @@ class CityController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return JsonResponse
      */
     public function show($id)
     {
         try {
             $data = City::findOrFail($id);
-            $data[ 'products' ] = $data->products;
+            $data['products'] = $data->products;
         } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => $e,
+                    'status' => 400,
+                    'message' => $e,
                 ]
             );
         }
@@ -128,8 +132,8 @@ class CityController extends Controller
         return response()->json(
             [
                 'isSuccess' => true,
-                'status'    => 200,
-                'objects'   => $data
+                'status' => 200,
+                'objects' => $data
             ]
         );
     }
@@ -137,7 +141,7 @@ class CityController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return JsonResponse
      */
     public function delete($id)
@@ -148,16 +152,16 @@ class CityController extends Controller
             return response()->json(
                 [
                     'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => 'No se encontro atributo para eliminar',
+                    'status' => 400,
+                    'message' => 'No se encontro atributo para eliminar',
                 ]
             );
         } catch (Exception $e) {
             return response()->json(
                 [
                     'isSuccess' => false,
-                    'status'    => 400,
-                    'message'   => 'Ha ocurrido un error inesperado',
+                    'status' => 400,
+                    'message' => 'Ha ocurrido un error inesperado',
                 ]
             );
         }
@@ -165,12 +169,11 @@ class CityController extends Controller
         return response()->json(
             [
                 'isSuccess' => true,
-                'message'   => 'El item ha sido eliminado!.',
-                'status'    => 200,
+                'message' => 'El item ha sido eliminado!.',
+                'status' => 200,
             ]
         );
     }
-
 
 
 }
