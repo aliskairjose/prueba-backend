@@ -44,7 +44,7 @@ class TrajectoryController extends Controller
     {
 
         try {
-            var_dump(request()->file('file'));
+
             Excel::import(new TrajectoriesImport('SIN RECAUDO'),  request()->file('file'));
         } catch (Exception $e) {
             return response()->json(
