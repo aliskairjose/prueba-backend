@@ -61,7 +61,7 @@ class TrajectoryController extends Controller
     {
         try {
 
-            Excel::import(new TrajectoriesImport('CON RECAUDO'), 'CON_RECAUDO.xlsx');
+            Excel::import('CON_RECAUDO.xlsx');
         } catch (Exception $e) {
             return response()->json(
                 [
