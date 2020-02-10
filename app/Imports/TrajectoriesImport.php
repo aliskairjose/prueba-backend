@@ -23,9 +23,11 @@ class TrajectoriesImport implements ToCollection
      */
     public function collection(Collection $collection)
     {
-        try {
+
         $cont = 0;
+        var_dump($cont);
         foreach ($collection as $row) {
+            var_dump($row);
             if ($cont > 0) {
 
                 $implodeDep = explode('-', $row[8]); //ciudad y departamento destino
@@ -108,10 +110,7 @@ class TrajectoriesImport implements ToCollection
             $cont++;
         }
 
-        } catch (Exception $e) {
 
-            var_dump($e);
-        }
     }
 
     private function existeString($buscar, $opcion)
