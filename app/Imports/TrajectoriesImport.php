@@ -18,7 +18,7 @@ class TrajectoriesImport implements ToCollection
     public function collection(Collection $rows)
     {
         var_dump($rows);
-     
+
     }
 
     private function existeString($buscar, $opcion)
