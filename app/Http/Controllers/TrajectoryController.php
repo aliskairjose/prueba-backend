@@ -27,7 +27,19 @@ class TrajectoryController extends Controller
 
     public function index()
     {
+        $data = new TrajectoryCollection(Trajectory::all());
 
+        return response()->json(
+            [
+                'isSuccess' => true,
+                'count' => $data->count(),
+                'status' => 200,
+                'objects' => $data,
+            ]
+        );
+    }
+
+    public function deletedatatra(){
         Trajectory::where('id', '>', 0)->delete();
         City::where('id', '>', 0)->delete();
         Department::where('id', '>', 0)->delete();
