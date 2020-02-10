@@ -172,13 +172,5 @@ class CityController extends Controller
     }
 
 
-    public function loadsinrecaudo(){
-        Excel::import(new TrajectoriesImport('SIN RECAUDO'), 'SIN_RECAUDO.xlsx');
-    }
-
-    public function loadconrecaudo(){
-        Excel::import(new TrajectoriesImport('CON RECAUDO'), 'CON_RECAUDO.xlsx');
-    }
-
 
 }

@@ -1,0 +1,49 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Department;
+use App\City;
+use App\Trajectory;
+
+use App\Http\Resources\City as CityResource;
+use App\Http\Resources\CityCollection;
+
+use App\Http\Resources\TrajectoryCollection;
+use App\Http\Resources\Trajectory as TrajectoryResource;
+
+use Maatwebsite\Excel\HeadingRowImport;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\TrajectoriesImport;
+
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\JsonResponse;
+
+
+class TrajectoryController extends Controller
+{
+
+    public function index(){
+
+        $data = new TrajectoryCollection(Trajectory::all());
+
+        return response()->json(
+            [
+                'isSuccess' => true,
+                'count'     => $data->count(),
+                'status'    => 200,
+                'objects'   => $data,
+            ]
+        );
+    }
+
+    public function loadsinrecaudo(){
+        Excel::import(new TrajectoriesImport('SIN RECAUDO'), 'SIN_RECAUDO.xlsx');
+    }
+
+    public function loadconrecaudo(){
+        Excel::import(new TrajectoriesImport('CON RECAUDO'), 'CON_RECAUDO.xlsx');
+    }
+}
