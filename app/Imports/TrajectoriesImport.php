@@ -4,6 +4,9 @@ namespace App\Imports;
 
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
+use App\Department;
+use App\City;
+use App\Trajectory;
 
 class TrajectoriesImport implements ToCollection
 {

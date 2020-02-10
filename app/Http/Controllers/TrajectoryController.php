@@ -11,10 +11,11 @@ use App\Http\Resources\City as CityResource;
 use App\Http\Resources\CityCollection;
 
 use App\Http\Resources\TrajectoryCollection;
+use App\Http\Resources\Trajectory as TrajectoryResource;
 
 use Maatwebsite\Excel\HeadingRowImport;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\TrajectoryImport;
+use App\Imports\TrajectoriesImport;
 
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
