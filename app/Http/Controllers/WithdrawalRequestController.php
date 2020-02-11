@@ -143,8 +143,8 @@ class WithdrawalRequestController extends Controller
             if($request->status === 'APROBADO'){
                 $wallet = \App\Wallet::where('user_id', 1)->get();
                 $wallet = $wallet[0];
-
                 $wallet->amount = $wallet->amount - $data->amount;
+                $wallet->save();
             }
 
             HistoryWithdrawal::create(
