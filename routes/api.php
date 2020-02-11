@@ -52,6 +52,7 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     // ImportList Routes
     Route::get('importlist', 'ImportListController@index');
     Route::post('importlist', 'ImportListController@store');
+    Route::post('importlist/filter', 'ImportListController@filter');
     Route::put('importlist/{id}', 'ImportListController@update');
     Route::delete('importlist/{id}', 'ImportListController@delete');
     Route::put('importlist/importstore/{id}', 'ImportListController@updateImportedToStore');
@@ -152,8 +153,6 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::post('payu/send_payment', 'PayuController@sendPayment');
     Route::post('payu/notifyurl', 'PayuController@notifyurl');
     Route::get('payu/getresponseprueba', 'PayuController@getresponseprueba');
-
-
 
     // LandingPage Page Routes
     Route::get('landing', 'LandingPageController@index');

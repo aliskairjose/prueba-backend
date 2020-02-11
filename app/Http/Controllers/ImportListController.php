@@ -14,6 +14,7 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ImportListController extends Controller
@@ -48,7 +49,7 @@ class ImportListController extends Controller
                 $product->woocomerse_url = $d->woocomerse_url;
                 $product->woocomerse_id = $d->woocomerse_id;
 
-                $product->landing = new LandingPageCollection(LandingPage::where(['user_id'=>$user->id,'product_id'=>$product->product_id])->get());
+                $product->landing = new LandingPageCollection(LandingPage::where(['user_id' => $user->id, 'product_id' => $product->product_id])->get());
 
                 array_push($il, $product);
                 // array_push($il, $prod_res);
@@ -66,7 +67,6 @@ class ImportListController extends Controller
             }
 
             $object = ['user_id' => $user->id, 'products' => $il];
-
         } catch (ModelNotFoundException $e) {
             return response()->json(
                 [
@@ -110,8 +110,8 @@ class ImportListController extends Controller
                     'user_id' => $user->id,
                     'product_id' => $request->product_id,
                     'variation_id' => $request->variation_id,
-                    'woocomerse_url' => isset($request->woocomerse_url)?$request->woocomerse_url:null,
-                    'woocomerse_id' => isset($request->woocomerse_id)?$request->woocomerse_id:null,
+                    'woocomerse_url' => isset($request->woocomerse_url) ? $request->woocomerse_url : null,
+                    'woocomerse_id' => isset($request->woocomerse_id) ? $request->woocomerse_id : null,
                     'product_name' => $product->name,
                     'date_imported_store' => now()
                 ]
@@ -248,7 +248,6 @@ class ImportListController extends Controller
                 'message' => 'El registro se ha actualizado con exito!.',
             ]
         );
-
     }
 
     /**
@@ -285,6 +284,32 @@ class ImportListController extends Controller
                 'isSuccess' => true,
                 'status' => 200,
                 'message' => 'Item actualizado',
+            ]
+        );
+    }
+
+    public function filter(Request $request)
+    {
+
+        try {
+            $keyword = $request->keyword;
+            $data = DB::table('import_lists')->where('product_name', 'like', '%' . $keyword . '%')->get();
+
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'status' => 400,
+                    'message' => $e,
+                ]
+            );
+        }
+
+        return response()->json(
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'objects'   => $data,
             ]
         );
     }
