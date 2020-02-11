@@ -158,7 +158,7 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     // LandingPage Page Routes
     Route::get('landing', 'LandingPageController@index');
     Route::post('landing', 'LandingPageController@store');
-    Route::post('landing/url', 'LandingPageController@getByUrl');
+
     Route::put('landing/{id}', 'LandingPageController@update');
     Route::delete('landing/{id}', 'LandingPageController@delete');
 
@@ -204,3 +204,5 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::post('trajectory/bycity', 'TrajectoryController@bycity');
 
 });
+
+Route::post('landing/url', 'LandingPageController@getByUrl');
