@@ -130,19 +130,11 @@ class WalletController extends Controller
     public function addBalance(Request $request, $id)
     {
         try {
-            $wallet = Wallet::findOrFail($id);
+            $wallet = Wallet::where('user_id', $id)->get();
+            $wallet = $wallet[0];
             $wallet->amount = $request->amount + $wallet->amount;
             $wallet->save();
         }
-        catch (ModelNotFoundException $e) {
-            return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'message'   => 'Registro no encontrado',
-                'error'     => $e
-              ]
-            );
         catch (Exception $e) {
             return response()->json(
               [
