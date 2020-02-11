@@ -129,6 +129,7 @@ class WalletController extends Controller
 
     public function addBalance(Request $request, $id)
     {
+
         try {
             $wallet = Wallet::where('user_id', $id)->get();
             $wallet = $wallet[0];
