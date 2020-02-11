@@ -9,5 +9,5 @@ class SubscriptionPlan extends Model
 {
     use Notifiable;
 
-    protected $fillable = [ 'name', 'description', 'active', 'auto_manage_delivery'];
+    protected $fillable = [ 'name', 'description', 'active', 'auto_manage_delivery', 'type'];
 }

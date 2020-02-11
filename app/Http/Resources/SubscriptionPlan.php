@@ -19,7 +19,8 @@ class SubscriptionPlan extends JsonResource
           'name'                 => $this->name,
           'description'          => $this->description,
           'active'               => $this->active,
-          'auto_manage_delivery' => $this->auto_manage_delivery
+          'auto_manage_delivery' => $this->auto_manage_delivery,
+          'type'                 => $this->type
         ];
     }
 }

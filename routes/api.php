@@ -208,6 +208,12 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::get('deletedatatra', 'TrajectoryController@deletedatatra');
     Route::post('trajectory/bycity', 'TrajectoryController@bycity');
 
+    // Subscription Plan Routes
+    Route::get('plans', 'SubscriptionPlanController@index');
+    Route::get('plans/{id}', 'SubscriptionPlanController@show');
+    Route::post('plans', 'SubscriptionPlanController@store');
+    Route::put('plans/{id}', 'SubscriptionPlanController@update');
+
 });
 
 Route::post('landing/url', 'LandingPageController@getByUrl');
