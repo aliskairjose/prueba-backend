@@ -114,6 +114,12 @@ class UserController extends Controller
             }
             $data->notes = $request->notes;
             $data->phone = $request->phone;
+            $data->name = $request->name;
+            $data->surname = $request->surname;
+            $data->store_name = $request->store_name;
+            $data->store_url = $request->store_url;
+            $data->consumer_key = $request->consumer_key;
+            $data->consumer_secret = $request->consumer_secret;
             $data->save();
 
         } catch (ModelNotFoundException $e) {
