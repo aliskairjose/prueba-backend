@@ -133,7 +133,8 @@ class WalletController extends Controller
 
         try {
             $user = Wallet::getAuthenticatedUser();
-            var_dump($user->type_user);
+
+            var_dump($user);
             if ($user->type_user === 'ADMIN') {
                 $currency = Currency::where('code', 'COP')->first();
                 $wallet = Wallet::firstOrNew(['user_id' => $id, 'currency_id' => $currency->id]);
@@ -151,7 +152,7 @@ class WalletController extends Controller
                 return response()->json(
                     [
                         'isSuccess' => false,
-                        'status' => 401,
+                        'status' => 400,
                         'message' => 'Solo el Admin puede agregar saldo'
                     ]
                 );
