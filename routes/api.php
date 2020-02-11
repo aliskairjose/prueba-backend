@@ -115,7 +115,7 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::post('orders/myorders', 'MyOrderController@store');
     Route::post('orders/myorders/import', 'MyOrderController@import');
     Route::put('orders/myorders/{id}', 'MyOrderController@update');
-    Route::put('orders/myorder/masive/{id}', 'MyOrderController@updateStatusList');
+    Route::post('orders/myorder/masive', 'MyOrderController@updateStatusList');
     Route::post('orders/myorders/filter', 'MyOrderController@filter');
     Route::get('orders/myorders/{id}', 'MyOrderController@show');
 

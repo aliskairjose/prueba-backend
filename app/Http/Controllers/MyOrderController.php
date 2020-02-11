@@ -379,12 +379,100 @@ class MyOrderController extends Controller
     public function updateStatusList(Request $request)
     {
 
-        $orders = $request->all();
 
-        try {
+
+         try {
             $nuevo = [];
+            $orders = $request->all();
             foreach ($orders as $o) {
-                $this->update($o, $o['id']);
+                $data = MyOrder::findOrFail($o['id']);
+                $user = User::findOrFail($data->user_id);
+                $supplier = User::findOrFail($data->suplier_id);
+
+                $uWallet = $user->wallet; // User wallet
+                $sWallet = $supplier->wallet; // Supplier Wallet
+
+                // Si es rechazado se repone el monto a la wallet
+                if ($o['status'] === 'RECHAZADO') {
+
+                    $newSaldo = $uWallet->amount + $data->total_order;
+                    $uWallet->amount = $newSaldo;
+                    $uWallet->save();
+
+                    // Crea registro en History Wallet
+                    HistoryWallet::create(
+                        [
+                            'wallet_id' => $uWallet->id,
+                            'amount'    => $data->total_order,
+                            'status'    => $request->status,
+                            'type'      => 'REINTEGRO'
+                        ]
+                    );
+                }
+
+                // Cuando se entrega, al supplier se le carga a la wallet el sale_price del producto
+                // y al dropshipper se le carga a la wallet el total_price de la orden menos el porcentaje
+                if ($o['status'] === 'ENTREGADO' && $data->type === 'FINAL_ORDER') {
+
+                    $product = Product::findOrFail($data->product_id);
+
+                    // Retorna el monto de la comision y el porcentaje
+                    $resp = $this->calcularMonto($data->total_order);
+
+                    $amount = $data->total_order - $resp['comision'];
+                    $adminAmount = $resp['comision'];
+
+                    // El monto del supplier
+                    $supplier_amount = $product->sale_price * $data->quantity;
+
+                    // El monto del dropshipper
+                    $dropshipper_amount = $amount - $supplier_amount;
+
+                    // Actualizo la waller del Dropshipper
+                    $uWallet->amount = $amount - $product->sale_price;
+                    $uWallet->save();
+
+                    // Actualizo la wallet del Supplier
+                    $sWallet->amount = $product->sale_price * $data->quantity;
+                    $sWallet->save();
+
+                    // Actualiza el status de la orden
+                    $data->status = $request->status;
+                    $data->comission_percent = $resp['porcentaje'];
+                    $data->comission_amount = $resp['comision'];
+                    $data->dropshipper_amount = $dropshipper_amount;
+                    $data->supplier_amount = $supplier_amount;
+                    $data->save();
+
+                    // Crea registro en History Wallet
+                    HistoryWallet::create(
+                        [
+                            'wallet_id' => $uWallet->id,
+                            'amount'    => $data->total_order,
+                            'status'    => $request->status,
+                            'type'      => 'ABONO'
+                        ]
+                    );
+                }
+
+                \App\HistoryOrder::create(
+                    [
+                        'order_id' => $data->id,
+                        'user_id'  => $data->user_id,
+                        'status'   => $o['status']
+                    ]
+                );
+
+                // Actualiza el status de la orden
+
+                $data = MyOrder::findOrFail($o['id']);
+                $data->status = $o['status'];
+                $data->save();
+
+                // Envios de correos
+                $this->sendNotification($user->email, $request->status);
+                $this->sendNotification($supplier->email, $request->status);
+
             }
         } catch (Exception $e) {
             return response()->json(
