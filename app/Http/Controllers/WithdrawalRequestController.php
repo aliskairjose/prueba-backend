@@ -135,9 +135,17 @@ class WithdrawalRequestController extends Controller
     public function update(Request $request, $id)
     {
         try {
+
             $data = WithdrawalRequest::findOrFail($id);
             $data->status = $request->status;
             $data->save();
+
+            if($request->status === 'APROBADO'){
+                $wallet = \App\Wallet::where('user_id', 1)->get();
+                $wallet = $wallet[0];
+
+                $wallet->amount = $wallet->amount - $data->amount;
+            }
 
             HistoryWithdrawal::create(
                 [
@@ -147,6 +155,7 @@ class WithdrawalRequestController extends Controller
                     'status'                => $request->status
                 ]
             );
+
         } catch (Exception $e) {
             return response()->json(
                 [
