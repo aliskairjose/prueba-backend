@@ -9,5 +9,5 @@ class HistoryWithdrawal extends Model
 {
     use Notifiable;
 
-    protected $fillable = [ 'user_id', 'amount' ];
+    protected $fillable = [ 'user_id', 'amount', 'status', 'withdrawal_request_id' ];
 }

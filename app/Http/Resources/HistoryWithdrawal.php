@@ -15,9 +15,11 @@ class HistoryWithdrawal extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'        =>$this->id,
-            'user_id'   =>$this->user_id,
-            'amount'    =>$this->amount,
+            'id'                    =>$this->id,
+            'user_id'               =>$this->user_id,
+            'amount'                =>$this->amount,
+            'status'                => $this->status,
+            'withdrawal_request_id' => $this->withdrawal_request_id
         ];
     }
 }
