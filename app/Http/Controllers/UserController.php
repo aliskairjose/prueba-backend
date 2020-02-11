@@ -139,7 +139,6 @@ class UserController extends Controller
             [
                 'isSuccess' => true,
                 'status'    => 200,
-                'error'     => $e,
                 'message'   => 'Se ha actualizado la imagen'
             ]
         );
