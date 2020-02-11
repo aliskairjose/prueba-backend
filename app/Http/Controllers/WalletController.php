@@ -133,7 +133,17 @@ class WalletController extends Controller
             $wallet = Wallet::findOrFail($id);
             $wallet->amount = $request->amount + $wallet->amount;
             $wallet->save();
-        } catch (Exception $e) {
+        }
+        catch (ModelNotFoundException $e) {
+            return response()->json(
+              [
+                'isSuccess' => false,
+                'status'    => 400,
+                'message'   => 'Registro no encontrado',
+                'error'     => $e
+              ]
+            );
+        catch (Exception $e) {
             return response()->json(
               [
                 'isSuccess' => false,
