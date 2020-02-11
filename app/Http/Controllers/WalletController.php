@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\Wallet as WalletResource;
 use App\Wallet;
 use App\Currency;
+use App\Role;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -134,8 +135,9 @@ class WalletController extends Controller
         try {
             $user = Wallet::getAuthenticatedUser();
 
-            var_dump($user);
-            if ($user->type_user === 'ADMIN') {
+            $rol= Role::where('id', $user->role_id)->first();
+            var_dump($rol);
+            if ($rol->name === 'ADMIN') {
                 $currency = Currency::where('code', 'COP')->first();
                 $wallet = Wallet::firstOrNew(['user_id' => $id, 'currency_id' => $currency->id]);
                 $wallet->currency_id = $currency->id;
