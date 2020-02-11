@@ -136,7 +136,6 @@ class WalletController extends Controller
             $user = Wallet::getAuthenticatedUser();
 
             $rol= Role::where('id', $user->role_id)->first();
-            var_dump($rol);
             if ($rol->name === 'ADMIN') {
                 $currency = Currency::where('code', 'COP')->first();
                 $wallet = Wallet::firstOrNew(['user_id' => $id, 'currency_id' => $currency->id]);
