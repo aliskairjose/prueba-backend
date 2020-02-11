@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\HistoryWithdrawal;
 use App\Http\Resources\WithdrawalRequest as WithdrawalRequestResource;
 use App\Http\Resources\WithdrawalRequestCollection;
 use App\WithdrawalRequest;
@@ -23,12 +24,12 @@ class WithdrawalRequestController extends Controller
         $data = new WithdrawalRequestCollection(WithdrawalRequest::all());
 
         return response()->json(
-          [
-            'isSuccess' => true,
-            'count'     => $data->count(),
-            'status'    => 200,
-            'objects'   => $data,
-          ]
+            [
+                'isSuccess' => true,
+                'count'     => $data->count(),
+                'status'    => 200,
+                'objects'   => $data,
+            ]
         );
     }
 
@@ -44,20 +45,20 @@ class WithdrawalRequestController extends Controller
             $data = new WithdrawalRequestResource(WithdrawalRequest::findOrFail($id));
         } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'message'   => $e,
-              ]
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => $e,
+                ]
             );
         }
 
         return response()->json(
-          [
-            'isSuccess' => true,
-            'status'    => 200,
-            'objects'   => $data
-          ]
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'objects'   => $data
+            ]
         );
     }
 
@@ -78,40 +79,49 @@ class WithdrawalRequestController extends Controller
             // Valida que el usuario tenga saldo suficiente en la wallet
             if ($request->amount > $wallet->amount) {
                 return response()->json(
-                  [
-                    'isSuccess' => false,
-                    'message'   => 'No posee saldo suficiente en la wallet',
-                    'status'    => 400,
-                  ]
+                    [
+                        'isSuccess' => false,
+                        'message'   => 'No posee saldo suficiente en la wallet',
+                        'status'    => 400,
+                    ]
                 );
             }
 
 
             $data = WithdrawalRequest::create(
-              [
-                'amount'  => $request->amount,
-                'user_id' => $request->user_id,
-                'status'  => "PENDIENTE"
-              ]
+                [
+                    'amount'  => $request->amount,
+                    'user_id' => $request->user_id,
+                    'status'  => "PENDIENTE"
+                ]
+            );
+
+            HistoryWithdrawal::create(
+                [
+                    'user_id'               => $user->id,
+                    'amount'                => $request->amount,
+                    'withdrawal_request_id' => $data->id,
+                    'status'                => "PENDIENTE"
+                ]
             );
         } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'message'   => 'Ha ocurrido un error',
-                'status'    => 400,
-                'error'     => $e
-              ]
+                [
+                    'isSuccess' => false,
+                    'message'   => 'Ha ocurrido un error',
+                    'status'    => 400,
+                    'error'     => $e
+                ]
             );
         }
 
         return response()->json(
-          [
-            'isSuccess' => true,
-            'message'   => 'El item ha sido creado con exito!.',
-            'status'    => 200,
-            'objects'   => $data
-          ]
+            [
+                'isSuccess' => true,
+                'message'   => 'El item ha sido creado con exito!.',
+                'status'    => 200,
+                'objects'   => $data
+            ]
         );
     }
 
@@ -129,21 +139,29 @@ class WithdrawalRequestController extends Controller
             $data->status = $request->status;
             $data->save();
 
+            HistoryWithdrawal::create(
+                [
+                    'user_id'               => $data->user_id,
+                    'amount'                => $data->amount,
+                    'withdrawal_request_id' => $data->id,
+                    'status'                => $request->status
+                ]
+            );
         } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'message'   => $e,
-              ]
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => $e,
+                ]
             );
         }
         return response()->json(
-          [
-            'isSuccess' => true,
-            'status'    => 200,
-            'message'   => 'EL status se ha actualizado con exito!.',
-          ]
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'message'   => 'EL status se ha actualizado con exito!.',
+            ]
         );
     }
 

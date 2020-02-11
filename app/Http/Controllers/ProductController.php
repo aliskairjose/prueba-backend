@@ -192,7 +192,7 @@ class ProductController extends Controller
     public function show($id)
     {
         try {
-            $data = new ProductResource((Product::findOrFail($id)));
+            $data = new ProductResource(Product::findOrFail($id));
         } catch (Exception $e) {
             return response()->json(
                 [

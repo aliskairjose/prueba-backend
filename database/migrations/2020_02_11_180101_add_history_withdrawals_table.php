@@ -2,10 +2,9 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class AlterMyOrdersTable extends Migration
+class AddHistoryWithdrawalsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +13,10 @@ class AlterMyOrdersTable extends Migration
      */
     public function up()
     {
-        DB::statement('ALTER TABLE my_orders ALTER COLUMN quantity TYPE INT;');
-
+        Schema::create('history_withdrawals', function (Blueprint $table) {
+            $table->string('status', 100)->comment('Estatus de la solicitud de retiro');
+            $table->integer('withdrawal_request_id')->comment('Id de la solicitud de retiro');
+        });
     }
 
     /**
