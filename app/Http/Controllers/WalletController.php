@@ -42,20 +42,20 @@ class WalletController extends Controller
             $data = Wallet::create($request->all());
         } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'message'   => 'Ha ocurrido un error',
-                'status'    => 400,
-              ]
+                [
+                    'isSuccess' => false,
+                    'message'   => 'Ha ocurrido un error',
+                    'status'    => 400,
+                ]
             );
         }
         return response()->json(
-          [
-            'isSuccess' => true,
-            'message'   => 'El registro ha sido creado con exito!.',
-            'status'    => 200,
-            'objects'   => $data,
-          ]
+            [
+                'isSuccess' => true,
+                'message'   => 'El registro ha sido creado con exito!.',
+                'status'    => 200,
+                'objects'   => $data,
+            ]
         );
     }
 
@@ -71,30 +71,30 @@ class WalletController extends Controller
             $data = new WalletResource(Wallet::findOrFail($id));
         } catch (ModelNotFoundException $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'message'   => 'No se encontro registro',
-                'status'    => 400,
-                'error'     => $e
-              ]
+                [
+                    'isSuccess' => false,
+                    'message'   => 'No se encontro registro',
+                    'status'    => 400,
+                    'error'     => $e
+                ]
             );
         } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'message'   => 'Ha ocurrido un error',
-                'status'    => 400,
-                'error'     => $e
-              ]
+                [
+                    'isSuccess' => false,
+                    'message'   => 'Ha ocurrido un error',
+                    'status'    => 400,
+                    'error'     => $e
+                ]
             );
         }
 
         return response()->json(
-          [
-            'isSuccess' => true,
-            'status'    => 200,
-            'objects'   => $data
-          ]
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'objects'   => $data
+            ]
         );
     }
 
@@ -111,19 +111,19 @@ class WalletController extends Controller
             Wallet::findOrFail($id)->update($request->all());
         } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'message'   => $e,
-              ]
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => $e,
+                ]
             );
         }
         return response()->json(
-          [
-            'isSuccess' => true,
-            'status'    => 200,
-            'message'   => 'EL registro se ha actualizado con exito!.',
-          ]
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'message'   => 'EL registro se ha actualizado con exito!.',
+            ]
         );
     }
 
@@ -131,26 +131,36 @@ class WalletController extends Controller
     {
 
         try {
-            $wallet = Wallet::where('user_id', $id)->get();
-            $wallet = $wallet[0];
-            $wallet->amount = $request->amount + $wallet->amount;
-            $wallet->save();
-        }
-        catch (Exception $e) {
+            $user = Wallet::getAuthenticatedUser();
+            if ($user->type_user === 'ADMIN') {
+                $wallet = Wallet::where('user_id', $id)->get();
+                $wallet = $wallet[0];
+                $wallet->amount = $request->amount + $wallet->amount;
+                $wallet->save();
+            } else {
+                return response()->json(
+                    [
+                        'isSuccess' => false,
+                        'status'    => 401,
+                        'message'   => 'Solo el Admin puede agregar saldo'
+                    ]
+                );
+            }
+        } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'message'   => $e,
-              ]
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => $e,
+                ]
             );
         }
         return response()->json(
-          [
-            'isSuccess' => true,
-            'status'    => 200,
-            'message'   => 'EL registro se ha actualizado con exito!.',
-          ]
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'message'   => 'EL registro se ha actualizado con exito!.',
+            ]
         );
     }
 
