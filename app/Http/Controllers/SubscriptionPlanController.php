@@ -41,20 +41,20 @@ class SubscriptionPlanController extends Controller
             $data = SubscriptionPlan::create($request->all());
         } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'message'   => 'Ha ocurrido un error',
-                'status'    => 400,
-              ]
+                [
+                    'isSuccess' => false,
+                    'message'   => 'Ha ocurrido un error',
+                    'status'    => 400,
+                ]
             );
         }
         return response()->json(
-          [
-            'isSuccess' => true,
-            'message'   => 'El registro ha sido creado con exito!.',
-            'status'    => 200,
-            'objects'   => $data,
-          ]
+            [
+                'isSuccess' => true,
+                'message'   => 'El registro ha sido creado con exito!.',
+                'status'    => 200,
+                'objects'   => $data,
+            ]
         );
     }
 
@@ -70,30 +70,30 @@ class SubscriptionPlanController extends Controller
             $data = new ResourcesSubscriptionPlan(SubscriptionPlan::findOrFail($id));
         } catch (ModelNotFoundException $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'message'   => 'No se encontro registro',
-                'status'    => 400,
-                'error'     => $e
-              ]
+                [
+                    'isSuccess' => false,
+                    'message'   => 'No se encontro registro',
+                    'status'    => 400,
+                    'error'     => $e
+                ]
             );
         } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'message'   => 'Ha ocurrido un error',
-                'status'    => 400,
-                'error'     => $e
-              ]
+                [
+                    'isSuccess' => false,
+                    'message'   => 'Ha ocurrido un error',
+                    'status'    => 400,
+                    'error'     => $e
+                ]
             );
         }
 
         return response()->json(
-          [
-            'isSuccess' => true,
-            'status'    => 200,
-            'objects'   => $data
-          ]
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'objects'   => $data
+            ]
         );
     }
 
@@ -110,19 +110,20 @@ class SubscriptionPlanController extends Controller
             SubscriptionPlan::findOrFail($id)->update($request->all());
         } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'message'   => $e,
-              ]
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => $e,
+                ]
             );
         }
         return response()->json(
-          [
-            'isSuccess' => true,
-            'status'    => 200,
-            'message'   => 'EL registro se ha actualizado con exito!.',
-          ]
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'message'   => 'EL registro se ha actualizado con exito!.',
+            ]
+        );
     }
 
     /**
