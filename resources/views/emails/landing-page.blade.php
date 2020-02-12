@@ -14,6 +14,16 @@
     <p>
         {{ $data['first_name']. ' ' . $data['last_name']}} a través del Landing Page,  te ha solicitado el producto: {{ $data['product_name'] }}.
     </p>
+    <p>
+        Datos del solicitante:
+        <ul>
+            <li>Email: {{ $data[ 'email' ] }}</li>
+            <li>Teléfono: {{ $data[ 'phone' ] }}</li>
+            <li>Dirección: {{ $data[ 'address' ] }}, {{ $data[ 'city' ] }}, {{ $data[ 'country' ] }} </li>
+            <li>Código postal: {{ $data[ 'zip_code' ] }}</li>
+            <li>Nota: {{ $data[ 'note' ] }}</li>
+        </ul>
+    </p>
 
 </body>
 </html>

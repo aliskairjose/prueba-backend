@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\LandingPage as LandingPageResource;
 use App\Http\Resources\LandingPageCollection;
 use App\LandingPage;
-use App\Mail\LandinPageMail;
+use App\Mail\LandingPageMail;
 use App\Product;
 use App\User;
 use Exception;
@@ -181,7 +181,6 @@ class LandingPageController extends Controller
 
             $user = User::findOrFail($request->user_id);
             $product = Product::findOrFail($request->product_id);
-            $productName = $product->name;
 
             $data = array(
                 "user_id"       => $request->user_id,
@@ -201,7 +200,7 @@ class LandingPageController extends Controller
 
 
             // Usando queue en lugar de send, el correo se envia en segundo plano!
-            Mail::to($user->email)->queue(new LandinPageMail($data));
+            Mail::to($user->email)->queue(new LandingPageMail($data));
         } catch (Exception $e) {
             return response()->json(
                 [

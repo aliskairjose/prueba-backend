@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class LandinPageMail extends Mailable
+class LandingPageMail extends Mailable
 {
     use Queueable, SerializesModels;
 
