@@ -101,13 +101,13 @@ class LandingPageController extends Controller
                 ]
             );
         } catch (Exception $e) {
-            var_dump($e);
+
             return response()->json(
                 [
                     'isSuccess' => false,
                     'status'    => 400,
                     'message'   => 'Ha ocurrido un error',
-                    'error'     => $e
+                    'error'     =>$e->getMessage()
                 ]
             );
         }
