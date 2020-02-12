@@ -108,7 +108,7 @@ class LandingPageController extends Controller
                     'isSuccess' => false,
                     'status'    => 400,
                     'message'   => 'Ha ocurrido un error',
-                    'error'     =>$e->getMessage()
+                    'error'     =>$e
                 ]
             );
         }
