@@ -157,7 +157,8 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     // LandingPage Page Routes
     Route::get('landing', 'LandingPageController@index');
     Route::post('landing', 'LandingPageController@store');
-
+    Route::post('landing/url', 'LandingPageController@getByUrl');
+    Route::post('landing/mail', 'LandingPageController@mail');
     Route::put('landing/{id}', 'LandingPageController@update');
     Route::delete('landing/{id}', 'LandingPageController@delete');
 
@@ -215,5 +216,3 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::put('plans/{id}', 'SubscriptionPlanController@update');
 
 });
-
-Route::post('landing/url', 'LandingPageController@getByUrl');
