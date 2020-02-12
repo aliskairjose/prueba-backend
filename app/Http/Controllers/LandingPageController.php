@@ -91,6 +91,7 @@ class LandingPageController extends Controller
 
     public function store(Request $request)
     {
+
         try {
             $user = $this->getAuthenticatedUser();
             $data = LandingPage::create(
@@ -218,5 +219,21 @@ class LandingPageController extends Controller
                 'message'   => 'Mensaje enviado con exito'
             ]
         );
+    }
+
+    private function getAuthenticatedUser()
+    {
+        try {
+            if (!$user = JWTAuth::parseToken()->authenticate()) {
+                return response()->json(['user_not_found'], 404);
+            }
+        } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
+            return response()->json(['token_expired']);
+        } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
+            return response()->json(['token_invalid']);
+        } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
+            return response()->json(['token_absent']);
+        }
+        return $user;
     }
 }
