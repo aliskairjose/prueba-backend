@@ -156,6 +156,7 @@ class MyOrderController extends Controller
                     'status'   => $data->status
                 ]
             );
+
         } catch (ModelNotFoundException $e) {
             return response()->json(
                 [
@@ -178,7 +179,10 @@ class MyOrderController extends Controller
 
         $user = User::findOrFail($request->get('suplier_id'));
         $status = '';
+        $adminEmail = env('EMAIL_NOTIFICATION_ADMIN');
         $notification = $this->sendNotification($user['email'], $status);
+        // Se le notifica al Admin
+        $this->sendNotification($adminEmail, $status);
 
         return response()->json(
             [

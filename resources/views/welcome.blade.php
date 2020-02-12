@@ -96,6 +96,9 @@
                 </div>
                 <div>
                     <p>{{ $data }} </p>
+                    <p>
+                        {{ env('MAIL_HOST') }}
+                    </p>
                 </div>
             </div>
         </div>
