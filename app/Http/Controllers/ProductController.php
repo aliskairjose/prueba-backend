@@ -351,7 +351,7 @@ class ProductController extends Controller
             [
                 'isSuccess' => true,
                 'status'    => 200,
-                // 'count'     => $data->count(),
+                'count'     => $data->count(),
                 'objects'   => $data
             ]
         );

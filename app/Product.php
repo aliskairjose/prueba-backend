@@ -129,7 +129,7 @@ class Product extends Model
     {
         if ($keyword) {
             // return $query->where('name', 'LIKE', '%'.$keyword.'%')->orWhere('description', 'LIKE', '%'.$keyword.'%');
-            return $query->where('description', 'like', '%Samsung%');
+            return $query->where('description', 'like', '%'.$keyword.'%');
         }
     }
 }
