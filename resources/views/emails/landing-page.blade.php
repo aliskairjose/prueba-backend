@@ -12,7 +12,7 @@
     <p >Hola {{ $data['user_full_name']}}</p>
 
     <p>
-        {{ $data['first_name']. ' ' . $data['last_name']}} a través del Landing Page,  te ha solicitado el producto: {{ $data['product_name'] }}.
+        {{ $data['first_name']. ' ' . $data['last_name']}} a través del Landing Page,  te ha solicitado {{ $data['quantity'] }}, del producto  {{ $data['product_name'] }}.
     </p>
     <p>
         Datos del solicitante:

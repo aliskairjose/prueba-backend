@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ProductImport;
+use Illuminate\Support\Str;
 
 class ProductController extends Controller
 {
@@ -261,8 +262,32 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         try {
-            Product::findOrFail($id)->update($request->all());
+            $sku = $request->sku;
+
+            $data = Product::findOrFail($id);
+            $data = $request->name;
+            $data = $request->description;
+            $data = $request->type;
+            $data = $request->stock;
+            $data = $request->sale_price;
+            $data = $request->suggested_price;
+            $data = $request->user_id;
+            $data = $request->privated_product;
+            $data = $request->active;
+            $data = $request->weight;
+            $data = $request->length;
+            $data = $request->width;
+            $data = $request->height;
+
+            if (Str::contains($request->sku, '-')) {
+                $data->sku = $request->sku;
+            } else {
+                $data->sku = 'SP'.$request->user_id.'-SKU';
+            }
+
+            $data->save();
         } catch (Exception $e) {
             return response()->json(
                 [
@@ -321,7 +346,6 @@ class ProductController extends Controller
 
     public function filters(Request $request)
     {
-
     }
 
     private function getAuthenticatedUser()

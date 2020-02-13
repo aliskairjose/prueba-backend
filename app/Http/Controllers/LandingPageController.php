@@ -197,7 +197,8 @@ class LandingPageController extends Controller
                 "city"          => $request->city,
                 "country"       => $request->country,
                 "zip_code"      => $request->zip_code,
-                "note"          => $request->note
+                "note"          => $request->note,
+                "quantity"      => $request->quantity
             );
 
 
