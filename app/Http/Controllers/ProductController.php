@@ -74,7 +74,7 @@ class ProductController extends Controller
 
         try {
 
-            $user = $this->getAuthenticatedUser();
+            $user = Product::getAuthenticatedUser();
 
             if ($request->type !== 'SIMPLE' && $request->type !== 'VARIABLE') {
                 return response()->json(
@@ -284,7 +284,7 @@ class ProductController extends Controller
             if (Str::contains($request->sku, '-')) {
                 $data->sku = $request->sku;
             } else {
-                $data->sku = 'SP'.$request->user_id.'-SKU';
+                $data->sku = 'SP' . $request->user_id . '-SKU';
             }
 
             $data->save();
@@ -346,21 +346,14 @@ class ProductController extends Controller
 
     public function filters(Request $request)
     {
-    }
-
-    private function getAuthenticatedUser()
-    {
-        try {
-            if (!$user = JWTAuth::parseToken()->authenticate()) {
-                return response()->json(['user_not_found'], 404);
-            }
-        } catch (Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
-            return response()->json(['token_expired']);
-        } catch (Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
-            return response()->json(['token_invalid']);
-        } catch (Tymon\JWTAuth\Exceptions\JWTException $e) {
-            return response()->json(['token_absent']);
-        }
-        return $user;
+        $data = Product::category($request->category)->rango($request->minPrice, $request->maxPrice)->ordenar($request->sortBy);
+        return response()->json(
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                // 'count'     => $data->count(),
+                'objects'   => $data
+            ]
+        );
     }
 }

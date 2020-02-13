@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class Product extends Model
@@ -16,20 +17,20 @@ class Product extends Model
      * @var array
      */
     protected $fillable = [
-      'name',
-      'description',
-      'type',
-      'stock',
-      'sale_price',
-      'suggested_price',
-      'user_id',
-      'privated_product',
-      'active',
-      'sku',
-      'weight',
-      'length',
-      'width',
-      'height'
+        'name',
+        'description',
+        'type',
+        'stock',
+        'sale_price',
+        'suggested_price',
+        'user_id',
+        'privated_product',
+        'active',
+        'sku',
+        'weight',
+        'length',
+        'width',
+        'height'
     ];
 
     /**
@@ -46,7 +47,6 @@ class Product extends Model
     public function variations()
     {
         return $this->hasMany(Variation::class);
-
     }
 
     /**
@@ -89,4 +89,39 @@ class Product extends Model
         return $user;
     }
 
+    public static function scopeCategory($query, $category)
+    {
+        if ($category) {
+            return $query->join('category_product', 'category_product.product_id', '=', 'products.id')
+                ->join('categories', 'categories.id', '=', 'category_product.category_id')
+                ->where('category_id', '=', $category);
+            //  ->get();
+        }
+    }
+
+    public static function scopeRango($query, $minPrice, $maxPrice)
+    {
+
+        if ($minPrice && $maxPrice === 0) {
+            return $query->where('sale_price', '>=', $minPrice);
+        }
+
+        if($maxPrice){
+            if ($maxPrice >= $minPrice) {
+                return $query->where('sale_price', '>=', $minPrice)->where('sale_price', '<=', $maxPrice);
+            }
+        }
+    }
+
+    public static function scopeOrdenar($query, $sortBy)
+    {
+        switch ($sortBy) {
+            case 'Precio mas bajo':
+                return $query->orderBy('sale_price', 'asc')->get();
+            case 'Precio mas alto':
+                return $query->orderBy('sale_price', 'desc')->get();
+            default:
+                return $query->orderBy('sale_price', 'asc')->get();
+        }
+    }
 }
