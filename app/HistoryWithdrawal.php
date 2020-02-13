@@ -13,6 +13,8 @@ class HistoryWithdrawal extends Model
 
     public static function scopeFiltro($query, $id)
     {
-        return $query->where('user_id', '=', $id)->get();
+        if($id){
+            return $query->where('user_id', '=', $id)->get();
+        }
     }
 }
