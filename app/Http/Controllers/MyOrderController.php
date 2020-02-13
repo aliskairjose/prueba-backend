@@ -90,6 +90,23 @@ class MyOrderController extends Controller
                 ->where('user_id', $request->user_id)
                 ->get();
 
+            $orderExist = MyOrder::where('user_id', $user->id)
+                ->where('suplier_id', $request->suplier_id)
+                ->where('product_id', $request->product_id)
+                ->where('type', 'SAMPLE_ORDER')
+                ->get();
+
+            if ($orderExist->count() > 0) {
+                return 'no puede pedir mas';
+                return response()->json(
+                    [
+                        'isSuccess' => true,
+                        'status'    => 400,
+                        'message'   => 'No puede solicitar nuevamente muestras de este producto a este suplier'
+                    ]
+                );
+            }
+
             if ($request->amount > $wallet->amount) {
                 return response()->json(
                     [
@@ -156,7 +173,6 @@ class MyOrderController extends Controller
                     'status'   => $data->status
                 ]
             );
-
         } catch (ModelNotFoundException $e) {
             return response()->json(
                 [
@@ -385,7 +401,7 @@ class MyOrderController extends Controller
 
 
 
-         try {
+        try {
             $nuevo = [];
             $orders = $request->all();
             foreach ($orders as $o) {
@@ -476,7 +492,6 @@ class MyOrderController extends Controller
                 // Envios de correos
                 $this->sendNotification($user->email, $request->status);
                 $this->sendNotification($supplier->email, $request->status);
-
             }
         } catch (Exception $e) {
             return response()->json(
