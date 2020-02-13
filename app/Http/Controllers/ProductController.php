@@ -346,7 +346,7 @@ class ProductController extends Controller
 
     public function filters(Request $request)
     {
-        $data = Product::category($request->category)->rango($request->minPrice, $request->maxPrice)->ordenar($request->sortBy);
+        $data = Product::keyword($request->keywords)->category($request->category)->rango($request->minPrice, $request->maxPrice)->ordenar($request->sortBy);
         return response()->json(
             [
                 'isSuccess' => true,

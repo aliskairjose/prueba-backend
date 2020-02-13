@@ -91,7 +91,7 @@ class Product extends Model
 
     public static function scopeCategory($query, $category)
     {
-        if ($category) {
+        if ($category && $category > 0) {
             return $query->join('category_product', 'category_product.product_id', '=', 'products.id')
                 ->join('categories', 'categories.id', '=', 'category_product.category_id')
                 ->where('category_id', '=', $category);
@@ -106,7 +106,7 @@ class Product extends Model
             return $query->where('sale_price', '>=', $minPrice);
         }
 
-        if($maxPrice){
+        if ($maxPrice) {
             if ($maxPrice >= $minPrice) {
                 return $query->where('sale_price', '>=', $minPrice)->where('sale_price', '<=', $maxPrice);
             }
@@ -122,6 +122,14 @@ class Product extends Model
                 return $query->orderBy('sale_price', 'desc')->get();
             default:
                 return $query->orderBy('sale_price', 'asc')->get();
+        }
+    }
+
+    public static function scopeKeyword($query, $keyword)
+    {
+        if ($keyword) {
+            // return $query->where('name', 'LIKE', '%'.$keyword.'%')->orWhere('description', 'LIKE', '%'.$keyword.'%');
+            return $query->where('description', 'like', '%Samsung%');
         }
     }
 }
