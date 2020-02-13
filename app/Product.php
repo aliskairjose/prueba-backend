@@ -120,6 +120,10 @@ class Product extends Model
                 return $query->orderBy('sale_price', 'asc')->get();
             case 'Precio mas alto':
                 return $query->orderBy('sale_price', 'desc')->get();
+            case 'SIMPLE':
+                return $query->orderBy('type', 'asc')->get();
+            case 'VARIABLE':
+                return $query->orderBy('type', 'asc')->get();
             default:
                 return $query->orderBy('sale_price', 'asc')->get();
         }
