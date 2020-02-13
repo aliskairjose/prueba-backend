@@ -116,6 +116,14 @@ class HistoryWithdrawalController extends Controller
 
     public function filter(Request $request)
     {
+        $data = HistoryWithdrawal::filtro($request->user_id);
 
+        return response()->json(
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'objects'   => $data
+            ]
+        );
     }
 }
