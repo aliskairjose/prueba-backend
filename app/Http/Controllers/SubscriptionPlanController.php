@@ -16,9 +16,14 @@ class SubscriptionPlanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = new SubscriptionPlanCollection(SubscriptionPlan::all());
+        if (isset($request->type)) {
+            $data = new SubscriptionPlanCollection(SubscriptionPlan::where('type',$request->type)->get());
+        }else{
+            $data = new SubscriptionPlanCollection(SubscriptionPlan::all());
+        }
+
         return response()->json(
             [
                 'isSuccess' => true,

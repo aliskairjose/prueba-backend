@@ -151,7 +151,7 @@ class VariationController extends Controller
         return response()->json(
           [
             'isSuccess' => true,
-            'message'   => 'El producto ha sido eliminado!.',
+            'message'   => 'El registro ha sido eliminado!.',
             'status'    => 200,
           ]
         );
