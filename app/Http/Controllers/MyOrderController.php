@@ -97,12 +97,12 @@ class MyOrderController extends Controller
                 ->get();
 
             if ($orderExist->count() > 0) {
-                return 'no puede pedir mas';
                 return response()->json(
                     [
                         'isSuccess' => true,
                         'status'    => 400,
-                        'message'   => 'No puede solicitar nuevamente muestras de este producto a este supplier'
+                        'message'   => 'No puede solicitar nuevamente muestras de este producto a este supplier',
+                        'objects'   => $orderExist
                     ]
                 );
             }
