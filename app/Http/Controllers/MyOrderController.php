@@ -102,7 +102,6 @@ class MyOrderController extends Controller
                         'isSuccess' => true,
                         'status'    => 400,
                         'message'   => 'No puede solicitar nuevamente muestras de este producto a este supplier',
-                        'objects'   => $orderExist
                     ]
                 );
             }
