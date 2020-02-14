@@ -3,11 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\HistoryWithdrawal;
-use App\City;
+
 use App\Http\Resources\HistoryWithdrawal as ResourcesHistoryWithdrawal;
 use App\Http\Resources\HistoryWithdrawalCollection;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\City;
+use App\Http\Resources\City as CityResource;
+use App\Http\Resources\CityCollection;
 
 class HistoryWithdrawalController extends Controller
 {
@@ -114,6 +118,12 @@ class HistoryWithdrawalController extends Controller
     {
         //
     }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return JsonResponse
+     */
 
     public function filter(Request $request)
     {
