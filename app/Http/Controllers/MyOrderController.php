@@ -6,6 +6,7 @@ use App\HistoryWallet;
 use App\Http\Resources\MyOrderCollection;
 use App\Imports\MyOrderImport;
 use App\Mail\MyOrder as MailMyOrder;
+use App\Mail\NewOrderMail;
 use App\MyOrder;
 use App\Product;
 use App\SeparateInventory;
@@ -197,7 +198,7 @@ class MyOrderController extends Controller
         $adminEmail = env('EMAIL_NOTIFICATION_ADMIN');
         $notification = $this->sendNotification($user['email'], $status);
         // Se le notifica al Admin
-        $this->sendNotification($adminEmail, $status);
+        $this->notifyOrder($adminEmail, $data);
 
         return response()->json(
             [
@@ -511,6 +512,19 @@ class MyOrderController extends Controller
             ]
         );
     }
+
+    private function notifyOrder($email, $data)
+    {
+        try {
+            // Usando queue en lugar de send, el correo se envia en segundo plano!
+            Mail::to($email)->queue(new NewOrderMail($data));
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+
+        return 'Notificacion enviada con exito';
+    }
+
 
     private function sendNotification($email, $status)
     {

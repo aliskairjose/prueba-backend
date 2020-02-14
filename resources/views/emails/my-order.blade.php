@@ -11,11 +11,8 @@
 
     <h5>Mis ordenes</h5>
 
-    @if ($status !== '')
-        <p> El estatus de su orden ha sido actualizado a: {{ $status }}</p>
-    @else
-        <p>Ha sido incluida una nueva orden</p>
-    @endif
+    <p> El estatus de su orden ha sido actualizado a: {{ $status }}</p>
+
 
 </body>
 </html>
