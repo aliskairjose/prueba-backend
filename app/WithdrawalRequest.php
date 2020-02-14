@@ -9,7 +9,7 @@ class WithdrawalRequest extends Model
 {
     use Notifiable;
 
-    protected $fillable = ['amount', 'user_id', 'status'];
+    protected $fillable = ['amount', 'user_id', 'status','created_at','updated_at'];
 
     /**
      * Relacion uno a uno con User (UserController)

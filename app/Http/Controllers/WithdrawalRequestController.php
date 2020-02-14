@@ -23,9 +23,11 @@ class WithdrawalRequestController extends Controller
     {
 
         if (isset($request->user_id)) {
-            $data = new WithdrawalRequestCollection(WithdrawalRequest::where('user_id',$request->user_id)->get());
+            $data = new WithdrawalRequestCollection(
+                WithdrawalRequest::where('user_id',$request->user_id)->orderBy('created_at', 'desc')->get()
+            );
         }else{
-            $data = new WithdrawalRequestCollection(WithdrawalRequest::all());
+            $data = new WithdrawalRequestCollection(WithdrawalRequest::orderBy('created_at', 'desc')->get());
         }
 
         return response()->json(
