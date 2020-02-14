@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\HistoryWithdrawal;
-use App\City;
+use App\City; 
 use App\Http\Resources\HistoryWithdrawal as ResourcesHistoryWithdrawal;
 use App\Http\Resources\HistoryWithdrawalCollection;
 use Exception;
