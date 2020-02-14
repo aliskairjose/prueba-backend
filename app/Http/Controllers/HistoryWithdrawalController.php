@@ -116,7 +116,7 @@ class HistoryWithdrawalController extends Controller
 
     public function filter(Request $request)
     {
-        var_dump($request->user_id);
+
         $data = HistoryWithdrawal::filtro($request->user_id);
 
         return response()->json(
