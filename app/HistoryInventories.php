@@ -17,6 +17,19 @@ class HistoryInventories extends Model
         'total',
         'status'
     ];
+
+
+    public static function scopeFilter($query, $request)
+    {
+        if($request->type === 'PRODUCTOS'){
+            return $query->where('product_id','=', $request->id)->get();
+        }
+
+        if($request->type === 'DROPSHIPPER'){
+            return $query->where('product_id','=', $request->id)->get();
+        }
+    }
+
 }
 
 

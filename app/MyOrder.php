@@ -31,7 +31,8 @@ class MyOrder extends Model
         'country',
         'state',
         'city',
-        'zip_cde'
+        'zip_cde',
+        'shipping'
     ];
 
     /**

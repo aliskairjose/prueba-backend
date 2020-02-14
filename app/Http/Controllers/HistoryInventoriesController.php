@@ -25,12 +25,12 @@ class HistoryInventoriesController extends Controller
         $data = new HistoryInventoriesCollection(HistoryInventories::all());
 
         return response()->json(
-          [
-            'isSuccess' => true,
-            'count'     => $data->count(),
-            'status'    => 200,
-            'objects'   => $data,
-          ]
+            [
+                'isSuccess' => true,
+                'count'     => $data->count(),
+                'status'    => 200,
+                'objects'   => $data,
+            ]
         );
     }
 
@@ -47,62 +47,60 @@ class HistoryInventoriesController extends Controller
             $variation_id = null;
             $product = new ProductResource(Product::findOrFail($request->get('product_id')));
 
-            if ($product[ 'type' ] == 'variable') {
+            if ($product['type'] == 'variable') {
                 $variation = DB::table('variations')->where('product_id', '=', $request->get('product_id'))->get();
                 if ($variation->count() !== 0) {
                     foreach ($variation as $v) {
                         $data = HistoryInventories::create(
-                          [
-                            'separate_inventory_id' => $request->get('separate_inventory_id'),
-                            'product_id'            => $request->get('product_id'),
-                            'variation_id'          => $v->id,
-                            'quantity'              => $request->get('quantity'),
-                            'price'                 => $request->get('price')
-                          ]
+                            [
+                                'separate_inventory_id' => $request->get('separate_inventory_id'),
+                                'product_id'            => $request->get('product_id'),
+                                'variation_id'          => $v->id,
+                                'quantity'              => $request->get('quantity'),
+                                'price'                 => $request->get('price')
+                            ]
                         );
                     }
                 } else {
                     $data = HistoryInventories::create(
-                      [
+                        [
+                            'separate_inventory_id' => $request->get('separate_inventory_id'),
+                            'product_id'            => $request->get('product_id'),
+                            'variation_id'          => $variation_id,
+                            'quantity'              => $request->get('quantity'),
+                            'price'                 => $request->get('price')
+                        ]
+                    );
+                }
+            } else {
+                $data = HistoryInventories::create(
+                    [
                         'separate_inventory_id' => $request->get('separate_inventory_id'),
                         'product_id'            => $request->get('product_id'),
                         'variation_id'          => $variation_id,
                         'quantity'              => $request->get('quantity'),
                         'price'                 => $request->get('price')
-                      ]
-                    );
-                }
-            } else {
-                $data = HistoryInventories::create(
-                  [
-                    'separate_inventory_id' => $request->get('separate_inventory_id'),
-                    'product_id'            => $request->get('product_id'),
-                    'variation_id'          => $variation_id,
-                    'quantity'              => $request->get('quantity'),
-                    'price'                 => $request->get('price')
-                  ]
+                    ]
                 );
             }
-
-
         } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'message'   => 'Ha ocurrido un error',
-                'status'    => 400,
-                'error'     => $e
-              ]
+                [
+                    'isSuccess' => false,
+                    'message'   => 'Ha ocurrido un error',
+                    'status'    => 400,
+                    'error'     => $e
+                ]
             );
         }
 
         return response()->json(
-          [
-            'isSuccess' => true,
-            'message'   => 'El producto ha sido creado con exito!.',
-            'status'    => 200,
-            'objects'   => $data,
-          ]
+            [
+                'isSuccess' => true,
+                'message'   => 'El producto ha sido creado con exito!.',
+                'status'    => 200,
+                'objects'   => $data,
+            ]
         );
     }
 
@@ -118,20 +116,20 @@ class HistoryInventoriesController extends Controller
             $data = new HistoryInventoriesResource((HistoryInventories::findOrFail($id)));
         } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'message'   => $e,
-              ]
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => $e,
+                ]
             );
         }
 
         return response()->json(
-          [
-            'isSuccess' => true,
-            'objects'   => $data,
-            'status'    => 200
-          ]
+            [
+                'isSuccess' => true,
+                'objects'   => $data,
+                'status'    => 200
+            ]
         );
     }
 
@@ -160,22 +158,21 @@ class HistoryInventoriesController extends Controller
     {
         try {
             HistoryInventories::findOrFail($id)->update($request->all());
-
         } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'message'   => $e,
-              ]
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => $e,
+                ]
             );
         }
         return response()->json(
-          [
-            'isSuccess' => true,
-            'status'    => 200,
-            'message'   => 'EL producto se ha actualizado con exito!.',
-          ]
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'message'   => 'EL producto se ha actualizado con exito!.',
+            ]
         );
     }
 
@@ -191,29 +188,52 @@ class HistoryInventoriesController extends Controller
             HistoryInventories::findOrFail($id)->delete();
         } catch (ModelNotFoundException $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'message'   => 'No se encontro HistoryInventories para eliminar',
-              ]
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => 'No se encontro HistoryInventories para eliminar',
+                ]
             );
-        }
-        catch (Exception $e) {
+        } catch (Exception $e) {
             return response()->json(
-              [
-                'isSuccess' => false,
-                'status'    => 400,
-                'message'   => 'Ha ocurrido un error inesperado',
-              ]
+                [
+                    'isSuccess' => false,
+                    'status'    => 400,
+                    'message'   => 'Ha ocurrido un error inesperado',
+                ]
             );
         }
 
         return response()->json(
-          [
-            'isSuccess' => true,
-            'message'   => 'El producto ha sido eliminado!.',
-            'status'    => 200,
-          ]
+            [
+                'isSuccess' => true,
+                'message'   => 'El producto ha sido eliminado!.',
+                'status'    => 200,
+            ]
+        );
+    }
+
+    public function filter(Request $request)
+    {
+        try {
+            $data = HistoryInventories::filter($request);
+        } catch (Exception $e) {
+            return response()->json(
+                [
+                    'isSuccess' => false,
+                    'status' => 400,
+                    'error' => $e,
+                    'message' => 'Ha ocurrrido un error'
+                ]
+            );
+        }
+
+        return response()->json(
+            [
+                'isSuccess' => true,
+                'status' => 200,
+                'objects' => $data
+            ]
         );
     }
 }

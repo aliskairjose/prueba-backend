@@ -102,7 +102,7 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::post('inventories/history', 'HistoryInventoriesController@store');
     Route::put('inventories/history/{id}', 'HistoryInventoriesController@update');
     Route::delete('inventories/history/{id}', 'HistoryInventoriesController@delete');
-
+    Route::post('inventories/history/filter', 'HistoryInventoriesController@filter');
 
     // ProductPhoto Routes
     Route::get('product/photos', 'ProductPhotosController@index');

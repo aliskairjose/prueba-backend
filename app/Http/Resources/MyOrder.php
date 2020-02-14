@@ -41,6 +41,7 @@ class MyOrder extends JsonResource
           'notes'             => $this->notes,
           'name'              => $this->name,
           'surname'           => $this->surnae,
+          'shipping'          => $this->shipping,
           'street_address'    => $this->street_address,
           'country'           => $this->country,
           'state'             => $this->state,
