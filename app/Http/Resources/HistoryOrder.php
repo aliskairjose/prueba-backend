@@ -17,7 +17,8 @@ class HistoryOrder extends JsonResource
         return [
           'user_id'  => $this->user_id,
           'order_id' => $this->order_id,
-          'status'   => $this->status
+          'status'   => $this->status,
+          'shipping' => $this->shipping
         ];
     }
 }

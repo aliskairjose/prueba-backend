@@ -9,6 +9,6 @@ class HistoryOrder extends Model
 {
     use Notifiable;
 
-    protected $fillable = [ 'user_id', 'order_id', 'status'];
+    protected $fillable = [ 'user_id', 'order_id', 'status', 'shipping'];
 
 }
