@@ -19,9 +19,14 @@ class WithdrawalRequestController extends Controller
      *
      * @return JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = new WithdrawalRequestCollection(WithdrawalRequest::all());
+
+        if (isset($request->user_id)) {
+            $data = new WithdrawalRequestCollection(WithdrawalRequest::where('user_id',$request->user_id)->get());
+        }else{
+            $data = new WithdrawalRequestCollection(WithdrawalRequest::all());
+        }
 
         return response()->json(
             [
