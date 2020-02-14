@@ -129,7 +129,7 @@ class HistoryWithdrawalController extends Controller
     {
 
         $data = HistoryWithdrawal::all();
-        
+
 
         return response()->json(
             [
