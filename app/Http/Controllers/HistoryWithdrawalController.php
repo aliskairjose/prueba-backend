@@ -116,9 +116,8 @@ class HistoryWithdrawalController extends Controller
 
     public function filter(Request $request)
     {
-
-        $data = HistoryWithdrawal::filtro($request->user_id);
-
+        
+        $data = new HistoryWithdrawalCollection(HistoryWithdrawal::where('user_id',$request->user_id)->get());
         return response()->json(
             [
                 'isSuccess' => true,
