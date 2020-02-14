@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\HistoryWithdrawal;
+use App\Http\Resources\City;
 use App\Http\Resources\HistoryWithdrawal as ResourcesHistoryWithdrawal;
 use App\Http\Resources\HistoryWithdrawalCollection;
 use Exception;
@@ -118,6 +119,9 @@ class HistoryWithdrawalController extends Controller
     {
 
         $data = HistoryWithdrawal::all();
+        var_dump($data);
+        $data = City::all();
+        var_dump($data);
 
         return response()->json(
             [
