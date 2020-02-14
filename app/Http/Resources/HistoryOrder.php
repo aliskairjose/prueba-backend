@@ -18,7 +18,6 @@ class HistoryOrder extends JsonResource
           'user_id'  => $this->user_id,
           'order_id' => $this->order_id,
           'status'   => $this->status,
-          'shipping' => $this->shipping
         ];
     }
 }

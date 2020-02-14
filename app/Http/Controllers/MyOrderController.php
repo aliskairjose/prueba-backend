@@ -169,8 +169,7 @@ class MyOrderController extends Controller
                 [
                     'order_id' => $data->id,
                     'user_id'  => $data->user_id,
-                    'status'   => $data->status,
-                    'shipping' => $data->shipping
+                    'status'   => $data->status
                 ]
             );
         } catch (ModelNotFoundException $e) {
@@ -355,8 +354,7 @@ class MyOrderController extends Controller
                 [
                     'order_id' => $data->id,
                     'user_id'  => $data->user_id,
-                    'status'   => $request->status,
-                    'shipping' => $data->shipping
+                    'status'   => $request->status
                 ]
             );
 
@@ -480,8 +478,7 @@ class MyOrderController extends Controller
                     [
                         'order_id' => $data->id,
                         'user_id'  => $data->user_id,
-                        'status'   => $o['status'],
-                        'shipping' => $o['shipping']
+                        'status'   => $o['status']
                     ]
                 );
 
