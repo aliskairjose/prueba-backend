@@ -129,9 +129,7 @@ class HistoryWithdrawalController extends Controller
     {
 
         $data = HistoryWithdrawal::all();
-        var_dump($data);
-        $data = City::all();
-        var_dump($data);
+        
 
         return response()->json(
             [
