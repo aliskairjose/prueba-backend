@@ -181,6 +181,7 @@ Route::group(['middleware' => 'jwt.verify'], function () {
     Route::get('withdrawal/records/{id}', 'HistoryWithdrawalController@show');
     Route::post('withdrawal/records', 'HistoryWithdrawalController@store');
     Route::post('withdrawal/records/filter', 'HistoryWithdrawalController@filter');
+    Route::get('withdrawal/records/byRequestId/{id}', 'HistoryWithdrawalController@byRequestId');
 
     // Currency Routes
     Route::get('currency', 'CurrencyController@index');

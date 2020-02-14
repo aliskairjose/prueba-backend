@@ -126,4 +126,17 @@ class HistoryWithdrawalController extends Controller
             ]
         );
     }
+
+    public function byRequestId($id)
+    {
+        $data = HistoryWithdrawal::byRequestId($id);
+
+        return response()->json(
+            [
+                'isSuccess' => true,
+                'status'    => 200,
+                'objects'   => $data
+            ]
+        );
+    }
 }
