@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Picture;
 use App\Store;
 use Illuminate\Http\Request;
 
@@ -34,6 +35,9 @@ class StoreController extends Controller
      */
     public function store(Request $request)
     {
+        $path_0 = '';
+        $path_1 = '';
+        $path_2 = '';
         $store = Store::create(
             [
                 'name' => $request->name,
@@ -43,10 +47,26 @@ class StoreController extends Controller
             ]
         );
 
+
+        if ($request->hasFile('picture_2')) $path_2 = $request->picture_2->store('public/images');
+        if ($request->hasFile('picture_1')) $path_1 = $request->picture_1->store('public/images');
+
+        if ($request->hasFile('picture_0')) {
+            $path_0 = $request->picture_0->store('public/images');
+            Picture::create(
+                [
+                    'store_id' => $store->id,
+                    'picture_1' => $path_0,
+                    'picture_2' => $path_1,
+                    'picture_3' => $path_2
+                ]
+            );
+        }
+
         return response()->json(
             [
                 'isSuccess' => true,
-                'message' => 'Se ha guardado nueva tienda'
+                'message' => 'Se ha guardado nueva tienda',
             ]
         );
     }

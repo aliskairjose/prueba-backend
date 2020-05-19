@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Store extends Model
 {
-    protected $fillable = ['name', 'phone', 'email', 'address'];
+    protected $fillable = ['id','name', 'phone', 'email', 'address'];
 
     public function pictures()
     {
