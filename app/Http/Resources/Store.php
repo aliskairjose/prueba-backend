@@ -20,6 +20,7 @@ class Store extends JsonResource
             'address' => $this->address,
             'phone' => $this->phone,
             'email' => $this->email,
+            'pictures' => $this->pictures
         ];
     }
 }

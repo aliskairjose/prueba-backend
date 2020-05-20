@@ -94,12 +94,6 @@
                     <a href="https://vapor.laravel.com">Vapor</a>
                     <a href="https://github.com/laravel/laravel">GitHub</a>
                 </div>
-                <div>
-                    <p>{{ $data }} </p>
-                    <p>
-                        {{ env('MAIL_HOST') }}
-                    </p>
-                </div>
             </div>
         </div>
     </body>

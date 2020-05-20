@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\StoreCollection;
 use App\Picture;
 use App\Store;
 use Illuminate\Http\Request;
-
+use Illuminate\Http\Response;
 class StoreController extends Controller
 {
     /**
@@ -16,7 +17,7 @@ class StoreController extends Controller
      */
     public function index()
     {
-        $stores = Store::all();
+        $stores = new StoreCollection(Store::all());
 
         return response()->json(
             [
@@ -48,17 +49,28 @@ class StoreController extends Controller
         );
 
 
-        if ($request->hasFile('picture_2')) $path_2 = $request->picture_2->store('public/images');
-        if ($request->hasFile('picture_1')) $path_1 = $request->picture_1->store('public/images');
+        if ($request->hasFile('picture_2')) {
+            $path_2 = $request->file('picture_2');
+            $name_2 = $path_2->getClientOriginalName();
+            \Storage::disk('public')->put($name_2, \File::get($path_2));
+        }
+        if ($request->hasFile('picture_1')) {
+            $path_1 = $request->file('picture_1');
+            $name_1 = $path_1->getClientOriginalName();
+            \Storage::disk('public')->put($name_1, \File::get($path_1));
+        };
 
         if ($request->hasFile('picture_0')) {
-            $path_0 = $request->picture_0->store('public/images');
+            $path_0 = $request->file('picture_0');
+            $name_0 = $path_0->getClientOriginalName();
+            \Storage::disk('public')->put($name_0, \File::get($path_0));
+
             Picture::create(
                 [
                     'store_id' => $store->id,
-                    'picture_1' => $path_0,
-                    'picture_2' => $path_1,
-                    'picture_3' => $path_2
+                    'picture_1' => $name_0,
+                    'picture_2' => $name_1,
+                    'picture_3' => $name_2
                 ]
             );
         }
@@ -71,48 +83,9 @@ class StoreController extends Controller
         );
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+    public function getImage($filename){
+        $file = \Storage::disk('public')->get($filename);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        return new Response($file);
     }
 }
